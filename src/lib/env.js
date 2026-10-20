@@ -27,9 +27,9 @@ export function setDemoFlag(on) {
 // The demo's pretend school (".example" addresses never exist, so nothing can reach one).
 export const DEMO_ORIGIN = 'https://canvas.example.edu';
 
-// K11: the app's name, in one place (plus manifest.json). A placeholder until you choose
-// the new one: published, the name can't use "Canvas" (Instructure's trademark).
-export const APP_NAME = 'Canvas Dashboard';
+// K11: the app's name, in one place (plus manifest.json). Chosen by the owner 2026-10-20.
+// It never uses "Canvas" (Instructure's trademark): descriptions say "works with Canvas".
+export const APP_NAME = 'Neko';
 
 // K12 + K13 + K17: set these before publishing. SITE_URL is where the landing site in
 // docs/ is hosted (GitHub Pages); the privacy policy and terms are pages there. Until

@@ -1,4 +1,6 @@
-# Canvas Dashboard — Spec
+# Neko — Spec
+
+*(Formerly "Canvas Dashboard". The name Neko was chosen by the owner on 2026-10-20.)*
 
 A Chrome extension that replaces the Canvas UI for UW courses (`canvas.uw.edu`). It loads unpacked from this folder, takes over the new-tab page, reads Canvas using the existing browser login (no API token), and keeps all data in Chrome on this computer.
 
@@ -1154,7 +1156,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **Done when:** Tested with sample data covering hidden grades and totals, no assignment groups, quizzes in outside tools, cross-listed and combined sections, and courses without a syllabus. Each shows a clear note instead of an error or a wrong number. Then checked with real accounts from at least two other schools (volunteers).
 
 #### K11 · Name and wording
-- **Status:** [~] partial — waiting for the name you choose. The name now lives in one place (`APP_NAME` in `src/lib/env.js`, plus `manifest.json`); UW-only wording is gone from screens (only the “UW 4.0 decimal” grading choice names UW), and the manifest description says “Not affiliated with Instructure” · **Phase:** 7
+- **Status:** [x] done — the name is **Neko** (your choice, 2026-10-20), set in one place (`APP_NAME` in `src/lib/env.js`, plus `manifest.json`), the site and the store notes. “Canvas” isn’t part of the name; UW-only wording is gone from screens (only the “UW 4.0 decimal” grading choice names UW); the manifest says “works with Canvas” and “Not affiliated with Instructure” · **Phase:** 7
 - **What:** A new name and text without anyone else's trademarks.
 - **Done when:** The name, icon, descriptions and in-app text no longer use "Canvas" as part of the name, "UW", or university logos. "for Canvas" may appear only as a description. *(You choose the name.)*
 
@@ -1192,7 +1194,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - `store/LISTING.md` has reviewer instructions for seeing every feature in demo mode.
 
 #### K17 · Landing site
-- **Status:** [~] partial — `docs/` (renamed from `site/` so GitHub Pages can publish it) has a home page (pitch, 3 demo screenshots, Join the beta, features, FAQ), a privacy policy and terms (both marked “Draft for review”, not legal advice: data stays in the browser, no analytics, no server, FERPA, not affiliated), a support page, and `docs/README.md`. It uses one accent color, the system font and the spacing scale, light and dark, and has no horizontal scroll at phone width. `SITE_URL` in `src/lib/env.js` feeds `PRIVACY_URL` and `TERMS_URL`. **Waiting for:** the name, the form link, the support email, your review of the drafts, and hosting · **Phase:** 7
+- **Status:** [~] partial — `docs/` (renamed from `site/` so GitHub Pages can publish it) has a home page (pitch, 3 demo screenshots, Join the beta, features, FAQ), a privacy policy and terms (both marked “Draft for review”, not legal advice: data stays in the browser, no analytics, no server, FERPA, not affiliated), a support page, and `docs/README.md`. It uses one accent color, the system font and the spacing scale, light and dark, and has no horizontal scroll at phone width. `SITE_URL` in `src/lib/env.js` feeds `PRIVACY_URL` and `TERMS_URL`. Named Neko. **Waiting for:** the form link, the support email, your review of the drafts, and hosting · **Phase:** 7
 - **What:** A static site in `docs/` for free GitHub Pages hosting.
 - **Done when:**
   - It has the name and a one-line pitch, 3 screenshots from demo mode, and a "Join the beta" button (Google Form link supplied by the owner).
@@ -1226,7 +1228,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **Done when:** A git repository with a `.gitignore` that leaves out `owner-data/`, `dist/` and anything personal. The owner sees the file list before the first commit. Nothing is pushed.
 
 #### K22 · "Works with Canvas" wording
-- **Status:** [~] partial — the manifest says “A clean, private dashboard that works with Canvas. Not affiliated with Instructure or any school.” The store text, site, setup, About and beta INSTALL.md say “works with Canvas” and carry the not-affiliated note. Wording rules are in `store/LISTING.md`, and `tools/check_extension.py` enforces the manifest and site notes. No Canvas logo is used anywhere. **Waiting for:** the name · **Phase:** 7
+- **Status:** [x] done — the name is Neko. The manifest says “A clean, private dashboard that works with Canvas. Not affiliated with Instructure or any school.” The store text, site, setup, About and beta INSTALL.md say “works with Canvas” and carry the not-affiliated note; wording rules are in `store/LISTING.md`; `tools/check_extension.py` enforces the manifest and site notes. No Canvas logo anywhere · **Phase:** 7
 - **What:** Describe the product without implying it's affiliated with Instructure.
 - **Done when:**
   - The name stays a placeholder until the owner chooses.
@@ -1378,7 +1380,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K8 | Your syllabi become your data | 7 | [~] |
 | K9 | First-run setup | 7 | [x] |
 | K10 | Other schools' Canvas setups | 7 | [~] |
-| K11 | Name and wording | 7 | [~] |
+| K11 | Name and wording | 7 | [x] |
 | K12 | About and disclaimers | 7 | [~] |
 | K13 | Report a problem | 7 | [~] |
 | K14 | Chrome Web Store package | 7 | [~] |
@@ -1389,6 +1391,6 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K19 | Beta build | 7 | [x] |
 | K20 | What's new | 7 | [x] |
 | K21 | Git repository | 7 | [x] |
-| K22 | "Works with Canvas" wording | 7 | [~] |
+| K22 | "Works with Canvas" wording | 7 | [x] |
 
-**Total: 144 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Done: 115 · Partial: 28 (16 waiting on your Chrome check; 12 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
+**Total: 144 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Done: 117 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0

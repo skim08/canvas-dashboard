@@ -596,7 +596,7 @@ test('A10', 'rejects files that are not backups', () => {
   } catch (e) {
     msg = e.message;
   }
-  ok(msg.includes('isn’t a Canvas Dashboard backup'), msg);
+  ok(msg.includes('isn’t a Neko backup'), msg);
 });
 test('A10', 'restore leaves out damaged fields and never touches object prototypes', () => {
   const text = JSON.stringify({ app: 'canvas-dashboard', schema: 1, data: { settings: { theme: 'dark', refreshMinutes: 'soon', features: 5 }, userdata: { notes: { a: 'hi' }, todos: 'oops' }, snapshots: { not: 'a list' } } }).replace('"theme"', '"__proto__":{"polluted":true},"theme"');

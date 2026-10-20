@@ -1,4 +1,6 @@
-# Canvas Dashboard — rules for Claude
+# Neko — rules for Claude
+
+(Formerly "Canvas Dashboard"; the name was chosen on 2026-10-20. Neko works with Canvas and isn't affiliated with Instructure.)
 
 A Chrome extension (Manifest V3, loaded unpacked) that replaces the Canvas UI for UW courses (`canvas.uw.edu`). **`SPEC.md` is the source of truth** for every feature, its acceptance criteria, its phase and its status.
 

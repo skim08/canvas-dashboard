@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Canvas Dashboard",
-  "short_name": "Dashboard",
+  "name": "Neko",
+  "short_name": "Neko",
   "description": "A clean, private dashboard that works with Canvas. Not affiliated with Instructure or any school.",
   "version": "0.2.0",
   "minimum_chrome_version": "116",
@@ -15,7 +15,7 @@
     "newtab": "src/newtab.html"
   },
   "action": {
-    "default_title": "Canvas Dashboard",
+    "default_title": "Neko",
     "default_popup": "src/popup.html",
     "default_icon": {
       "16": "src/icons/icon16.png",

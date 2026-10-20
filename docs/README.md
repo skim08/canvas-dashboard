@@ -4,7 +4,6 @@ Static pages for GitHub Pages: `index.html`, `privacy.html`, `terms.html`, `supp
 
 ## Before publishing, replace these placeholders everywhere
 
-- `[NAME]`: the extension's name.
 - `[BETA FORM LINK]`: the Google Form address.
 - `[SUPPORT EMAIL]`: the support address.
 - `[DATE]`: the "last updated" date on the privacy policy and terms.

@@ -1,6 +1,6 @@
 # Chrome Web Store listing (K14)
 
-What to paste into the Chrome Web Store developer dashboard. Fill in the name (K11) first.
+What to paste into the Chrome Web Store developer dashboard for **Neko**.
 
 ## Build
 
@@ -39,7 +39,7 @@ It doesn't ask for `cookies` or any always-on host access. No remote code is loa
 
 ## Name and wording rules (K22)
 
-- Until you choose the name, it's a placeholder (`APP_NAME` in `src/lib/env.js` and `manifest.json`).
+- The name is **Neko** (`APP_NAME` in `src/lib/env.js` and `manifest.json`). Store title idea: “Neko: a calm dashboard for your classes”.
 - Say "works with Canvas", never "Canvas Dashboard", "official" or "for Canvas by…". Don't use "Canvas" as part of the name.
 - Never use the Canvas or Instructure logo or colors. The icon is the extension's own.
 - Wherever the name appears, say it isn't affiliated: the manifest description, the store text, the site footer, setup, Settings → About and the beta INSTALL.md.
@@ -83,7 +83,7 @@ Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample 
 
 ## Still needed from you
 
-- [ ] Name (K11). Set it in `manifest.json` (`name`, `action.default_title`) and in `APP_NAME` in `src/lib/env.js`.
+- [x] Name (K11): Neko.
 - [ ] Privacy policy and terms pages. Put their addresses in `PRIVACY_URL` and `TERMS_URL`.
 - [ ] Support email, in `SUPPORT_EMAIL`.
 - [ ] 2-step verification on the publishing Google account.

@@ -1,4 +1,4 @@
-# Canvas Dashboard (working name)
+# Neko
 
 A clean, private dashboard that works with Canvas. It's a Chrome extension that replaces the new-tab page with one calm view of everything due, your grades and GPA, a real calendar and your syllabus dates. It reads Canvas with the login you already have and keeps everything on your computer: no account, no server, no analytics.
 
