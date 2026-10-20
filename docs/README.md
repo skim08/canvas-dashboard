@@ -13,7 +13,7 @@ Then remove the "Draft for review" boxes once you've reviewed both documents. Th
 
 ## Hosting on GitHub Pages
 
-In the repository, go to Settings → Pages, choose **Deploy from a branch**, branch `main`, folder `/site`, or copy this folder into a separate repository.
+In the repository on GitHub, go to Settings → Pages, choose **Deploy from a branch**, branch `main`, folder **`/docs`**, and save. After a minute the site is at `https://<your-username>.github.io/<repository-name>/`.
 
 Then put the site address in `src/lib/env.js` as `SITE_URL`. The extension's About screen links to `privacy.html` and `terms.html` there.
 

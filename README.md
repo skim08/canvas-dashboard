@@ -4,11 +4,11 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
 
 *Not affiliated with Instructure (the makers of Canvas) or any school.*
 
-![Home: what's due, grades at a glance, exams and Mochi](site/img/home.jpg)
+![Home: what's due, grades at a glance, exams and Mochi](docs/img/home.jpg)
 
 | Calendar | Grades |
 |---|---|
-| ![Week view with class times and topics](site/img/calendar.jpg) | ![Grades with projected GPA](site/img/grades.jpg) |
+| ![Week view with class times and topics](docs/img/calendar.jpg) | ![Grades with projected GPA](docs/img/grades.jpg) |
 
 ## What it does
 
@@ -69,10 +69,10 @@ It uses sample data. Add `?scenario=setup`, `otherschool`, `expired`, `offline` 
 | `src/lib/` | Canvas client, sync, grade engine, syllabus import, models (no DOM) |
 | `src/ui/` | Screens and components |
 | `src/tests/` | Browser tests and sample data |
-| `site/` | Landing site for GitHub Pages (privacy policy and terms are drafts) |
+| `docs/` | Landing site for GitHub Pages (privacy policy and terms are drafts) |
 | `store/` | Chrome Web Store listing notes |
 | `tools/` | Checks, build and dev server |
 
 ## Privacy
 
-Everything stays in Chrome on your computer. The extension never sees your password, has no server and sends nothing to the developer or anyone else. See [`site/privacy.html`](site/privacy.html) (draft).
+Everything stays in Chrome on your computer. The extension never sees your password, has no server and sends nothing to the developer or anyone else. See [`docs/privacy.html`](docs/privacy.html) (draft).

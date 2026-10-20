@@ -8,7 +8,7 @@ What to paste into the Chrome Web Store developer dashboard. Fill in the name (K
 2. Run `python3 tools/test_builds.py` (checks the owner, public and beta builds).
 3. Run `python3 tools/build_zip.py`, which creates `dist/<name>-<version>.zip`: the public, read-only build.
 
-The zip leaves out the tests, tools, `owner-data/` (your personal syllabi and classes), the site and these notes. It includes the made-up sample student for demo mode (K16). Upload that zip.
+The zip leaves out the tests, tools, `owner-data/` (your personal syllabi and classes), the landing site (`docs/`) and these notes. It includes the made-up sample student for demo mode (K16). Upload that zip.
 
 ## Single purpose
 

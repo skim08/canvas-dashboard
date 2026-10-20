@@ -20,7 +20,7 @@ if "new URL(url).origin !== CANVAS_ORIGIN" not in canvas_src: problems.append("c
 if m["manifest_version"] != 3: problems.append("not Manifest V3")
 # K22: describe it as working with Canvas, and say it isn't affiliated, wherever the name appears.
 if "works with Canvas" not in m["description"] or "Not affiliated with Instructure" not in m["description"]: problems.append("manifest description must say \"works with Canvas\" and \"Not affiliated with Instructure\"")
-for page in ["site/index.html", "site/privacy.html", "site/terms.html", "site/support.html"]:
+for page in ["docs/index.html", "docs/privacy.html", "docs/terms.html", "docs/support.html"]:
     if os.path.exists(page) and "affiliated" not in open(page, encoding="utf-8").read(): problems.append(f"{page}: missing the not-affiliated note")
 
 ALLOWED_HOSTS = {"canvas.uw.edu", "canvas.example.edu", "www.w3.org", "www.youtube.com", "example.com"}  # canvas.example.edu: the demo's pretend school (K16); ".example" never resolves  # w3 = SVG namespace; youtube/example.com only in test data (example.com stands in for a non-Canvas upload server, F13)

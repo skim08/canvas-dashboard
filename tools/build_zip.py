@@ -20,7 +20,7 @@ args = sys.argv[1:]
 BETA = "--beta" in args
 OUT = args[args.index("--out") + 1] if "--out" in args else "dist"
 
-EXCLUDE_DIRS = {"src/tests", "tools", "owner-data", "store", "dist", "site", ".claude", ".git"}
+EXCLUDE_DIRS = {"src/tests", "tools", "owner-data", "store", "dist", "docs", ".claude", ".git"}
 EXCLUDE_FILES = {"SPEC.md", "CLAUDE.md", "GPA-CHECKLIST.md", "README.md", "CHANGELOG.md", "manifest.json", ".gitignore"}
 # Only loaded for the owner (test mode extras, the one-time syllabus move); fine to be missing.
 OPTIONAL_DYNAMIC = {"owner-data/syllabi.js", "owner-data/fixtures.js", "src/tests/sample/classes.js"}

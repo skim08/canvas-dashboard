@@ -32,7 +32,7 @@ export const DEMO_ORIGIN = 'https://canvas.example.edu';
 export const APP_NAME = 'Canvas Dashboard';
 
 // K12 + K13 + K17: set these before publishing. SITE_URL is where the landing site in
-// site/ is hosted (GitHub Pages); the privacy policy and terms are pages there. Until
+// docs/ is hosted (GitHub Pages); the privacy policy and terms are pages there. Until
 // they're set, About says they're coming.
 export const SITE_URL = null;
 export const PRIVACY_URL = SITE_URL ? `${SITE_URL}/privacy.html` : null;

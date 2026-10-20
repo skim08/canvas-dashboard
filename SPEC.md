@@ -1192,8 +1192,8 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - `store/LISTING.md` has reviewer instructions for seeing every feature in demo mode.
 
 #### K17 · Landing site
-- **Status:** [~] partial — `site/` has a home page (pitch, 3 demo screenshots, Join the beta, features, FAQ), a privacy policy and terms (both marked “Draft for review”, not legal advice: data stays in the browser, no analytics, no server, FERPA, not affiliated), a support page, and `site/README.md`. It uses one accent color, the system font and the spacing scale, light and dark, and has no horizontal scroll at phone width. `SITE_URL` in `src/lib/env.js` feeds `PRIVACY_URL` and `TERMS_URL`. **Waiting for:** the name, the form link, the support email, your review of the drafts, and hosting · **Phase:** 7
-- **What:** A static site in `site/` for free GitHub Pages hosting.
+- **Status:** [~] partial — `docs/` (renamed from `site/` so GitHub Pages can publish it) has a home page (pitch, 3 demo screenshots, Join the beta, features, FAQ), a privacy policy and terms (both marked “Draft for review”, not legal advice: data stays in the browser, no analytics, no server, FERPA, not affiliated), a support page, and `docs/README.md`. It uses one accent color, the system font and the spacing scale, light and dark, and has no horizontal scroll at phone width. `SITE_URL` in `src/lib/env.js` feeds `PRIVACY_URL` and `TERMS_URL`. **Waiting for:** the name, the form link, the support email, your review of the drafts, and hosting · **Phase:** 7
+- **What:** A static site in `docs/` for free GitHub Pages hosting.
 - **Done when:**
   - It has the name and a one-line pitch, 3 screenshots from demo mode, and a "Join the beta" button (Google Form link supplied by the owner).
   - A short FAQ answers: is it safe, is it allowed, is it affiliated with Canvas, and what data it keeps.

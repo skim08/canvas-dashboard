@@ -31,7 +31,7 @@ for beta in (False, True):
         check(("beta: true" in build) == beta, f"{label}: beta flag wrong")
         stub = z.read("src/lib/canvasWrite.js").decode()
         check("fetch" not in stub and "cookies" not in stub, f"{label}: canvasWrite.js can still write")
-        check(not any(n.startswith(("owner-data/", "src/tests/", "tools/", "site/")) for n in names), f"{label}: ships owner-data, tests, tools or site")
+        check(not any(n.startswith(("owner-data/", "src/tests/", "tools/", "docs/")) for n in names), f"{label}: ships owner-data, tests, tools or docs")
         check("src/lib/fixtures.js" in names, f"{label}: demo data missing (K16)")
         everything = "".join(z.read(n).decode("utf-8", "ignore") for n in names if n.endswith(".js"))
         private = [w.strip() for w in open("owner-data/private-words.txt", encoding="utf-8")] if os.path.exists("owner-data/private-words.txt") else []
