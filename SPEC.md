@@ -1221,7 +1221,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **Done when:** The version is bumped, `CHANGELOG.md` is started, and after an update Settings shows a one-time "What's new" note from the changelog.
 
 #### K21 · Git repository
-- **Status:** [~] partial — `git init` done (branch main) with a `.gitignore` for `owner-data/`, `dist/`, zips, `GPA-CHECKLIST.md` and system files. Nothing is committed or pushed. **Waiting for:** your OK on the file list (119 files). `SPEC.md` and `src/tests/tests.js` mention your real classes and instructors · **Phase:** 7
+- **Status:** [x] done — repository on branch `main` with a `.gitignore` for `owner-data/`, `dist/`, zips, `GPA-CHECKLIST.md` and system files. The repo copy is generic (your choice, 2026-10-20): tests use a renamed copy of your classes in `src/tests/sample/` (made-up codes, people, rooms and Zoom IDs), the spec says “your accounting class” instead of course codes, and the real words to keep out live in `owner-data/private-words.txt`. First commit made after you approved the list (121 files, scanned for personal details). Nothing pushed · **Phase:** 7
 - **What:** Version history for the project, ready for GitHub.
 - **Done when:** A git repository with a `.gitignore` that leaves out `owner-data/`, `dist/` and anything personal. The owner sees the file list before the first commit. Nothing is pushed.
 
@@ -1388,7 +1388,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K18 | Feedback prompt | 7 | [~] |
 | K19 | Beta build | 7 | [x] |
 | K20 | What's new | 7 | [x] |
-| K21 | Git repository | 7 | [~] |
+| K21 | Git repository | 7 | [x] |
 | K22 | "Works with Canvas" wording | 7 | [~] |
 
-**Total: 144 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Done: 114 · Partial: 29 (16 waiting on your Chrome check; 13 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
+**Total: 144 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Done: 115 · Partial: 28 (16 waiting on your Chrome check; 12 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
