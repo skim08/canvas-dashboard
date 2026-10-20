@@ -1,0 +1,17 @@
+# K21: never in git (and never published)
+# Your own syllabi and classes (copied into your saved data on first run)
+owner-data/
+# Built zips: rebuild with tools/build_zip.py
+dist/
+*.zip
+# Your personal grade checks
+GPA-CHECKLIST.md
+.claude/
+
+# System and editor files
+.DS_Store
+._*
+*.swp
+.vscode/
+.idea/
+__pycache__/

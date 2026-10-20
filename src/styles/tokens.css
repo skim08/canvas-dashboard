@@ -1,0 +1,240 @@
+/* Design tokens. Every color, size and spacing value in the app comes from here (B4). */
+
+:root {
+  /* Spacing scale: 4, 8, 12, 16, 24, 32, 48 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  /* Type scale: 12, 14, 16, 20, 28. Weights: 400, 600. */
+  --t-2xs: 11px; /* calendar blocks only, so more fits at a glance (2026-10-07) */
+  --t-xs: 12px;
+  --t-sm: 14px;
+  --t-md: 16px;
+  --t-lg: 20px;
+  --t-xl: 28px;
+  --w-regular: 400;
+  --w-semibold: 600;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 10px;
+  --content-max: 1100px;
+  --reading-max: 760px;
+  --drawer-width: 480px;
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* J1: soft pink (default). Classic is below, under [data-palette="classic"]. */
+  --bg: #fdf5f7;
+  --surface: #ffffff;
+  --surface-2: #f9ebf0;
+  --border: #f0dde4;
+  --text: #2d2026;
+  --text-muted: #66525b;
+  --text-faint: #7a646d;
+  --accent: #b03867;
+  --accent-soft: #fbe4ed;
+  --on-accent: #ffffff;
+  --red: #bb3a22;
+  --red-soft: #fbe8e4;
+  --amber: #8f5800;
+  --amber-soft: #fbefdc;
+  --green: #23744a;
+  --green-soft: #e3f2e8;
+  --lime: #566500; /* yellow-green: due in 4–6 days */
+  --lime-soft: #eff5d2;
+  --overlay: rgba(45, 32, 38, 0.26);
+  --shadow: 0 8px 32px rgba(120, 50, 80, 0.12);
+  --focus: 0 0 0 3px rgba(176, 56, 103, 0.3);
+  /* Class colors, softened to sit with the pink. */
+  --c1: #e0679a;
+  --c2: #8b7fd6;
+  --c3: #3fa58b;
+  --c4: #e2944a;
+  --c5: #5b93d6;
+  --c6: #b968b4;
+  --c7: #6fa64f;
+  --c8: #d9745f;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1418;
+    --surface: #261b20;
+    --surface-2: #30232a;
+    --border: #45313a;
+    --text: #f6e9ef;
+    --text-muted: #cdb4bf;
+    --text-faint: #ad939e;
+    --accent: #f490b6;
+    --accent-soft: #4a2234;
+    --on-accent: #2a1119;
+    --red: #ff8c7c;
+    --red-soft: #46211c;
+    --amber: #f1c46e;
+    --amber-soft: #3f3019;
+    --green: #8fd6a9;
+    --green-soft: #1c3626;
+    --lime: #c8db68; /* yellow-green: due in 4–6 days */
+    --lime-soft: #2e3316;
+    --overlay: rgba(0, 0, 0, 0.5);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --focus: 0 0 0 3px rgba(244, 144, 182, 0.4);
+    --c1: #f08bb5;
+    --c2: #a99cf0;
+    --c3: #5cc4a8;
+    --c4: #f0ad6a;
+    --c5: #7fb0ee;
+    --c6: #d48ad0;
+    --c7: #8fc46f;
+    --c8: #ee917d;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1d1418;
+  --surface: #261b20;
+  --surface-2: #30232a;
+  --border: #45313a;
+  --text: #f6e9ef;
+  --text-muted: #cdb4bf;
+  --text-faint: #ad939e;
+  --accent: #f490b6;
+  --accent-soft: #4a2234;
+  --on-accent: #2a1119;
+  --red: #ff8c7c;
+  --red-soft: #46211c;
+  --amber: #f1c46e;
+  --amber-soft: #3f3019;
+  --green: #8fd6a9;
+  --green-soft: #1c3626;
+  --lime: #c8db68; /* yellow-green: due in 4–6 days */
+  --lime-soft: #2e3316;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --focus: 0 0 0 3px rgba(244, 144, 182, 0.4);
+  --c1: #f08bb5;
+  --c2: #a99cf0;
+  --c3: #5cc4a8;
+  --c4: #f0ad6a;
+  --c5: #7fb0ee;
+  --c6: #d48ad0;
+  --c7: #8fc46f;
+  --c8: #ee917d;
+  color-scheme: dark;
+}
+
+/* Classic (the original look), chosen in Settings → Appearance. */
+:root[data-palette="classic"] {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f1f1ee;
+  --border: #e5e4e0;
+  --text: #1c1b19;
+  --text-muted: #55534e;
+  --text-faint: #6e6b65;
+  --accent: #4255c9;
+  --accent-soft: #e9ecfb;
+  --on-accent: #ffffff;
+  --red: #c42b2b;
+  --red-soft: #fbeaea;
+  --amber: #9a5b00;
+  --amber-soft: #fbf1df;
+  --green: #22774a;
+  --green-soft: #e5f3ea;
+  --lime: #566500; /* yellow-green: due in 4–6 days */
+  --lime-soft: #eff5d2;
+  --overlay: rgba(20, 20, 18, 0.28);
+  --shadow: 0 8px 32px rgba(20, 20, 18, 0.12);
+  --focus: 0 0 0 3px rgba(66, 85, 201, 0.35);
+  /* Course / chart series colors, validated with the dataviz palette checker (light surface). */
+  --c1: #2a78d6;
+  --c2: #eb6834;
+  --c3: #1baf7a;
+  --c4: #eda100;
+  --c5: #e87ba4;
+  --c6: #008300;
+  --c7: #4a3aa7;
+  --c8: #e34948;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="classic"]:not([data-theme="light"]) {
+    --bg: #111113;
+    --surface: #18181b;
+    --surface-2: #202024;
+    --border: #2b2b30;
+    --text: #ececee;
+    --text-muted: #a3a3ab;
+    --text-faint: #8e8e97;
+    --accent: #95a3ff;
+    --accent-soft: #23264a;
+    --on-accent: #111113;
+    --red: #ff7b7b;
+    --red-soft: #3a1d1f;
+    --amber: #f2c25b;
+    --amber-soft: #352a14;
+    --green: #6fd39a;
+    --green-soft: #17301f;
+    --lime: #c8db68; /* yellow-green: due in 4–6 days */
+    --lime-soft: #2e3316;
+    --overlay: rgba(0, 0, 0, 0.5);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --focus: 0 0 0 3px rgba(149, 163, 255, 0.4);
+    --c1: #3987e5;
+    --c2: #d95926;
+    --c3: #199e70;
+    --c4: #c98500;
+    --c5: #d55181;
+    --c6: #008300;
+    --c7: #9085e9;
+    --c8: #e66767;
+    color-scheme: dark;
+  }
+}
+
+:root[data-palette="classic"][data-theme="dark"] {
+  --bg: #111113;
+  --surface: #18181b;
+  --surface-2: #202024;
+  --border: #2b2b30;
+  --text: #ececee;
+  --text-muted: #a3a3ab;
+  --text-faint: #8e8e97;
+  --accent: #95a3ff;
+  --accent-soft: #23264a;
+  --on-accent: #111113;
+  --red: #ff7b7b;
+  --red-soft: #3a1d1f;
+  --amber: #f2c25b;
+  --amber-soft: #352a14;
+  --green: #6fd39a;
+  --green-soft: #17301f;
+  --lime: #c8db68; /* yellow-green: due in 4–6 days */
+  --lime-soft: #2e3316;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --focus: 0 0 0 3px rgba(149, 163, 255, 0.4);
+  --c1: #3987e5;
+  --c2: #d95926;
+  --c3: #199e70;
+  --c4: #c98500;
+  --c5: #d55181;
+  --c6: #008300;
+  --c7: #9085e9;
+  --c8: #e66767;
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+  }
+}

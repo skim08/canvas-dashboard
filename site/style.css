@@ -1,0 +1,56 @@
+/* K17: the landing site. Same design rules as the extension: one accent color, the
+   system font, spacing 4 / 8 / 12 / 16 / 24 / 32 / 48 px, light and dark. */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --radius: 10px;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+  --bg: #fdf5f7; --surface: #ffffff; --border: #f0dde4;
+  --text: #2d2026; --text-muted: #66525b;
+  --accent: #b03867; --accent-soft: #fbe4ed; --on-accent: #ffffff;
+  --amber: #8a5a00; --amber-soft: #fdf1d8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d1418; --surface: #261b20; --border: #45313a;
+    --text: #f6e9ef; --text-muted: #cdb4bf;
+    --accent: #f490b6; --accent-soft: #4a2234; --on-accent: #2a1119;
+    --amber: #f2c48d; --amber-soft: #3a2a12;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 var(--font); }
+a { color: var(--accent); }
+.wrap { width: min(960px, 100%); margin: 0 auto; padding: 0 var(--s4); }
+header.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4) 0; }
+header.top .brand { font-weight: 600; color: var(--text); text-decoration: none; }
+header.top nav { display: flex; gap: var(--s4); font-size: 14px; }
+header.top nav a { color: var(--text-muted); text-decoration: none; }
+.hero { padding: var(--s7) 0 var(--s6); text-align: center; }
+.hero h1 { margin: 0 0 var(--s3); font-size: clamp(32px, 6vw, 48px); line-height: 1.1; letter-spacing: -0.02em; }
+.hero p { margin: 0 auto var(--s5); max-width: 560px; color: var(--text-muted); font-size: 18px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 var(--s5); border-radius: var(--radius); background: var(--accent); color: var(--on-accent); font-weight: 600; text-decoration: none; }
+.btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s3); }
+.note { margin-top: var(--s3); color: var(--text-muted); font-size: 14px; }
+.shots { display: grid; gap: var(--s5); padding: var(--s6) 0; }
+.shots figure { margin: 0; }
+.shots img { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(45, 32, 38, 0.08); }
+.shots figcaption { margin-top: var(--s2); color: var(--text-muted); font-size: 14px; text-align: center; }
+@media (min-width: 800px) { .shots { grid-template-columns: 1fr 1fr; } .shots figure:first-child { grid-column: 1 / -1; } }
+section { padding: var(--s6) 0; border-top: 1px solid var(--border); }
+section h2 { margin: 0 0 var(--s4); font-size: 24px; }
+.features { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); padding: 0; margin: 0; list-style: none; }
+.features li { padding: var(--s4); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.features strong { display: block; margin-bottom: var(--s1); }
+.faq details { padding: var(--s3) 0; border-bottom: 1px solid var(--border); }
+.faq summary { cursor: pointer; font-weight: 600; }
+.faq details p { margin: var(--s2) 0 0; color: var(--text-muted); }
+.doc { padding-top: var(--s6); padding-bottom: var(--s6); max-width: 752px; }
+.doc h1 { margin: 0 0 var(--s2); font-size: 32px; }
+.doc h2 { margin: var(--s6) 0 var(--s2); font-size: 20px; }
+.doc p, .doc li { color: var(--text); }
+.draft { margin: var(--s4) 0; padding: var(--s3) var(--s4); border: 1px solid var(--amber); border-radius: var(--radius); background: var(--amber-soft); color: var(--text); font-size: 14px; }
+footer { padding: var(--s6) 0 var(--s7); color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--border); }
+footer nav { display: flex; flex-wrap: wrap; gap: var(--s4); margin-bottom: var(--s2); }
+footer a { color: var(--text-muted); }

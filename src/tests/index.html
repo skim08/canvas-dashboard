@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dashboard tests</title>
+    <link rel="stylesheet" href="../styles/tokens.css" />
+    <style>
+      body { font-family: var(--font); background: var(--bg); color: var(--text); max-width: 760px; margin: 32px auto; padding: 0 16px; font-size: 14px; }
+      h1 { font-size: 20px; }
+      h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin: 24px 0 8px; }
+      .pass { color: var(--green); }
+      .fail { color: var(--red); font-weight: 600; }
+      #out div { padding: 2px 0; }
+    </style>
+  </head>
+  <body>
+    <h1>Canvas Dashboard · tests</h1>
+    <p id="summary">Running…</p>
+    <div id="out"></div>
+    <script type="module" src="tests.js"></script>
+  </body>
+</html>
