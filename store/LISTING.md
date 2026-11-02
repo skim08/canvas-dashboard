@@ -85,6 +85,6 @@ Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample 
 
 - [x] Name (K11): Neko.
 - [ ] Privacy policy and terms pages. Put their addresses in `PRIVACY_URL` and `TERMS_URL`.
-- [ ] Support email, in `SUPPORT_EMAIL`.
+- [x] Support email, in `SUPPORT_EMAIL`: neko.dashboard@gmail.com.
 - [ ] 2-step verification on the publishing Google account.
 - [ ] $5 developer fee and the trader question.

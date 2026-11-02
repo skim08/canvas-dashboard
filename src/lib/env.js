@@ -37,7 +37,7 @@ export const APP_NAME = 'Neko';
 export const SITE_URL = 'https://skim08.github.io/canvas-dashboard';
 export const PRIVACY_URL = SITE_URL ? `${SITE_URL}/privacy.html` : null;
 export const TERMS_URL = SITE_URL ? `${SITE_URL}/terms.html` : null;
-export const SUPPORT_EMAIL = null;
+export const SUPPORT_EMAIL = 'neko.dashboard@gmail.com';
 export const FEEDBACK_URL = null; // K18: the beta / feedback Google Form
 export const STORE_URL = null; // K18: the Chrome Web Store listing, once it exists
 
