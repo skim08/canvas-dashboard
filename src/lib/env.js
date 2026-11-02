@@ -34,7 +34,7 @@ export const APP_NAME = 'Neko';
 // K12 + K13 + K17: set these before publishing. SITE_URL is where the landing site in
 // docs/ is hosted (GitHub Pages); the privacy policy and terms are pages there. Until
 // they're set, About says they're coming.
-export const SITE_URL = null;
+export const SITE_URL = 'https://skim08.github.io/canvas-dashboard';
 export const PRIVACY_URL = SITE_URL ? `${SITE_URL}/privacy.html` : null;
 export const TERMS_URL = SITE_URL ? `${SITE_URL}/terms.html` : null;
 export const SUPPORT_EMAIL = null;
