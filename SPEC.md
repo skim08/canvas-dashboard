@@ -119,7 +119,7 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 | 5 | Extras | Section I, F13, F14, plus D8 and D9 (added 2026-10-06) |
 | 6 | Look and feel | Section J (added 2026-10-06 at your request): soft pink theme, Neko, Ask Neko, celebrations; plus C16 exam countdown (2026-10-07) |
 | 7 | Any student (approved by you 2026-10-20; built 2026-10-20, waiting on your checks and choices) | Section K (added 2026-10-20 at your request): works at any school's Canvas, syllabus import, setup, and what's needed to publish free on the Chrome Web Store |
-| 8 | After launch | Requests from the owner and friends after publishing (2026-11-04/05): G12 custom events, G13 class times you type in, J8 themes tab with animal mascots, K23 syllabus setup comes first. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
+| 8 | After launch | Requests from the owner and friends after publishing (2026-11-04/05): G12 custom events, G13 class times you type in, J8 themes tab with animal mascots, K23 syllabus setup comes first, K24 questionnaire, E34/E35 class totals and work not posted yet, K26 typing in a class's info when there's no syllabus. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
 | 9 | Groups and messages | Requested by the owner 2026-11-05: F16 Canvas group pages, F17 Inbox tab, F18 write and reply to messages, K25 messaging in the public build (the owner chose this). Also on the `after-launch` branch |
 
 A feature always lands in the same phase as, or a later phase than, any feature it depends on.
@@ -734,6 +734,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - The top and bottom subjects are shown. Subjects with only one course are labeled as such.
 
 #### E29 · Custom grade total
+- **Note (2026-11-05):** E34 lets you type the total in for any class, and E35 counts points that aren't posted yet as work to come.
 - **Status:** [x] done · **Phase:** 2
 - **What:** Classes graded out of a fixed number of points (the owner's real estate class: out of 600, with 700 available). *(Added 2026-10-01 at the owner's request.)*
 - **Done when:**
@@ -768,6 +769,20 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Built-in setups written from the owner's syllabi (accounting, statistics and real estate, Autumn 2026) are matched by course code and applied automatically, with assignments sorted into syllabus categories by name. Anything that can't be matched is listed, never silently dropped.
   - Other classes use, in order: your own setup → the instructor's Canvas scale → a scale found in the Canvas syllabus → the common UW scale. Credits default to 5. Every guess is labeled "Estimated".
   - You can still override anything, or turn the automatic setup off per class.
+
+#### E34 · Class total you type in
+- **Status:** [x] done — a class's grade window → Setup → **Class total: graded out of ___ points**. Filling it in makes the class work like E29 (points earned ÷ the total, on-pace score, what you need on the rest); leaving it empty changes nothing. Shown for classes without a built-in setup, or whose setup is already out of a total. It's saved with your other grading setups, so it's in backup. Tested in the browser and with automated tests · **Phase:** 8
+- **What:** For classes without a syllabus Neko knows, type in the class total from your syllabus (like “1000 points for the quarter”). *(Added 2026-11-05 at the owner's request, with K26.)*
+- **Done when:**
+  - You can type a class total for any class, and clear it again.
+  - The class's grade then uses that total, the same way as E29.
+
+#### E35 · Work not posted yet isn't counted as zeros
+- **Status:** [~] partial — in a class graded out of a total (E29, E34), points Canvas hasn't posted yet (the total minus everything posted) count as one piece of open work: at your current pace for the on-pace score and “At risk”, full marks for best case, zero for worst case, and included in “what you need on what's left”. The grade window says how many points aren't posted yet, and they're left out of the biggest-impact list. Hand-calculated automated tests (80% pace, 70 of 100 points unposted: on pace 80%, not 24%; best 96%; worst 16%; need 92.5% for 90%). **Check in Chrome:** your class that posts assignments the week they're due should no longer say At risk · **Phase:** 8
+- **What:** Some classes only post assignments the week they're due, so the Grades tab said “At risk” because there seemed to be nothing left to earn. *(Added 2026-11-05 at the owner's request.)*
+- **Done when:**
+  - Points the class total still has to post count as work to come, not as zeros.
+  - Once everything is posted, nothing changes.
 
 ### F. Course content
 
@@ -1341,6 +1356,13 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - The public manifest's extra permission is explained in the listing and privacy policy.
   - Tests cover both builds.
 
+#### K26 · No syllabus? Type it in
+- **Status:** [x] done — a class's syllabus window (from Home's “Finish setting up”, the Calendar's reminder, or the class page) now has a **No syllabus for this class?** section with three rows: **Exams, quizzes, deadlines and days off** (Type them in), **Class times** (G13), and **Grading** (opens the class's grading setup: scale, weights, credits and the class total, E34). Before, typing dates in was a small link under the import buttons. Home's card mentions it too. Tested in the browser in test mode · **Phase:** 8
+- **What:** Classes without a syllabus get the same calendar and grade information, typed in by you. *(Added 2026-11-05 at the owner's request: “the information that is needed from the syllabus can just be manually input by the user”.)*
+- **Done when:**
+  - Every class's syllabus window offers a clear way to type in dates, class times and grading without a syllabus file.
+  - Everything typed in is saved and in backup.
+
 ---
 
 ## Coverage table
@@ -1427,6 +1449,8 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | E31 | Statistics-class grading formula | 2 | [x] |
 | E32 | Use Canvas's grade when it's reliable | 2 | [x] |
 | E33 | Automatic grading setup | 2 | [x] |
+| E34 | Class total you type in | 8 | [x] |
+| E35 | Work not posted yet isn't counted as zeros | 8 | [~] |
 | F1 | Course home page | 3 | [x] |
 | F2 | Unified announcements | 3 | [x] |
 | F3 | Modules | 3 | [x] |
@@ -1500,5 +1524,6 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K23 | Syllabus setup comes first | 8 | [x] |
 | K24 | Make Neko yours | 8 | [x] |
 | K25 | Messages in the public build | 9 | [~] |
+| K26 | No syllabus? Type it in | 8 | [x] |
 
-**Total: 153 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13, K24 added 2026-11-05; F16–F18, K25 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 5 · Phase 9: 4 · Done: 120 · Partial: 30 (20 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0
+**Total: 156 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13, K24 added 2026-11-05; F16–F18, K25, E34, E35, K26 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 8 · Phase 9: 4 · Done: 122 · Partial: 31 (21 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0

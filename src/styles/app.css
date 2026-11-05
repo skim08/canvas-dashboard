@@ -5876,3 +5876,37 @@ button.chat-item {
   color: var(--text-muted);
   margin: 0;
 }
+
+/* ---------- K26: no syllabus, type it in ---------- */
+
+.syl-manual-rows {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.syl-manual-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--border);
+}
+
+.syl-manual-row:last-child {
+  border-bottom: 0;
+}
+
+.syl-manual-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  min-width: 0;
+}
+
+.syl-manual-row .btn {
+  flex: none;
+}

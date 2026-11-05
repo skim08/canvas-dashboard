@@ -1157,6 +1157,36 @@ test('E29', 'RE 150: graded out of 600 → need 77.8% on the rest for your 3.9',
   eq(c.gp, 4);
   eq(c.paceBased, true);
 });
+// E34 + E35: a class out of 100 points that posts work late. Graded 16/20 (80% pace),
+// 10 points posted and open, so 70 points aren't posted yet.
+const lateClass = (cfg = { outOf: 100 }) => {
+  const course = { id: '7', groups: [{ id: 'g', name: 'Work', weight: 0 }], weighted: false };
+  const items = [
+    { source: 'canvas', kind: 'assignment', courseId: '7', canvasId: 'a', groupId: 'g', points: 20, sub: { state: 'graded', score: 16 } },
+    { source: 'canvas', kind: 'assignment', courseId: '7', canvasId: 'b', groupId: 'g', points: 10, dueAt: pdt('2026-10-09T23:59'), expectsSubmission: true, sub: { state: 'unsubmitted' } },
+  ];
+  return G.buildCourse(course, items, NOW, cfg);
+};
+test('E35', 'points not posted yet count at your pace, not as zeros', () => {
+  const m = lateClass();
+  near(G.current(m).pct, 80); // (16 + 10·.8 + 70·.8) / 100; was 24% when the 70 counted as zeros
+  eq(m.unposted, 70);
+});
+test('E35', 'best, worst and what you need include the unposted points', () => {
+  const m = lateClass();
+  const r = G.range(m);
+  near(r.best, 96); // 16 + 10 + 70
+  near(r.worst, 16);
+  eq(G.required(m, 90).need, 92.5); // 16 + 80x = 90 → x = 92.5%
+});
+test('E35', 'nothing changes once everything is posted, and big-impact lists skip the placeholder', () => {
+  const m = lateClass({ outOf: 30 });
+  eq([m.unposted, m.items.some((e) => e.unposted)], [undefined, false]);
+  near(G.current(m).pct, 80); // (16 + 10·.8) / 30
+});
+test('E34', 'a class total you type in turns a points class into “out of” grading', () => {
+  eq([lateClass({}).kind, lateClass().kind, lateClass().outOf], ['standard', 'outOf', 100]);
+});
 test('E29', 'RE 150 scale is the syllabus table as written (94% = 4.0, 61% = 0.7)', async () => {
   const c = await profileCase('R E 150');
   eq([G.gradeFromPercent(c.scale, 94), G.gradeFromPercent(c.scale, 93.9), G.gradeFromPercent(c.scale, 61), G.gradeFromPercent(c.scale, 60.9)], [4, 3.9, 0.7, 0]);

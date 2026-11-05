@@ -158,13 +158,28 @@ export function buildCourse(course, items, now, cfg = {}, profile = null) {
   const useProfile = profile?.model && cfg.auto !== false;
   if (useProfile && profile.model.kind !== 'outOf') return buildFromProfile(course, items, now, cfg, profile);
   const built = buildStandard(course, items, now, cfg);
-  if (useProfile) {
-    built.kind = 'outOf'; // E29
-    built.outOf = profile.model.outOf;
+  // E29: graded out of a fixed total, from the syllabus or the total you typed in (E34).
+  const outOf = cfg.outOf > 0 ? cfg.outOf : useProfile ? profile.model.outOf : null;
+  if (outOf) {
+    built.kind = 'outOf';
+    built.outOf = outOf;
     built.weighted = false;
+    addUnposted(built);
   }
   built.fallbackRate = overallRate(built.items);
   return built;
+}
+
+// E35: points the class total promises that Canvas hasn't posted yet (some classes post
+// each assignment the week it's due) are work still to come, not zeros. They count as
+// one open item: at your pace in projections, full marks at best, nothing at worst.
+function addUnposted(built) {
+  const posted = built.items.filter((e) => !e.extraCredit && e.state !== 'excused').reduce((s, e) => s + (e.possible || 0), 0);
+  const left = Math.round((built.outOf - posted) * 100) / 100;
+  if (!(left > 0)) return;
+  built.groups.push({ id: '__unposted', name: 'Not posted yet', weight: 0, dropLowest: 0, dropHighest: 0, neverDrop: new Set() });
+  built.items.push({ id: '__unposted', groupId: '__unposted', possible: left, score: null, state: 'open', unposted: true, item: null });
+  built.unposted = left;
 }
 
 function overallRate(engineItems) {

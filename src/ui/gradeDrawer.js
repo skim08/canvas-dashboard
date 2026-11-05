@@ -159,7 +159,7 @@ function howGraded(c) {
   const lines = [];
   if (c.profile) lines.push(`Set up automatically from your ${c.profile.source}.`);
   if (c.pctSource === 'canvas') lines.push('Current grade is Canvas’s own number. Projections use the same rules Canvas does.');
-  else if (c.paceBased) lines.push(c.model.kind === 'outOf' ? `Graded out of ${c.model.outOf} points, so Canvas’s % (${c.canvasPct != null ? F.pct(c.canvasPct) : 'hidden'}) understates you. The score shown is where your current pace lands.` : 'Your exam weights depend on how much completion work you do, so the score shown is where your current pace lands.');
+  else if (c.paceBased) lines.push(c.model.kind === 'outOf' ? `Graded out of ${c.model.outOf} points, so Canvas’s % (${c.canvasPct != null ? F.pct(c.canvasPct) : 'hidden'}) understates you. The score shown is where your current pace lands.${c.model.unposted ? ` ${F.pts(c.model.unposted)} of those points aren’t posted on Canvas yet; they count at your pace, not as zeros.` : ''}` : 'Your exam weights depend on how much completion work you do, so the score shown is where your current pace lands.');
   else if (c.profile) lines.push(`Calculated from the syllabus rules${c.canvasPct == null ? ' (Canvas doesn’t show a total for this class)' : ''}.`);
   if (c.scaleNote) lines.push(c.scaleNote);
   return block(
@@ -200,6 +200,15 @@ function assignmentsTab(c, ctx) {
                 { class: 'assign-row' },
                 h('span', { class: 'assign-title is-static' }, g.name, h('span', { class: 'muted' }, ' · not on Canvas · assumed')),
                 h('span', { class: 'assign-score' }, `${F.pts(e.score)}%`)
+              );
+            }
+            // E35: points the class total still has to post.
+            if (e.unposted) {
+              return h(
+                'div',
+                { class: 'assign-row' },
+                h('span', { class: 'assign-title is-static' }, 'Assignments Canvas hasn’t posted yet', h('span', { class: 'muted' }, ' · counted at your current pace, not as zeros')),
+                h('span', { class: 'assign-score' }, `— / ${F.pts(e.possible)}`)
               );
             }
             const i = e.item;
@@ -337,6 +346,20 @@ function manualSetup(c, ctx) {
       h('div', { class: 'field-row' }, h('span', null, 'Graded as'), segmented([['numeric', 'Graded'], ['sn', 'S/NS'], ['crnc', 'CR/NC'], ['pnp', 'P/NP']], c.grading, (v) => setCourseCfg(id, { grading: v }), 'cfg-grading')),
       h('p', { class: 'caption' }, `${c.creditsAssumed ? `Assumed ${c.credits} credits (your usual credits per class, set in Settings → Grades). Change it if your transcript says otherwise. ` : ''}Pass/fail classes (S/NS, CR/NC, P/NP) never count toward GPA.`)
     ),
+    // E34: classes graded out of a fixed total (e.g. "1000 points for the quarter").
+    !c.profile || c.profile.model?.kind === 'outOf'
+      ? block(
+          'Class total',
+          h(
+            'label',
+            { class: 'field-row' },
+            h('span', null, 'Graded out of'),
+            h('input', { type: 'number', step: '1', min: '0', class: 'num-input', value: cfg.outOf != null ? String(cfg.outOf) : '', placeholder: c.profile?.model?.outOf ? String(c.profile.model.outOf) : 'Points', 'data-key': 'cfg-outof', onchange: (e) => setCourseCfg(id, { outOf: num(e.target.value) || null }) }),
+            h('span', { class: 'muted' }, 'points')
+          ),
+          h('p', { class: 'caption' }, 'Only if your syllabus says the class is out of a set number of points for the whole term (like 1000). Then assignments Canvas hasn’t posted yet count as work still to come, not zeros. Leave empty otherwise.')
+        )
+      : null,
     // E1
     block(
       'Grading scale',

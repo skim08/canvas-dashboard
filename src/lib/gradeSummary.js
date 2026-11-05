@@ -146,7 +146,7 @@ export function summarize({ cache, items, settings, grades, now }) {
   const impact = courses
     .flatMap((c) =>
       c.model.items
-        .filter((e) => e.state === 'open' && e.possible > 0 && !whatIf[e.id])
+        .filter((e) => e.state === 'open' && e.possible > 0 && !whatIf[e.id] && !e.unposted) // E35: not an assignment yet
         .map((e) => {
           const share = G.itemShare(c.model, e);
           return { c, e, share, impact: share * (totalCredits && c.credits ? c.credits / totalCredits : 0) };

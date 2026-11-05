@@ -4,7 +4,7 @@
 
 import { h } from './dom.js';
 import { state, saveSyllabus, removeSyllabus, updateUser } from './store.js';
-import { setUi, toast, openDrawer } from './actions.js';
+import { ui, setUi, toast, openDrawer } from './actions.js';
 import { button, iconButton, emptyState, dot } from './components.js';
 import { icon } from './icons.js';
 import { textFromFile } from '../lib/fileText.js';
@@ -143,11 +143,28 @@ function startScreen(course) {
             button('Find dates', () => s.paste.trim() && run(course, s.paste, 'pasted text'), { kind: 'primary', key: 'syl-paste-go' })
           )
         : null,
-      s.error ? h('p', { class: 'setup-error', role: 'alert' }, s.error) : null,
-      !mine ? h('button', { class: 'link-btn', 'data-key': 'syl-blank', onclick: () => startBlank(course, null) }, 'Or type class times and dates in yourself') : null
+      s.error ? h('p', { class: 'setup-error', role: 'alert' }, s.error) : null
     ),
-    // G13: class times you type in, for when the syllabus doesn't list them.
-    h(
+    // K26: no syllabus at all? Type in what it would have said.
+    !mine
+      ? h(
+          'section',
+          { class: 'd-block syl-manual' },
+          h('h3', null, builtIn ? 'Or type it in yourself' : 'No syllabus for this class?'),
+          h('p', { class: 'caption' }, 'Type in what a syllabus would tell Neko. Every part is optional, and you can change it later.'),
+          h(
+            'div',
+            { class: 'syl-manual-rows' },
+            manualRow('Exams, quizzes, deadlines and days off', 'So they show on your calendar.', button('Type them in', () => startBlank(course, null), { key: 'syl-blank', iconName: 'plus' })),
+            manualRow('Class times', 'Lectures, quiz sections and labs as weekly blocks.', button(typedTimes(course.id) ? 'Edit class times' : 'Add class times', () => openDrawer('classTimes', course.id), { key: 'syl-manual-times', iconName: 'clock' })),
+            manualRow('Grading', 'Grade scale, category weights, credits, or a class total (like 1000 points).', button('Set up grading', () => ((ui.gradeTab = 'setup'), openDrawer('grade', course.id)), { key: 'syl-manual-grading', iconName: 'gear' }))
+          )
+        )
+      : null,
+    // G13: class times you type in, for when the syllabus doesn't list them (K26 covers it without one).
+    !(mine || builtIn)
+      ? null
+      : h(
       'section',
       { class: 'd-block' },
       h('h3', null, 'Class times'),
@@ -164,6 +181,8 @@ function startScreen(course) {
       : null,
   ];
 }
+
+const manualRow = (title, sub, action) => h('div', { class: 'syl-manual-row' }, h('div', null, h('strong', null, title), h('span', { class: 'caption' }, sub)), action);
 
 // ---------- K6: review (and K7: edit by hand) ----------
 
@@ -335,7 +354,7 @@ export function syllabusSetupCard(ctx) {
       'div',
       { class: 'setup-todo-head' },
       h('strong', null, list.every((c) => needsWhat(c) === 'times') ? 'Finish setting up: add your class times' : 'Finish setting up: add your syllabi'),
-      h('span', null, 'Canvas doesn’t share when your classes meet. Add each syllabus (or type the class times) so lectures, sections, exams and deadlines show on your calendar. About a minute per class.')
+      h('span', null, 'Canvas doesn’t share when your classes meet. Add each syllabus so lectures, sections, exams and deadlines show on your calendar. No syllabus? Type the details in instead. About a minute per class.')
     ),
     h(
       'div',

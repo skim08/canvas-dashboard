@@ -8,6 +8,8 @@ Newest first. The app shows the newest entry once after an update (Settings → 
 - Message your instructors, TAs and classmates without opening Canvas: write a new message (press C) or reply right in the conversation. Messages go through Canvas.
 - Star, archive and mark messages unread; Canvas shows the same.
 - Canvas groups: your project teams and study groups now have their own pages (Courses → Your groups) with announcements, discussions, pages, files and members.
+- Classes that post assignments the week they’re due no longer show as At risk: points not posted yet count as work to come, not zeros.
+- No syllabus for a class? Its syllabus window now lets you type in exams, deadlines, class times and grading (including a class total, like 1000 points).
 
 ## 0.3.0 (2026-11-05)
 
