@@ -3,7 +3,7 @@ pink nose) on Classic blue. Flat shapes in three colors, so it stays clean at ev
 The 128 px icon has 16 px of clear space around 96 px of art, as the Chrome Web Store asks.
 Rendered with Chrome (headless), so Chrome must be installed.
 
-Usage:  /usr/bin/python3 tools/make_icons.py     writes src/icons/*.png, store/icon-512.png and docs/img/icon.png"""
+Usage:  /usr/bin/python3 tools/make_icons.py     writes src/icons/*.png, store/icon-512.png, docs/img/icon.png and docs/img/icon.svg"""
 import os, subprocess, sys, tempfile
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -42,3 +42,6 @@ if __name__ == "__main__":
         for out, size, pad, detail in SIZES:
             render(svg(size, pad, detail), size, out, tmp)
             print("wrote", out)
+    # The website uses a vector copy, so the logo is sharp at any size and on Retina screens.
+    open("docs/img/icon.svg", "w").write(svg(100, 0))
+    print("wrote docs/img/icon.svg")
