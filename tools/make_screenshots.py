@@ -87,15 +87,15 @@ SHOTS = [
 
 TILE = """<!doctype html><html><head><style>
 html,body{margin:0;width:440px;height:280px;overflow:hidden;font-family:-apple-system,"Helvetica Neue",Arial,sans-serif}
-.t{width:440px;height:280px;box-sizing:border-box;padding:34px 36px;background:linear-gradient(160deg,#4b67e6 0%,#2c44b8 100%);display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;color:#fff}
+.t{width:440px;height:280px;box-sizing:border-box;padding:34px 36px;background:#4255c9;display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;color:#fff}
 .row{display:flex;align-items:center;gap:16px}
 .name{font-size:46px;font-weight:700;letter-spacing:-.5px}
 .tag{font-size:19px;line-height:1.35;font-weight:500;max-width:330px;color:#e6ebff}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{font-size:13px;font-weight:600;color:#2c44b8;background:#fff;border-radius:999px;padding:5px 11px}
-.chip.pink{background:#ff8fb3;color:#3a1020}
+.chip{font-size:13px;font-weight:600;color:#4255c9;background:#fff;border-radius:999px;padding:5px 11px}
+.chip.pink{background:#f08cb0;color:#3a1020}
 </style></head><body><div class="t">
-<div class="row"><img src="/store/icon-512.png" width="74" height="74" style="border-radius:17px;box-shadow:0 0 0 2px rgba(255,255,255,.35)"><span class="name">Neko</span></div>
+<div class="row"><img src="/store/icon-512.png" width="74" height="74" style="border-radius:17px;box-shadow:0 0 0 2px rgba(255,255,255,.5)"><span class="name">Neko</span></div>
 <div class="tag">Your classes, deadlines and grades in one calm place.</div>
 <div class="chips"><span class="chip">Due dates</span><span class="chip">GPA</span><span class="chip">Calendar</span><span class="chip pink">Inbox</span></div>
 </div></body></html>

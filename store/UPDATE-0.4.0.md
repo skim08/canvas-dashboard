@@ -77,7 +77,7 @@ Neko works with Canvas. It isn't affiliated with, endorsed by or sponsored by In
 
 | Field | File |
 |---|---|
-| Store icon (128×128) | `src/icons/icon128.png` (the new icon: a white cat with a pink check for a smile, on blue) |
+| Store icon (128×128) | `src/icons/icon128.png` (the new icon: a minimal white cat on Classic blue) |
 | Screenshots (1280×800), in this order | `store/screenshots/0.4.0/1-home.png`, `2-calendar.png`, `3-grades.png`, `4-inbox.png`, `5-themes.png` |
 | Small promo tile (440×280) | `store/promo-tile-440x280.png` |
 

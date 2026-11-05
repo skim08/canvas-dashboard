@@ -1,4 +1,4 @@
-/* K17: the landing site. Same design rules as the extension: the icon's blue as the
+/* K17: the landing site. Same design rules as the extension: Classic blue (the icon's) as the
    accent (pink only as a small highlight), the system font, spacing 4 / 8 / 12 / 16 /
    24 / 32 / 48 px, light and dark. */
 :root {
@@ -7,7 +7,7 @@
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
   --bg: #f6f7fb; --surface: #ffffff; --border: #e1e5f2;
   --text: #1d2233; --text-muted: #555d75;
-  --accent: #3550c8; --accent-soft: #e7ebff; --on-accent: #ffffff; --pink: #e0457b;
+  --accent: #4255c9; --accent-soft: #e7ebff; --on-accent: #ffffff; --pink: #e0457b;
   --amber: #8a5a00; --amber-soft: #fdf1d8;
 }
 @media (prefers-color-scheme: dark) {
