@@ -401,7 +401,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Hidden and snoozed items still count in grade calculations.
 
 #### C12 · Search assignments
-- **Status:** [x] done · **Phase:** 1
+- **Status:** [–] removed at your request (2026-11-05): no search box in the top bar, no `/` shortcut and no switch in Settings. The ID is kept so numbering doesn’t change. · **Phase:** 1
 - **What:** Find any assignment instantly.
 - **Done when:**
   - Typing in search filters assignments from all courses by name as you type (under 100ms on 500 items).
@@ -856,7 +856,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Canvas groups you belong to are shown automatically when the course uses them.
 
 #### F12 · Search everything
-- **Status:** [x] done · **Phase:** 3
+- **Status:** [–] removed at your request (2026-11-05): no search box in the top bar, no `/` shortcut and no switch in Settings. The ID is kept so numbering doesn’t change. · **Phase:** 3
 - **What:** One search across assignments, announcements, pages and files.
 - **Done when:**
   - The search box (C12) now also searches announcements, pages and file names, with results grouped by type.
@@ -1329,7 +1329,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | C9 | Full assignment page | 1 | [x] |
 | C10 | Pin items | 1 | [x] |
 | C11 | Hide or snooze items | 1 | [x] |
-| C12 | Search assignments | 1 | [x] |
+| C12 | Search assignments | 1 | [–] removed |
 | C13 | Add to Home | 1 | [x] |
 | C14 | Event wording | 1 | [x] |
 | C15 | Office hours kept separate | 1 | [x] |
@@ -1387,7 +1387,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | F9 | Quick links | 3 | [x] |
 | F10 | Instructors, TAs and office hours | 3 | [x] |
 | F11 | Study groups | 3 | [x] |
-| F12 | Search everything | 3 | [x] |
+| F12 | Search everything | 3 | [–] removed |
 | F13 | Submit from the dashboard | 5 | [~] |
 | F14 | Reply to discussions | 5 | [~] |
 | F15 | Quizzes and exams link out | 1 | [x] |
@@ -1445,4 +1445,4 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K22 | "Works with Canvas" wording | 7 | [x] |
 | K23 | Syllabus setup comes first | 8 | [x] |
 
-**Total: 148 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 4 · Done: 121 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
+**Total: 148 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 4 · Done: 119 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0

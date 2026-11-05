@@ -13,6 +13,7 @@ export const CHANGES = [
       'No class times in your syllabus? Type them in (Lecture, Quiz section, Lab…) and they show as blocks every week.',
       'Fixed a background error that could appear on chrome://extensions after reloading.',
       'Long details in compact lists now shorten neatly instead of overlapping.',
+      'The search bar is gone from the top bar, for a cleaner look.',
     ],
   },
   {

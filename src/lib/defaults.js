@@ -65,7 +65,6 @@ export const FEATURES = [
   { id: 'gradeAlerts', label: 'New grade alerts', desc: 'A notification when a grade is posted.', group: 'notifications' },
   { id: 'riskAlerts', label: 'At-risk alerts', desc: 'A notification when a class drops below your target.', group: 'notifications' },
   { id: 'filters', label: 'Course filter and sort', desc: 'Filter chips and sort menu above lists.' },
-  { id: 'search', label: 'Search', desc: 'Search box in the top bar.' },
   { id: 'shortcuts', label: 'Keyboard shortcuts', desc: 'Press ? to see them.' },
 ];
 

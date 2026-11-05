@@ -4,7 +4,7 @@ import { h } from './dom.js';
 import { icon } from './icons.js';
 import { state, init, subscribe, requestSync, describeSync, exitDemo } from './store.js';
 import { ui, setUi, openDrawer, closeDrawer, toggleDone, togglePin, toast } from './actions.js';
-import { feat, itemMenu, dot, iconButton, dueText, button } from './components.js';
+import { feat, itemMenu, iconButton, button } from './components.js';
 import { renderDrawer } from './drawer.js';
 import { renderHome } from './pages/home.js';
 import { renderCourses } from './pages/courses.js';
@@ -21,12 +21,11 @@ import { renderCompleted } from './pages/completed.js';
 import { watchDay } from './celebrate.js';
 import { installTooltips } from './tooltip.js';
 import { balanceHome } from './pages/home.js';
-import { searchEverything } from '../lib/search.js';
 import { routeCanvasLink } from '../lib/contentNormalize.js';
 import { initReadState } from './content.js';
 import { initFocus, focusPill, startFocus, stopFocus, focusState } from './focus.js';
-import { allItems, attention, visibleCourses, courseColor, courseNick, searchItems, TYPE_LABEL } from '../lib/model.js';
-import { DEFAULT_TZ, formatTime, formatDate, userTz } from '../lib/time.js';
+import { allItems, attention, visibleCourses, courseColor, courseNick } from '../lib/model.js';
+import { DEFAULT_TZ, formatTime, userTz } from '../lib/time.js';
 import { renderSetup, needsSetup } from './pages/setup.js';
 import { STALE_MS } from '../lib/sync.js';
 import { summarize } from '../lib/gradeSummary.js';
@@ -131,7 +130,7 @@ function topBar(ctx, current) {
         'div',
         { class: 'topbar-right' },
         feat('focus') ? focusPill((id) => openDrawer('item', id)) : null,
-        feat('search') ? searchBox(ctx) : null,
+        // C12 + F12: the search box was removed at your request (2026-11-05).
         h(
           'span',
           { class: 'updated', title: state.cache?.fetchedAt ? `Last updated ${new Date(state.cache.fetchedAt).toLocaleString()}` : '' },
@@ -143,89 +142,6 @@ function topBar(ctx, current) {
         h('a', { href: '#/settings', class: ['icon-btn', current === 'settings' && 'is-on'], title: 'Settings', 'aria-label': 'Settings', 'data-key': 'nav:settings' }, icon('gear'))
       )
     )
-  );
-}
-
-// C12 + F12: one search across assignments, announcements, pages and files.
-function searchBox(ctx) {
-  const q = ui.search.query;
-  const index = state.cache?.index || {};
-  const visible = new Set([...ctx.courses, ...ctx.otherCourses].map((c) => c.id));
-  const groups = ui.search.open && q ? searchEverything({ items: ctx.allItems, announcements: state.cache?.announcements, pages: index.pages, files: index.files, nickOf: ctx.nickOf, visibleCourseIds: visible }, q) : [];
-  const flat = groups.flatMap((g) => g.results);
-  const active = Math.min(ui.search.active, Math.max(0, flat.length - 1));
-  const pick = (r) => {
-    setUi({ search: { query: '', open: false, active: 0 } });
-    document.activeElement?.blur();
-    if (r.type === 'assignment') openDrawer('item', r.id);
-    else if (r.type === 'announcement') openDrawer('announcement', r.id);
-    else if (r.type === 'page') openDrawer('page', r.id);
-    else if (r.type === 'file') {
-      ui.folder = { ...(ui.folder || {}), [r.courseId]: r.ref.folderId };
-      ui.fileHighlight = r.id;
-      location.hash = `#/course/${r.courseId}/files`;
-    }
-  };
-  const metaOf = (r) => {
-    const course = r.courseId ? [dot(ctx.colorOf(r.courseId)), ctx.nickOf(r.courseId)] : 'Personal';
-    if (r.type === 'assignment') return [course, ` · ${TYPE_LABEL[r.ref.type]} · ${r.ref.done ? 'Done' : dueText(r.ref, ctx.now, ctx.tz)}`];
-    if (r.type === 'announcement') return [course, r.ref.postedAt ? ` · ${formatDate(r.ref.postedAt, ctx.tz)}` : ''];
-    if (r.type === 'file') return [course, r.ref.folderId ? ' · File' : ''];
-    return [course, ' · Page'];
-  };
-  let n = -1;
-  return h(
-    'div',
-    { class: 'search' },
-    icon('search'),
-    h('input', {
-      id: 'search',
-      type: 'search',
-      placeholder: 'Search everything',
-      value: q,
-      autocomplete: 'off',
-      'aria-label': 'Search assignments, announcements, pages and files',
-      'data-key': 'search',
-      oninput: (e) => setUi({ search: { query: e.target.value, open: true, active: 0 } }),
-      onfocus: () => q && setUi({ search: { ...ui.search, open: true } }),
-      onblur: () => setTimeout(() => ui.search.open && setUi({ search: { ...ui.search, open: false } }), 150),
-      onkeydown: (e) => {
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          setUi({ search: { ...ui.search, active: Math.min(active + 1, flat.length - 1) } });
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          setUi({ search: { ...ui.search, active: Math.max(active - 1, 0) } });
-        } else if (e.key === 'Enter' && flat[active]) {
-          e.preventDefault();
-          pick(flat[active]);
-        } else if (e.key === 'Escape') {
-          setUi({ search: { query: '', open: false, active: 0 } });
-          e.target.blur();
-        }
-      },
-    }),
-    ui.search.open && q
-      ? h(
-          'div',
-          { class: 'search-results', role: 'listbox' },
-          groups.length
-            ? groups.map((g) => [
-                h('div', { class: 'search-group' }, g.label),
-                g.results.map((r) => {
-                  n++;
-                  const idx = n;
-                  return h(
-                    'button',
-                    { class: ['search-result', idx === active && 'is-active'], role: 'option', 'aria-selected': String(idx === active), onmousedown: (e) => e.preventDefault(), onclick: () => pick(r) },
-                    h('span', { class: 'row-title' }, r.title),
-                    h('span', { class: 'row-meta' }, metaOf(r))
-                  );
-                }),
-              ])
-            : h('p', { class: 'search-empty' }, 'No matches')
-        )
-      : null
   );
 }
 
@@ -416,10 +332,7 @@ function onKey(e) {
   const pages = { 1: 'home', 2: 'courses', 3: 'grades', 4: 'calendar', ...(feat('otherTab') ? { 5: 'other' } : {}) };
   if (pages[k]) location.hash = `#/${pages[k]}`;
   else if (k === ',') location.hash = '#/settings';
-  else if (k === '/' && feat('search')) {
-    e.preventDefault();
-    document.getElementById('search')?.focus();
-  } else if (k === 'j') moveFocus(1);
+  else if (k === 'j') moveFocus(1);
   else if (k === 'k') moveFocus(-1);
   else if (k === 'r') manualRefresh();
   else if (k === '?') openDrawer('help');

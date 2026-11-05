@@ -7,7 +7,6 @@ export const ui = {
   drawer: null, // { type: 'item' | 'course' | 'todo-new' | 'hidden' | 'help', id }
   menu: null, // { itemId, x, y, mode }
   expanded: {}, // group/section key -> true
-  search: { query: '', open: false, active: 0 },
   attentionOpen: {},
   importPreview: null,
   confirmClear: false,

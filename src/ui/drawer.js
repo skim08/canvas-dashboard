@@ -470,7 +470,6 @@ function hiddenList(ctx) {
 export const SHORTCUTS = [
   ['1 – 5', 'Home, Courses, Grades, Calendar, Other'],
   [',', 'Settings'],
-  ['/', 'Search'],
   ['j / k', 'Next / previous item'],
   ['Enter', 'Open details'],
   ['x', 'Mark focused item done'],
