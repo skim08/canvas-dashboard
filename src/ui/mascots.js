@@ -7,9 +7,9 @@
 export const THEMES = [
   { id: 'pink', mascot: 'cat', title: 'Neko', blurb: 'Soft pink, with Neko the cat.', swatch: ['#fdf5f7', '#fbe4ed', '#b03867'] },
   { id: 'matcha', mascot: 'frog', title: 'Matcha', blurb: 'Calm greens, with Kero the frog.', swatch: ['#f4f8f1', '#e3f0dc', '#376f34'] },
-  { id: 'ocean', mascot: 'shark', title: 'Ocean', blurb: 'Blues and seafoam, with Finn the shark.', swatch: ['#f2f8fb', '#dff0f8', '#1f6f99'] },
+  { id: 'ocean', mascot: 'shark', title: 'Ocean', blurb: 'Blues and seafoam, with Nami the shark.', swatch: ['#f2f8fb', '#dff0f8', '#1f6f99'] },
   { id: 'polar', mascot: 'bear', title: 'Polar', blurb: 'Minimal white, grey and black, with Yumi the polar bear.', swatch: ['#f6f6f6', '#e8e8e8', '#2a2a2a'] },
-  { id: 'honey', mascot: 'shiba', title: 'Honey', blurb: 'Warm golds, with Honey the shiba.', swatch: ['#fdf8ef', '#f9ebd4', '#93550f'] },
+  { id: 'honey', mascot: 'shiba', title: 'Honey', blurb: 'Warm golds, with Hachi the shiba.', swatch: ['#fdf8ef', '#f9ebd4', '#93550f'] },
   { id: 'classic', mascot: 'cat', title: 'Classic', blurb: 'The original look: neutral, with a blue accent.', swatch: ['#f7f7f5', '#e9ecfb', '#4255c9'] },
 ];
 export const themeOf = (palette) => THEMES.find((t) => t.id === palette) || THEMES[0];
@@ -17,9 +17,9 @@ export const themeOf = (palette) => THEMES.find((t) => t.id === palette) || THEM
 export const MASCOTS = {
   cat: { name: 'Neko', animal: 'cat' },
   frog: { name: 'Kero', animal: 'frog' },
-  shark: { name: 'Finn', animal: 'shark' },
+  shark: { name: 'Nami', animal: 'shark' },
   bear: { name: 'Yumi', animal: 'polar bear' },
-  shiba: { name: 'Honey', animal: 'shiba' },
+  shiba: { name: 'Hachi', animal: 'shiba' },
 };
 
 // ---------- the shared face kit ----------
@@ -84,7 +84,7 @@ const ANIMALS = {
     eyesAt: { l: 40, r: 80, y: 39 },
     mouthY: 70,
   },
-  // Finn: a friendly blue shark with a fin on top and a pale belly.
+  // Nami: a friendly blue shark with a fin on top and a pale belly.
   shark: {
     k: { ink: '#22333f', fur: '#9cc3dd', belly: '#f2f8fc', cheek: '#f3b7c4', tongue: '#e88a9c' },
     back: (k) =>
@@ -111,7 +111,7 @@ const ANIMALS = {
     eyesAt: { l: 44, r: 76, y: 55 },
     mouthY: 71,
   },
-  // Honey: a shiba with a cream muzzle and little dot eyebrows.
+  // Hachi: a shiba with a cream muzzle and little dot eyebrows.
   shiba: {
     k: { ink: '#3b2a1e', fur: '#f3b66f', cream: '#fff3e2', cheek: '#f6a3a0', tongue: '#e9878f' },
     back: (k) =>

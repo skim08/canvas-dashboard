@@ -441,7 +441,7 @@ test('J8', 'five animal themes plus Classic, each with a named mascot in all fiv
   const M = await import('../ui/mascots.js');
   const css = await (await fetch('../styles/tokens.css')).text();
   const boot = await (await fetch('../boot.js')).text();
-  eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Kero'], ['ocean', 'Finn'], ['polar', 'Yumi'], ['honey', 'Honey'], ['classic', 'Neko']]);
+  eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Kero'], ['ocean', 'Nami'], ['polar', 'Yumi'], ['honey', 'Hachi'], ['classic', 'Neko']]);
   for (const t of M.THEMES) {
     for (const mood of M.MASCOT_MOODS) ok(/^<svg[\s\S]*<\/svg>$/.test(M.mascotMarkup(t.mascot, mood, 40)), `${t.mascot} ${mood}`);
     if (t.id !== 'pink') {
@@ -453,7 +453,7 @@ test('J8', 'five animal themes plus Classic, each with a named mascot in all fiv
 });
 test('J8', 'Ask uses the theme’s mascot name and animal', async () => {
   const { systemPrompt } = await import('../lib/scheduleContext.js');
-  ok(systemPrompt('Finn', 'shark').startsWith('You are Finn, a friendly shark'), 'prompt follows the mascot');
+  ok(systemPrompt('Nami', 'shark').startsWith('You are Nami, a friendly shark'), 'prompt follows the mascot');
 });
 
 // ---------- what's new (K20) ----------

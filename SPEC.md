@@ -1112,16 +1112,16 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 ---
 
 #### J8 · Themes tab with animal mascots
-- **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Neko (pink cat, default), Matcha (green frog), Ocean (Finn the shark), Polar (Yumi the polar bear, white/grey/black), Honey (shiba) and Classic. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA (2026-11-05: the frog is Kero and the polar bear is Yumi, at your request) · **Phase:** 8
+- **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Neko (pink cat, default), Matcha (green frog), Ocean (Nami the shark), Polar (Yumi the polar bear, white/grey/black), Honey (shiba) and Classic. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA (2026-11-05: the frog is Kero and the polar bear is Yumi, at your request) (2026-11-05: the shark is Nami and the shiba is Hachi, at your request) · **Phase:** 8
 - **What:** Choose between animal themes, each with its own mascot, name and colors. *(Added 2026-11-04 at the owner's request.)*
 - **Done when:**
   - A Themes tab (from the top bar and Settings → Appearance) shows each theme as a card with its mascot and colors. One click applies it everywhere.
   - Five themes:
     - **Neko**, the pink cat (default)
     - **Matcha**, with Kero the green frog
-    - **Finn**, a blue ocean shark
+    - **Ocean**, with Nami the blue shark
     - **Polar**, with Yumi the minimalist white, grey and black polar bear
-    - **Honey**, a golden shiba dog
+    - **Honey**, with Hachi the golden shiba dog
   - Classic stays available.
   - Each mascot is drawn in code in the same style, with the same five moods (content, happy, worried, sleepy, celebrating). Its name is used in the greeting, the chat ("Ask Kero") and empty states.
   - Every theme has light and dark colors that pass WCAG AA contrast (`tools/contrast.py` checks them all).
