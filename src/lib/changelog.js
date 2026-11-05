@@ -44,7 +44,7 @@ export const CHANGES = [
   {
     version: '0.1.0',
     date: '2026-10-07',
-    items: ['First version: due dates, grades and GPA, calendar, course content, reminders and Mochi.'],
+    items: ['First version: due dates, grades and GPA, calendar, course content, reminders and Neko (then called Mochi).'],
   },
 ];
 

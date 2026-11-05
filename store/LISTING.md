@@ -31,7 +31,7 @@ It doesn't ask for any always-on host access. No remote code is loaded: everythi
 
 ## Privacy practices tab
 
-- **Data collected:** answer that personally identifiable information, educational records and website content are *handled*, but kept only on your device.
+- **Data collected:** tick personally identifiable information, personal communications (the Canvas inbox) and website content. All of it is kept only on the student's device.
 - **Certify:**
   - Data isn't sold to third parties.
   - Data isn't used or transferred for purposes unrelated to the single purpose.
@@ -83,9 +83,11 @@ Paste this into **Test instructions** in the developer dashboard:
 >
 > With a real school, the extension asks for access to that one Canvas site. It reads from it, and changes nothing there except Canvas messages the student chooses to send, reply to, star, archive or mark read or unread.
 
-## Screenshots
+## Screenshots and images
 
-Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample data). Never use your real Canvas.
+Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample data). Never use your real Canvas. The current set is in `store/screenshots/0.4.0/`, with the promo tile at `store/promo-tile-440x280.png`. Regenerate the icons with `/usr/bin/python3 tools/make_icons.py`.
+
+For the paste-ready text of the 0.4.0 update (every dashboard tab), see `store/UPDATE-0.4.0.md`.
 
 ## Still needed from you
 

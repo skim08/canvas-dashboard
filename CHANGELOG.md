@@ -34,4 +34,4 @@ Newest first. The app shows the newest entry once after an update (Settings → 
 
 ## 0.1.0 (2026-10-07)
 
-- First version: due dates, grades and GPA, calendar, course content, reminders and Mochi.
+- First version: due dates, grades and GPA, calendar, course content, reminders and Neko (then called Mochi).
