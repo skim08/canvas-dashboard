@@ -435,6 +435,28 @@ test('K23', 'classes without class times are listed until you add them or say th
   }
 });
 
+// ---------- make Neko yours (K24) ----------
+group('Make Neko yours (K24)');
+test('K24', 'six questions, in order; your chosen name is used in the greeting', async () => {
+  const { PERSONALIZE_QUESTIONS } = await import('../ui/personalize.js');
+  const { state } = await import('../ui/store.js');
+  const { mochiGreeting } = await import('../ui/mochi.js');
+  eq(PERSONALIZE_QUESTIONS, ['buddy', 'name', 'goal', 'workload', 'reminders', 'look']);
+  const was = state.settings;
+  try {
+    state.settings = withDefaults({ nickname: 'Sam' });
+    const g = mochiGreeting({ items: [], allItems: [], grades: { courses: [] }, now: NOW, tz: TZ, nickOf: (x) => x });
+    ok(/Sam/.test(g.title), g.title);
+  } finally {
+    state.settings = was;
+  }
+});
+test('K24', 'answers are ordinary settings, so they’re in backups', () => {
+  const data = { settings: { nickname: 'Sam', workloadLimit: 4, palette: 'matcha', personalized: true, notify: { reminderHours: [48, 24], morningTime: '07:00' } } };
+  const back = parseBackup(JSON.stringify(makeBackup(data))).data.settings;
+  eq([back.nickname, back.workloadLimit, back.palette, back.notify.reminderHours], ['Sam', 4, 'matcha', [48, 24]]);
+});
+
 // ---------- themes tab (J8) ----------
 group('Themes tab (J8)');
 test('J8', 'five animal themes plus Classic, each with a named mascot in all five moods', async () => {

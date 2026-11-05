@@ -6,7 +6,7 @@ import { term } from './term.js';
 import { icon } from './icons.js';
 import { state, updateSettings } from './store.js';
 import {
-  ui, closeDrawer, openDrawer, toggleDone, togglePin, togglePromoted, hideItem, unhideItem, snoozeItem, snoozeChoices, setType,
+  ui, closeDrawer, openDrawer, toast, toggleDone, togglePin, togglePromoted, hideItem, unhideItem, snoozeItem, snoozeChoices, setType,
   addTodo, updateTodo, deleteTodo, addSubtask, toggleSubtask, deleteSubtask, moveSubtask, setNote, noteValue, setUi,
 } from './actions.js';
 import { feat, statusTags, dueText, dueTone, button, iconButton, dot, itemRow, emptyState, startsRather } from './components.js';
@@ -24,6 +24,7 @@ import { mascotName } from './mochi.js';
 import { syllabusDrawer } from './syllabusDrawer.js';
 import { eventDrawer, ownEventActions } from './eventDrawer.js';
 import { classTimesDrawer } from './classTimesDrawer.js';
+import { personalizeQuiz } from './personalize.js';
 import { hiddenMarks } from '../lib/marks.js';
 import { unhideMark } from './marks.js';
 import { markSeen } from './gradeActions.js';
@@ -59,6 +60,9 @@ export function renderDrawer(ctx) {
   } else if (d.type === 'archive') {
     title = `Past ${term()}`;
     body = archiveDrawer(d.id, ctx); // I1
+  } else if (d.type === 'personalize') {
+    title = 'Make Neko yours';
+    body = personalizeQuiz({ done: () => (closeDrawer(), toast('All set! You can change any of these in Settings.')) }); // K24
   } else if (d.type === 'classTimes') {
     title = 'Class times';
     body = classTimesDrawer(d.id, ctx); // G13

@@ -31,7 +31,7 @@ export function mochiGreeting(ctx) {
     classes: ctx.allItems.filter((i) => i.area === 'classes'),
     atRisk,
     streak: feat('streak') ? streak(ctx.items, state.userdata, ctx.now, ctx.tz) : null,
-    name: state.cache?.profile?.name || '',
+    name: state.settings.nickname || state.cache?.profile?.name || '', // K24: your chosen name first
     now: ctx.now,
     tz: ctx.tz,
   });

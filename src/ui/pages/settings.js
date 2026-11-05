@@ -17,6 +17,7 @@ import { CANVAS_ORIGIN, APP_NAME, PRIVACY_URL, TERMS_URL, SUPPORT_EMAIL, isDemo 
 import { hostOf } from '../../lib/school.js';
 import { startSchoolChange } from './setup.js';
 import { themeOf } from '../mascots.js';
+import { startPersonalize } from '../personalize.js';
 import { needsSyllabus } from '../syllabusDrawer.js';
 import { findProfile } from '../../lib/profiles.js';
 import { TERM_TYPES } from '../../lib/term.js';
@@ -79,6 +80,7 @@ export function renderSettings(ctx) {
     h('h1', { class: 'page-title' }, 'Settings'),
     whatsNew(),
     group('Appearance', [
+      field('Make Neko yours', 'Six quick questions: your study buddy, your name, GPA goal, daily workload, reminders and look.', button('Answer the questions', () => (startPersonalize(), openDrawer('personalize')), { key: 'personalize', iconName: 'note' })), // K24
       field('Color theme', `${themeOf(s.palette).title}. Pick an animal theme (or Classic) on the Themes tab.`, h('a', { class: 'btn btn-secondary', href: '#/themes', 'data-key': 'go-themes' }, 'Open Themes')), // J8 // J1
       field('Theme', 'Light, dark, or match your Mac.', segmented([['light', 'Light'], ['dark', 'Dark'], ['system', 'System']], s.theme, (v) => updateSettings({ theme: v }), 'theme')),
       field('Density', 'Compact rows or roomier cards.', segmented([['compact', 'Compact'], ['comfortable', 'Comfortable']], s.density, (v) => updateSettings({ density: v }), 'density')),

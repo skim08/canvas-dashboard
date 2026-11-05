@@ -12,6 +12,7 @@ Newest first. The app shows the newest entry once after an update (Settings → 
 - Fixed a background error that could appear on chrome://extensions after reloading.
 - Long details in compact lists now shorten neatly instead of overlapping.
 - The search bar is gone from the top bar, for a cleaner look.
+- Make Neko yours: six quick, skippable questions (study buddy, your name, GPA goal, workload, reminders, look) in setup and in Settings.
 
 ## 0.2.0 (2026-10-20)
 

@@ -80,6 +80,8 @@ export const DEFAULT_SETTINGS = {
   setupDone: false, // K9: finished (or skipped) the first-run steps
   termType: null, // K4: 'quarter' | 'semester' | 'trimester'; null = detect from Canvas
   seenVersion: null, // K20: the newest "What's new" you've seen
+  nickname: null, // K24: what your mascot calls you (null = your Canvas first name)
+  personalized: false, // K24: answered (or skipped) the Make Neko yours questions
   usage: null, // K18: { days, last, dismissed }: days you've opened the dashboard (this computer only)
   theme: 'system', // light | dark | system
   palette: 'pink', // J1: pink | classic

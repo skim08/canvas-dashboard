@@ -11,6 +11,7 @@ import { findProfile } from '../../lib/profiles.js';
 import * as G from '../../lib/grades.js';
 import { TERM_TYPES } from '../../lib/term.js';
 import { term } from '../term.js';
+import { personalizeQuiz } from '../personalize.js';
 import { mochiSvg } from '../mochi.js';
 import * as storage from '../../lib/storage.js';
 import { isExtension, isDev, isDemo, devScenario, CANVAS_ORIGIN } from '../../lib/env.js';
@@ -129,8 +130,8 @@ function schoolStep() {
   ];
 }
 
-// K9: after the school, new students get three short, skippable steps.
-const STEPS = ['classes', 'grading', 'syllabi'];
+// K9 + K24: after the school, new students get four short, skippable steps.
+const STEPS = ['classes', 'grading', 'personalize', 'syllabi'];
 
 export function needsSetup() {
   // Test mode with sample data skips the optional steps (try them with ?scenario=setup).
@@ -239,7 +240,7 @@ export function renderSetup(onChange) {
   if (!su.input && !su.changing && state.settings.canvasOrigin) su.input = hostOf(state.settings.canvasOrigin);
   const schoolDone = CANVAS_ORIGIN && state.access !== false && !su.changing;
   const step = stepOf();
-  const body = !schoolDone ? schoolStep() : step === 'grading' ? gradingStep() : step === 'syllabi' ? syllabiStep() : classesStep();
+  const body = !schoolDone ? schoolStep() : step === 'grading' ? gradingStep() : step === 'personalize' ? personalizeQuiz({ done: () => go('syllabi'), setupStep: `Step ${STEPS.indexOf('personalize') + 2} of ${STEPS.length + 1}` }) : step === 'syllabi' ? syllabiStep() : classesStep();
   return h(
     'main',
     { class: 'setup' },

@@ -1282,6 +1282,22 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Settings has a "Syllabi & class times" section listing every class with Add or Edit.
   - All of these open the class's syllabus screen (K5–K7).
 
+#### K24 · Make Neko yours
+- **Status:** [x] done — six quick questions, one per screen, each with “Skip this question” and “Skip the rest”:
+  1. Pick your study buddy (sets the theme)
+  2. What should your buddy call you (greeting name)
+  3. GPA goal (decimal choices for UW; plain words like “Mostly A−” for letter grades)
+  4. Daily workload limit
+  5. Reminders (a day + 2 hours before, two days + one day before, morning summary only, or none, plus the summary’s time)
+  6. Light/dark and roomy/compact
+
+  Answers save as you go and switch the look instantly. They’re part of first-run setup (step 4 of 5, before syllabi) and can be retaken any time from Settings → Appearance → Make Neko yours. They’re ordinary settings, so they’re in backup. Tested by walking through setup as a new student (every answer saved) and with automated tests · **Phase:** 8
+- **What:** A short, skippable questionnaire so new students set up the things the owner tuned for herself. *(Added 2026-11-05 at the owner's request.)*
+- **Done when:**
+  - New students see it during setup.
+  - Each question can be skipped, or all at once.
+  - Answers apply immediately, can be retaken from Settings, and are included in backup.
+
 **Your tasks before publishing (not features, listed so they aren't forgotten):**
 - Choose the name (K11).
 - Publish a privacy policy page and a terms page (Claude can draft them; a free student legal clinic can review them).
@@ -1444,5 +1460,6 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K21 | Git repository | 7 | [x] |
 | K22 | "Works with Canvas" wording | 7 | [x] |
 | K23 | Syllabus setup comes first | 8 | [x] |
+| K24 | Make Neko yours | 8 | [x] |
 
-**Total: 148 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 4 · Done: 119 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0
+**Total: 149 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13, K24 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 5 · Done: 120 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0
