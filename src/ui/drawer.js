@@ -20,7 +20,9 @@ import { submitBlock } from './submitBlock.js';
 import { archiveDrawer } from './archiveView.js';
 import { streakDrawer } from './streak.js';
 import { mochiChat } from './chatDrawer.js';
+import { mascotName } from './mochi.js';
 import { syllabusDrawer } from './syllabusDrawer.js';
+import { eventDrawer, ownEventActions } from './eventDrawer.js';
 import { hiddenMarks } from '../lib/marks.js';
 import { unhideMark } from './marks.js';
 import { markSeen } from './gradeActions.js';
@@ -38,7 +40,7 @@ export function renderDrawer(ctx) {
     } else {
       title = item.kind === 'todo' ? 'To-do' : TYPE_LABEL[item.type];
       if (item.status === 'graded' && item.sub?.gradedAt) queueMicrotask(() => markSeen(item.canvasId, item.sub.gradedAt));
-      body = item.kind === 'todo' ? todoDetails(item, ctx) : itemDetails(item, ctx);
+      body = item.kind === 'todo' ? todoDetails(item, ctx) : item.source === 'own' && item.eventId ? [itemDetails(item, ctx), ownEventActions(item)] : itemDetails(item, ctx); // G12
     }
   } else if (d.type === 'course') {
     const c = ctx.allCourses.find((x) => x.id === d.id);
@@ -48,7 +50,7 @@ export function renderDrawer(ctx) {
     title = 'New to-do';
     body = newTodoForm(ctx);
   } else if (d.type === 'mochi') {
-    title = 'Ask Mochi';
+    title = `Ask ${mascotName()}`;
     body = mochiChat(ctx); // J4, J5
   } else if (d.type === 'streak') {
     title = 'Daily streak';
@@ -56,6 +58,9 @@ export function renderDrawer(ctx) {
   } else if (d.type === 'archive') {
     title = `Past ${term()}`;
     body = archiveDrawer(d.id, ctx); // I1
+  } else if (d.type === 'event') {
+    title = 'Your event';
+    body = eventDrawer(d.id, ctx); // G12
   } else if (d.type === 'syllabus') {
     title = 'Syllabus';
     body = syllabusDrawer(d.id, ctx); // K5–K7
@@ -119,7 +124,7 @@ const SUBMISSION_LABEL = {
 
 function itemDetails(item, ctx) {
   const { now, tz } = ctx;
-  const late = lateAcceptance(item, now);
+  const late = item.source === 'own' ? null : lateAcceptance(item, now); // G12: your own events aren't submitted
   // In-person quizzes from a syllabus (G10) aren't taken in Canvas.
   const isQuizLike = item.source !== 'syllabus' && (item.type === 'quiz' || item.isQuiz || (item.type === 'exam' && item.submissionTypes.includes('online_quiz')));
   const desc = item.descriptionHtml ? sanitizeHtml(item.descriptionHtml, { courseId: item.courseId }) : null;
@@ -470,7 +475,8 @@ export const SHORTCUTS = [
   ['w', 'What-if mode on / off'],
   ['a', 'Announcements'],
   ['i', 'Inbox'],
-  ['m', 'Ask Mochi'],
+  ['m', 'Ask your mascot (Neko, or your theme’s)'],
+  ['e', 'Add your own event to the calendar'],
   ['f', 'Start or stop focus on the selected item'],
   ['[ / ]', 'Calendar: previous / next'],
   ['t', 'Calendar: today'],

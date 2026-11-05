@@ -1,0 +1,7 @@
+body { margin: 0; padding: 24px; background: #fffafb; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; color: #2d2026; }
+h1 { margin: 0 0 16px; font-size: 20px; }
+.row { display: grid; grid-template-columns: 120px repeat(5, 1fr); align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid #f0dde4; }
+.row.head { border: 0; color: #66525b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+.name strong { display: block; font-size: 16px; }
+.name span { color: #66525b; font-size: 12px; }
+.cell { display: flex; justify-content: center; }

@@ -16,6 +16,9 @@ import * as storage from '../../lib/storage.js';
 import { CANVAS_ORIGIN, APP_NAME, PRIVACY_URL, TERMS_URL, SUPPORT_EMAIL, isDemo } from '../../lib/env.js';
 import { hostOf } from '../../lib/school.js';
 import { startSchoolChange } from './setup.js';
+import { themeOf } from '../mascots.js';
+import { needsSyllabus } from '../syllabusDrawer.js';
+import { findProfile } from '../../lib/profiles.js';
 import { TERM_TYPES } from '../../lib/term.js';
 import { unseen, VERSION } from '../../lib/changelog.js';
 import { terms } from '../term.js';
@@ -30,6 +33,18 @@ function whatsNew() {
     h('div', { class: 'whats-new-head' }, h('strong', null, `What’s new in ${list[0].version}`), button('Got it', () => updateSettings({ seenVersion: VERSION }), { key: 'whats-new-ok', kind: 'secondary' })),
     list.map((c) => h('ul', { class: 'plain-list' }, c.items.map((t) => h('li', null, t))))
   );
+}
+
+// K23: every class, with its syllabus status, in one place.
+function syllabusSettings(ctx) {
+  const missing = new Set(needsSyllabus(ctx).map((c) => c.id));
+  const classes = ctx.courses.filter((c) => !c.unavailable);
+  if (!classes.length) return [h('p', { class: 'field-desc' }, 'Your classes will appear here once they load from Canvas.')];
+  return classes.map((c) => {
+    const p = findProfile(c);
+    const status = missing.has(c.id) ? (p ? 'Syllabus added, but no class times yet' : 'No syllabus yet') : state.userdata.syllabusSkip?.[c.id] ? `${p ? 'Syllabus added · ' : ''}No class times needed` : 'Class times and dates added';
+    return field(c.nick, status, button(missing.has(c.id) ? 'Add' : 'Edit', () => openDrawer('syllabus', c.id), { key: `set-syl:${c.id}`, kind: missing.has(c.id) ? 'primary' : 'secondary' }));
+  });
 }
 
 // K12 + K13
@@ -59,7 +74,7 @@ export function renderSettings(ctx) {
     h('h1', { class: 'page-title' }, 'Settings'),
     whatsNew(),
     group('Appearance', [
-      field('Color theme', 'Soft pink, or the original classic look.', segmented([['pink', 'Soft pink'], ['classic', 'Classic']], s.palette || 'pink', (v) => updateSettings({ palette: v }), 'palette')), // J1
+      field('Color theme', `${themeOf(s.palette).title}. Pick an animal theme (or Classic) on the Themes tab.`, h('a', { class: 'btn btn-secondary', href: '#/themes', 'data-key': 'go-themes' }, 'Open Themes')), // J8 // J1
       field('Theme', 'Light, dark, or match your Mac.', segmented([['light', 'Light'], ['dark', 'Dark'], ['system', 'System']], s.theme, (v) => updateSettings({ theme: v }), 'theme')),
       field('Density', 'Compact rows or roomier cards.', segmented([['compact', 'Compact'], ['comfortable', 'Comfortable']], s.density, (v) => updateSettings({ density: v }), 'density')),
     ]),
@@ -109,6 +124,7 @@ export function renderSettings(ctx) {
       field('Unpin after submitting', 'Pinned items drop back into the list once they’re done.', toggle(s.unpinOnSubmit, (v) => updateSettings({ unpinOnSubmit: v }), 'Unpin after submitting', 'unpin')),
       field('Keyboard shortcuts', 'Press ? anywhere to see them.', button('Show shortcuts', () => openDrawer('help'), { key: 'show-help', iconName: 'keyboard' })),
     ]),
+    group('Syllabi & class times', syllabusSettings(ctx)), // K23
     group('Data', [dataSection()]),
     group('About', aboutSection())
   );

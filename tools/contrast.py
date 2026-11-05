@@ -4,8 +4,13 @@ css = open("src/styles/tokens.css").read()
 def block(sel):
     i = css.index(sel); j = css.index("}", i)
     return dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})", css[i:j]))
-# J1: both palettes, light and dark.
-themes = (("pink light", block(":root {")), ("pink dark", block(':root[data-theme="dark"]')), ("classic light", block(':root[data-palette="classic"] {')), ("classic dark", block(':root[data-palette="classic"][data-theme="dark"]')))
+# J1 + J8: every palette, light and dark.
+base_light, base_dark = block(":root {"), block(':root[data-theme="dark"]')
+themes = [("pink light", base_light), ("pink dark", base_dark)]
+# Classic (J1) and the animal themes (J8). A palette overrides some tokens; the rest come from the pink base.
+for pal in ("classic", "matcha", "ocean", "polar", "honey"):
+    themes.append((f"{pal} light", {**base_light, **block(f':root[data-palette="{pal}"] {{')}))
+    themes.append((f"{pal} dark", {**base_dark, **block(f':root[data-palette="{pal}"][data-theme="dark"]')}))
 def lum(h):
     c = [int(h[i:i+2], 16) / 255 for i in (1, 3, 5)]
     c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]

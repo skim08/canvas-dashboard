@@ -2,7 +2,8 @@
 // Runs entirely inside Chrome on this Mac: the extension sends nothing anywhere.
 // Chrome downloads the model once, by itself, the first time it's used.
 
-import { SYSTEM_PROMPT } from '../lib/scheduleContext.js';
+import { systemPrompt } from '../lib/scheduleContext.js';
+import { mascot } from './mochi.js';
 
 const LANGS = { expectedInputs: [{ type: 'text', languages: ['en'] }], expectedOutputs: [{ type: 'text', languages: ['en'] }] };
 const api = () => globalThis.LanguageModel || null;
@@ -28,7 +29,7 @@ export async function aiSession(context, onProgress = () => {}) {
   session?.destroy?.();
   session = await api().create({
     ...LANGS,
-    initialPrompts: [{ role: 'system', content: `${SYSTEM_PROMPT}\n\nSchedule:\n${context}` }],
+    initialPrompts: [{ role: 'system', content: `${systemPrompt(mascot().name, mascot().animal)}\n\nSchedule:\n${context}` }],
     monitor(m) {
       m.addEventListener('downloadprogress', (e) => onProgress(e.loaded));
     },

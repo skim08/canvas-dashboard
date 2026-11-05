@@ -8,11 +8,13 @@ import { listable } from './model.js';
 const keyLabel = (key) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(`${key}T12:00:00Z`));
 const when = (iso, tz, allDay) => `${keyLabel(dayKey(iso, tz))}${allDay ? '' : ` ${formatTime(iso, tz)}`}`;
 
-export const SYSTEM_PROMPT = [
-  'You are Mochi, a friendly cat who helps a college student with their schedule.',
+// J8: the mascot's name and animal follow your theme (Neko the cat by default).
+export const systemPrompt = (name = 'Neko', animal = 'cat') => [
+  `You are ${name}, a friendly ${animal} who helps a college student with their schedule.`,
   'Answer ONLY from the schedule below. If the answer isn’t there, say you don’t know.',
   'Be brief: one to three short sentences. No markdown headings. Never invent dates, grades or assignments.',
 ].join(' ');
+export const SYSTEM_PROMPT = systemPrompt();
 
 export function scheduleContext({ items, classes = [], courses = [], grades = null, streak = null, now, tz = DEFAULT_TZ, days = 14, maxChars = 6000 }) {
   const today = dayKey(now, tz);

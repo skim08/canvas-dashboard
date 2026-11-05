@@ -339,6 +339,80 @@ test('K16', 'demo mode points at a school that can’t exist', () => {
   }
 });
 
+// ---------- your own events (G12) ----------
+group('Your own events (G12)');
+test('G12', 'weekly events: chosen weekdays until a date, minus skipped days', async () => {
+  const EV = await import('../lib/events.js');
+  const ev = { id: 'e1', title: 'Codon reading', day: '2026-11-02', start: '09:00', end: '09:45', repeat: { days: ['Mon', 'Wed'], until: '2026-11-16' }, skip: ['2026-11-11'] };
+  eq(EV.occurrences(ev), ['2026-11-02', '2026-11-04', '2026-11-09', '2026-11-16']);
+  eq(EV.occurrences({ ...ev, repeat: null, skip: [] }), ['2026-11-02']);
+  eq(EV.occurrences({ ...ev, repeat: { days: ['Fri'], until: '' }, skip: [] }).length, 16); // no end date: 16 weeks
+});
+test('G12', 'occurrences become calendar items at the right times (Pacific, across the time change)', async () => {
+  const EV = await import('../lib/events.js');
+  const items = EV.expandEvents([{ id: 'e1', title: 'Slides', day: '2026-10-30', start: '14:00', end: '15:30', repeat: { days: ['Fri'], until: '2026-11-06' }, type: 'assignment', courseId: '5' }, { id: 'e2', title: 'Study day', day: '2026-11-07', start: null }], { tz: TZ });
+  eq(
+    items.map((i) => [i.id, i.dueAt, i.endAt, i.allDay, i.kind, i.ownType, i.courseId]),
+    [
+      ['ev:e1:2026-10-30', '2026-10-30T21:00:00.000Z', '2026-10-30T22:30:00.000Z', false, 'event', 'assignment', '5'], // PDT
+      ['ev:e1:2026-11-06', '2026-11-06T22:00:00.000Z', '2026-11-06T23:30:00.000Z', false, 'event', 'assignment', '5'], // PST
+      ['ev:e2:2026-11-07', '2026-11-08T07:59:00.000Z', null, true, 'event', null, null],
+    ]
+  );
+});
+test('G12', 'events join your items (typed as you chose), can be checked off, and the switch turns them off', () => {
+  const ud = userWithDefaults({ events: [{ id: 'e1', title: 'Pre-class reading', day: '2026-10-05', start: '08:00', end: '08:30', type: 'reading' }], done: { 'ev:e1:2026-10-05': true } });
+  const on = model.allItems({ courses: [], items: [] }, ud, withDefaults(null), NOW).find((i) => i.id === 'ev:e1:2026-10-05');
+  const off = model.allItems({ courses: [], items: [] }, ud, withDefaults({ features: { customEvents: false } }), NOW).some((i) => i.eventId);
+  eq([on.type, on.done, on.area, off], ['reading', true, 'main', false]);
+});
+test('G12', 'events are in backups (they live in your data)', () => {
+  const data = { userdata: { events: [{ id: 'e1', title: 'x', day: '2026-11-02' }] } };
+  eq(parseBackup(JSON.stringify(makeBackup(data))).data.userdata.events[0].title, 'x');
+});
+
+// ---------- syllabus setup comes first (K23) ----------
+group('Syllabus setup comes first (K23)');
+test('K23', 'classes without class times are listed until you add them or say they aren’t needed', async () => {
+  const PR = await import('../lib/profiles.js');
+  const { state } = await import('../ui/store.js');
+  const { needsSyllabus } = await import('../ui/syllabusDrawer.js');
+  const before = [PR.PROFILES, state.userdata];
+  try {
+    PR.setProfiles([
+      { id: 'a', courseId: '1', code: 'BIO 180', schedule: { classes: [{ id: 'lec', name: 'Lecture', days: ['Mon'], start: '09:00' }] } },
+      { id: 'b', courseId: '2', code: 'HIST 101', schedule: { deadlines: [{ id: 'd', day: '2026-11-02', title: 'Essay' }] } }, // dates, but no class times
+    ]);
+    state.userdata = userWithDefaults({ syllabusSkip: { 4: true } });
+    const ctx = { courses: [{ id: '1', code: 'BIO 180' }, { id: '2', code: 'HIST 101' }, { id: '3', code: 'CHEM 142' }, { id: '4', code: 'ONLINE 100' }, { id: '5', code: 'X 1', unavailable: '403' }] };
+    eq(needsSyllabus(ctx).map((c) => c.id), ['2', '3']);
+  } finally {
+    PR.setProfiles(before[0]);
+    state.userdata = before[1];
+  }
+});
+
+// ---------- themes tab (J8) ----------
+group('Themes tab (J8)');
+test('J8', 'five animal themes plus Classic, each with a named mascot in all five moods', async () => {
+  const M = await import('../ui/mascots.js');
+  const css = await (await fetch('../styles/tokens.css')).text();
+  const boot = await (await fetch('../boot.js')).text();
+  eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Matcha'], ['ocean', 'Finn'], ['polar', 'Yuki'], ['honey', 'Honey'], ['classic', 'Neko']]);
+  for (const t of M.THEMES) {
+    for (const mood of M.MASCOT_MOODS) ok(/^<svg[\s\S]*<\/svg>$/.test(M.mascotMarkup(t.mascot, mood, 40)), `${t.mascot} ${mood}`);
+    if (t.id !== 'pink') {
+      ok(css.includes(`:root[data-palette="${t.id}"] {`) && css.includes(`:root[data-palette="${t.id}"][data-theme="dark"]`), `${t.id} has light and dark colors`);
+      ok(boot.includes(t.id), `${t.id} applies before first paint`);
+    }
+  }
+  eq([M.themeOf('nope').id, M.themeOf('ocean').mascot], ['pink', 'shark']);
+});
+test('J8', 'Ask uses the theme’s mascot name and animal', async () => {
+  const { systemPrompt } = await import('../lib/scheduleContext.js');
+  ok(systemPrompt('Finn', 'shark').startsWith('You are Finn, a friendly shark'), 'prompt follows the mascot');
+});
+
 // ---------- what's new (K20) ----------
 group('What’s new (K20)');
 test('K20', 'version is the same in manifest.json, CHANGELOG.md and the app', async () => {
@@ -349,7 +423,7 @@ test('K20', 'version is the same in manifest.json, CHANGELOG.md and the app', as
 });
 test('K20', 'notes show once per update, newest first', async () => {
   const { unseen, newer, VERSION } = await import('../lib/changelog.js');
-  eq([unseen('0.1.0').map((c) => c.version), unseen(VERSION).length, newer('0.10.0', '0.9.1'), newer('0.2.0', '0.2.0')], [[VERSION], 0, true, false]);
+  eq([unseen('0.2.0').map((c) => c.version), unseen('0.1.0')[0].version, unseen(VERSION).length, newer('0.10.0', '0.9.1'), newer('0.2.0', '0.2.0')], [[VERSION], VERSION, 0, true, false]);
 });
 
 // ---------- feedback prompt (K18) ----------

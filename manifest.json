@@ -3,7 +3,7 @@
   "name": "Neko",
   "short_name": "Neko",
   "description": "A clean, private dashboard that works with Canvas. Not affiliated with Instructure or any school.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minimum_chrome_version": "116",
   "icons": {
     "16": "src/icons/icon16.png",

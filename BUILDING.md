@@ -36,7 +36,7 @@ The rules turned "build me a dashboard" into a sequence of small, checkable step
 | 3 | Course content |
 | 4 | Planning and notifications |
 | 5 | Extras |
-| 6 | Look and feel: theme, Mochi |
+| 6 | Look and feel: theme, mascot |
 | 7 | Making it work for any student, and publishing |
 
 **4. Tests the AI can't fake.** Grade and GPA math is tested against values I worked out by hand. Examples: a weighted course with a dropped quiz, a class graded out of 600 points, and a 3-class GPA of 3.12. Tools check the rest:
@@ -57,7 +57,7 @@ The rules turned "build me a dashboard" into a sequence of small, checkable step
 - **Read-only public version.** My own copy can submit assignments and post replies. The published version only reads. That way it asks Chrome for fewer permissions, and a bug can never change anything on a student's Canvas.
 - **Works at any school.** It started hard-wired to UW. Phase 7 added choosing your school, letter or decimal grades, semesters or quarters, and syllabus import, so the code no longer assumes my classes.
 - **Demo mode.** Chrome Web Store reviewers (and anyone curious) can't log in to my Canvas, so a made-up student shows every feature with no network access.
-- **A friendly face.** Mochi, a cat drawn in code, greets you with a summary of your day and answers questions about your schedule.
+- **A friendly face.** Neko, a cat drawn in code, greets you with a summary of your day and answers questions about your schedule.
 
 ## Problems worth mentioning
 

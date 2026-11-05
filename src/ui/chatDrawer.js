@@ -7,7 +7,7 @@ import { icon } from './icons.js';
 import { state, notify } from './store.js';
 import { openDrawer } from './actions.js';
 import { feat, button } from './components.js';
-import { mochiSvg } from './mochi.js';
+import { mochiSvg, mascotName } from './mochi.js';
 import { answer, suggestQuestions } from '../lib/ask.js';
 import { scheduleContext } from '../lib/scheduleContext.js';
 import { streak } from '../lib/progress.js';
@@ -131,7 +131,7 @@ function chatForm(ctx, key) {
   return h(
     'form',
     { class: 'chat-form', onsubmit: (e) => (e.preventDefault(), send(ctx, chat.input)) },
-    h('input', { class: 'text-input', type: 'text', placeholder: 'Ask about your schedule…', 'aria-label': 'Ask Mochi', 'data-key': key, value: chat.input, autofocus: key === 'chat-input', oninput: (e) => (chat.input = e.target.value) }),
+    h('input', { class: 'text-input', type: 'text', placeholder: 'Ask about your schedule…', 'aria-label': `Ask ${mascotName()}`, 'data-key': key, value: chat.input, autofocus: key === 'chat-input', oninput: (e) => (chat.input = e.target.value) }),
     h('button', { class: 'btn btn-primary', type: 'submit', 'data-key': `${key}-send`, 'aria-label': 'Send', disabled: chat.busy }, icon('up'))
   );
 }
@@ -151,12 +151,12 @@ export function mochiChatPanel(ctx) {
 }
 
 export function mochiChat(ctx) {
-  if (!feat('askMochi')) return h('p', { class: 'caption' }, 'Ask Mochi is turned off in Settings → Features.');
+  if (!feat('askMochi')) return h('p', { class: 'caption' }, `Ask ${mascotName()} is turned off in Settings → Features.`);
   if (chat.ai === null) aiStatus().then((s) => ((chat.ai = s), notify()));
   const aiNote =
     chat.ai === 'available' ? 'Smarter answers: Chrome’s on-device AI is ready.' : chat.ai === 'downloadable' || chat.ai === 'downloading' ? 'Chrome’s on-device AI can be downloaded for questions I don’t know by heart.' : chat.ai ? 'Chrome’s on-device AI isn’t available on this Mac, so I stick to what I know by heart.' : '';
   return [
-    h('header', { class: 'chat-head' }, mochiSvg('happy', 48), h('div', null, h('h2', { class: 'd-title' }, 'Ask Mochi'), h('p', { class: 'caption caption-tight' }, 'Answers come from your dashboard and stay on your computer.'))),
+    h('header', { class: 'chat-head' }, mochiSvg('happy', 48), h('div', null, h('h2', { class: 'd-title' }, `Ask ${mascotName()}`), h('p', { class: 'caption caption-tight' }, 'Answers come from your dashboard and stay on your computer.'))),
     h(
       'div',
       { class: 'chat-log', role: 'log', 'aria-live': 'polite' },

@@ -1,6 +1,7 @@
 // Courses (B1). Phase 1: a clean list of courses; each opens its details.
 
 import { h } from '../dom.js';
+import { needsSyllabus } from '../syllabusDrawer.js';
 import { state } from '../store.js';
 import { openDrawer } from '../actions.js';
 import { icon } from '../icons.js';
@@ -45,6 +46,7 @@ function officeHoursSection(ctx) {
 }
 
 export function renderCourses(ctx) {
+  const missing = new Set(needsSyllabus(ctx).map((c) => c.id)); // K23
   const { courses, items, now, tz } = ctx;
   return h(
     'div',
@@ -79,7 +81,8 @@ export function renderCourses(ctx) {
                   { class: 'course-card-next' },
                   next ? `Next: ${next.title} · ${dueText(next, now, tz)}` : 'Nothing upcoming',
                   overdue ? h('span', { class: 'tone-red' }, ` · ${overdue} overdue`) : null
-                )
+                ),
+                missing.has(c.id) ? h('span', { class: 'course-card-todo' }, 'No class times yet · open to add your syllabus') : null // K23
               );
             })
           )

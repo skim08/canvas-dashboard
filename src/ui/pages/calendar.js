@@ -3,10 +3,11 @@
 // with each day's total hours (G4).
 
 import { h } from '../dom.js';
+import { syllabusCalendarBanner } from '../syllabusDrawer.js';
 import { Term } from '../term.js';
 import { state, updateSettings } from '../store.js';
 import { ui, setUi, openDrawer } from '../actions.js';
-import { emptyState, loadingText, sectionHeader, filterBar, itemRow, feat, segmented, dot, iconButton, startsRather } from '../components.js';
+import { emptyState, loadingText, sectionHeader, filterBar, itemRow, feat, segmented, dot, iconButton, startsRather, button } from '../components.js';
 import { dayGroups, applyFilter, listable } from '../../lib/model.js';
 import { formatDayHeading, dayKey, formatKeyRange, addDays, dayDiff, formatTime, formatDate } from '../../lib/time.js';
 import { weekKeys, monthKeys, itemsOnDay, workloadByDay, quarterWeeks, workItems, estimateOf, plansFor, formatMinutes, plannableAhead } from '../../lib/planning.js';
@@ -50,7 +51,8 @@ export function renderCalendar(ctx) {
   return h(
     'div',
     { class: ['page', (view === 'week' || view === 'quarter' || view === 'month') && 'page-wide'] },
-    h('div', { class: 'page-head' }, h('h1', { class: 'page-title' }, 'Calendar'), segmented(views.map(([v, l]) => [v, l]), view, (v) => updateSettings({ calendarView: v }), 'cview')),
+    h('div', { class: 'page-head' }, h('h1', { class: 'page-title' }, 'Calendar'), feat('customEvents') ? button('Event', () => openDrawer('event', `new|${anchor}|`), { key: 'cal-new-event', iconName: 'plus', kind: 'ghost' }) : null, segmented(views.map(([v, l]) => [v, l]), view, (v) => updateSettings({ calendarView: v }), 'cview')),
+    feat('classSchedule') ? syllabusCalendarBanner(ctx) : null, // K23
     title
       ? h(
           'div',
@@ -350,7 +352,19 @@ function timeGrid(ctx, days, { view, hourPx, load = {} }) {
             days.map((k) =>
               h(
                 'div',
-                { class: ['tg-col', k === ctx.today && 'is-today', k < ctx.today && 'is-past'], ...dropProps(k, { timed: true }) },
+                {
+                  class: ['tg-col', k === ctx.today && 'is-today', k < ctx.today && 'is-past'],
+                  ...dropProps(k, { timed: true }),
+                  // G12: a click on an empty slot starts a new event there (on the half hour).
+                  onclick: feat('customEvents')
+                    ? (e) => {
+                        if (e.target !== e.currentTarget) return;
+                        const min = Math.max(0, Math.min(23 * 60 + 30, Math.floor(((e.clientY - e.currentTarget.getBoundingClientRect().top) / hourPx) * 2) * 30));
+                        openDrawer('event', `new|${k}|${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`);
+                      }
+                    : null,
+                  title: feat('customEvents') ? 'Click an empty spot to add an event' : null,
+                },
                 lanes([...split[k].timed.map((i) => itemBlock(i, ctx)), ...split[k].timedPlans.map((p) => planBlock(p, ctx))]).map((b) =>
                   h(
                     'div',

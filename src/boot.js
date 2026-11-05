@@ -5,7 +5,7 @@
     var theme = localStorage.getItem('boot:theme');
     if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
     var palette = localStorage.getItem('boot:palette'); // J1: no flash of the wrong colors
-    if (palette === 'classic') document.documentElement.setAttribute('data-palette', palette);
+    if (/^(classic|matcha|ocean|polar|honey)$/.test(palette || '')) document.documentElement.setAttribute('data-palette', palette); // J8
     var isNewTab = /newtab\.html$/.test(location.pathname) && location.search.indexOf('app=1') === -1;
     if (isNewTab && localStorage.getItem('boot:newtab') === '0' && typeof chrome !== 'undefined' && chrome.tabs) {
       document.documentElement.style.visibility = 'hidden';

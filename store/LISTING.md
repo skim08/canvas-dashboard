@@ -56,7 +56,8 @@ It doesn't ask for `cookies` or any always-on host access. No remote code is loa
 - **Grades and GPA:** your grading scale (letters or a 4.0 decimal), what you need on what's left, and what-if scores.
 - **Calendar:** day, week, month and term views, with your class times and exams.
 - **Syllabus import:** PDF or Word files, read on your computer. You review everything before it's saved.
-- **Mochi:** a friendly cat who answers questions about your schedule.
+- **Neko and friends:** a friendly cat who answers questions about your schedule. Four more animal themes (Matcha the frog, Finn the shark, Yuki the polar bear, Honey the shiba) on the Themes tab.
+- **Your own events:** pre-class readings, study sessions and anything Canvas doesn't list, with weekly repeats.
 - **Private by design:** no account, no tracking, and nothing leaves your computer except requests to your own school's Canvas.
 - **Disclaimer:** "Not affiliated with Instructure or any school. Grades and GPA are estimates; always check Canvas."
 
@@ -67,7 +68,9 @@ Paste this into **Test instructions** in the developer dashboard:
 > You don't need a Canvas account. Open a new tab (the extension replaces the new-tab page) and click **Try it with sample data** on the first screen. Demo mode loads a made-up student and makes no network requests. A "Demo — sample data" banner stays at the bottom.
 >
 > To see every feature:
-> - **Home:** due soon, Next up, grades at a glance, the exam countdown, and Mochi (type "what's due tomorrow?").
+> - **Home:** due soon, Next up, grades at a glance, the exam countdown, and Neko (type "what's due tomorrow?").
+> - **Themes** (palette icon, top right): five animal themes, each with its own mascot.
+> - **Calendar:** click **+ Event** or an empty time slot to add your own event.
 > - **Courses:** pick CSE 143. Try the Modules, Pages, Files, Discussions, Syllabus and People tabs, and the **Syllabus dates** button (paste any syllabus text to see the review screen).
 > - **Grades:** class details, What-if mode, Trends and History.
 > - **Calendar:** Day, Week (class times and topics), Month, Quarter and List.

@@ -576,6 +576,23 @@ button.group-head[aria-expanded] {
   white-space: nowrap;
 }
 
+/* In narrow rows the last detail (like "Accepting until Nov 6") shortens with "…"
+   instead of running into the due time. */
+.row-meta {
+  overflow: hidden;
+}
+
+.row-meta > * {
+  flex-shrink: 0;
+}
+
+.row-meta > :last-child {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .row-meta .course {
   display: inline-flex;
   align-items: center;
@@ -5182,4 +5199,215 @@ button.chat-item {
   margin: 0;
   padding-left: var(--s5);
   font-size: var(--t-sm);
+}
+
+/* J8: Themes tab */
+.page-lead {
+  margin: 0 0 var(--s5);
+  max-width: var(--reading-max);
+  color: var(--text-muted);
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--s4);
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.theme-card:hover {
+  border-color: var(--accent);
+}
+
+.theme-card.is-on {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.theme-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s4) 0;
+}
+
+.theme-dots {
+  position: absolute;
+  right: var(--s3);
+  bottom: var(--s3);
+  display: flex;
+  gap: var(--s1);
+}
+
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.theme-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) var(--s4) var(--s4);
+  border-top: 1px solid var(--border);
+}
+
+.theme-text strong {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--t-md);
+}
+
+.theme-text > span {
+  color: var(--text-muted);
+  font-size: var(--t-sm);
+}
+
+.theme-current {
+  padding: 0 var(--s2);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--t-xs);
+  font-weight: var(--w-semibold);
+}
+
+/* K23: syllabus setup comes first */
+.setup-todo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.setup-todo-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
+.setup-todo-head strong {
+  font-size: var(--t-md);
+}
+
+.setup-todo-head span {
+  color: var(--text-muted);
+  font-size: var(--t-sm);
+}
+
+.setup-todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+.setup-todo-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.setup-todo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--t-sm);
+  font-weight: var(--w-semibold);
+  cursor: pointer;
+}
+
+.setup-todo-chip:hover {
+  border-color: var(--accent);
+}
+
+.setup-todo-add {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  color: var(--accent);
+}
+
+.cal-k23 {
+  flex-wrap: wrap;
+  margin-bottom: var(--s4);
+}
+
+.cal-k23-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+
+.course-card-todo {
+  color: var(--amber);
+  font-size: var(--t-xs);
+  font-weight: var(--w-semibold);
+}
+
+/* G12: your own events */
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.event-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+
+.event-row > .form-field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.event-check {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+
+.event-repeat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  margin-top: var(--s2);
+}
+
+.event-form textarea.text-input {
+  height: auto;
+  padding: var(--s2) var(--s3);
+  resize: vertical;
+}
+
+.tg-col[title] {
+  cursor: pointer;
 }

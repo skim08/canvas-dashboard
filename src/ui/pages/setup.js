@@ -210,8 +210,8 @@ function syllabiStep() {
   const has = (c) => findProfile(c);
   return [
     progress('syllabi'),
-    h('h1', { class: 'setup-title' }, 'Add your syllabi (optional)'),
-    h('p', { class: 'setup-lead' }, 'Exams, deadlines and class times from your syllabi go on your calendar. You check everything before it’s saved. You can also do this later from each class’s page.'),
+    h('h1', { class: 'setup-title' }, 'Add your syllabi'),
+    h('p', { class: 'setup-lead' }, h('strong', null, 'This is how your classes get on your calendar. '), 'Canvas doesn’t share when your classes meet, or many exam dates. Add each syllabus (PDF, Word or pasted text), check what was found, and it’s done. About a minute per class.'),
     h(
       'div',
       { class: 'setup-list' },
@@ -224,6 +224,7 @@ function syllabiStep() {
         )
       )
     ),
+    classes.some((c) => !has(c)) ? h('p', { class: 'setup-hint' }, 'Skipping for now? Home will remind you which classes still need theirs.') : null,
     stepNav('syllabi'),
   ];
 }

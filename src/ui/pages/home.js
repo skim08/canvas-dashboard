@@ -17,7 +17,8 @@ import { unreadMessages } from './inbox.js';
 import * as F from '../fmt.js';
 import { pinnedEverything, hiddenMarks } from '../../lib/marks.js';
 import { streakChip } from '../streak.js';
-import { mochiPanel, mochiEmpty, mochiSvg } from '../mochi.js';
+import { mochiPanel, mochiEmpty, mochiSvg, mascotName } from '../mochi.js';
+import { syllabusSetupCard } from '../syllabusDrawer.js';
 import { feedbackDue } from '../../lib/feedback.js';
 import { completedCount } from './completed.js';
 
@@ -46,9 +47,9 @@ export function renderHome(ctx) {
     h(
       'div',
       { class: 'home-layout' },
-      h('div', { class: 'home-main' }, feedbackCard(), shown('attention') ? alertStrip(ctx) : null, shown('due') ? dueSection(ctx) : null),
+      h('div', { class: 'home-main' }, syllabusSetupCard(ctx), feedbackCard(), shown('attention') ? alertStrip(ctx) : null, shown('due') ? dueSection(ctx) : null),
       side.length ? h('aside', { class: 'home-left', 'aria-label': 'Grades and exams' }, side) : null,
-      feat('mochi') ? h('aside', { class: 'home-right', 'aria-label': 'Mochi' }, mochiPanel(ctx)) : null
+      feat('mochi') ? h('aside', { class: 'home-right', 'aria-label': mascotName() }, mochiPanel(ctx)) : null
     )
   );
 }

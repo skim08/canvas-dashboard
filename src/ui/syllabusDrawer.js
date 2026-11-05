@@ -3,9 +3,10 @@
 // save it to the calendar. Nothing leaves this computer.
 
 import { h } from './dom.js';
-import { state, saveSyllabus, removeSyllabus } from './store.js';
-import { setUi, toast } from './actions.js';
-import { button, iconButton, emptyState } from './components.js';
+import { state, saveSyllabus, removeSyllabus, updateUser } from './store.js';
+import { setUi, toast, openDrawer } from './actions.js';
+import { button, iconButton, emptyState, dot } from './components.js';
+import { icon } from './icons.js';
 import { textFromFile } from '../lib/fileText.js';
 import { htmlToText } from '../lib/sanitize.js';
 import { extractSyllabus, toSyllabus, fromSyllabus } from '../lib/syllabusImport.js';
@@ -145,6 +146,10 @@ function startScreen(course) {
       s.error ? h('p', { class: 'setup-error', role: 'alert' }, s.error) : null,
       !mine ? h('button', { class: 'link-btn', 'data-key': 'syl-blank', onclick: () => startBlank(course, null) }, 'Or type class times and dates in yourself') : null
     ),
+    // K23: online or self-paced classes have no class times; stop asking for them.
+    !state.userdata.syllabusSkip?.[course.id] && !hasTimes(mine || builtIn)
+      ? h('p', { class: 'caption' }, 'No set class times, like an online class? ', h('button', { class: 'link-btn', 'data-key': 'syl-skip', onclick: () => (skipSyllabus(course.id), toast(`OK: ${course.nick || course.code} won’t ask for class times`)) }, 'Mark as not needed'))
+      : null,
   ];
 }
 
@@ -273,3 +278,49 @@ export function syllabusDrawer(courseId, ctx) {
 
 // For tests: the review state of a class.
 export const syllabusSession = (courseId) => st(courseId);
+
+// ---------- K23: syllabus setup comes first ----------
+
+// A class has its times once its syllabus lists weekly meetings or dated sessions.
+const hasTimes = (p) => !!p && ((p.schedule?.classes || []).some((c) => (c.days && c.days.length) || (p.schedule?.sessions || []).some((m) => m.in === c.id)));
+
+// Classes still missing their syllabus or class times (unless you said they don't need one).
+export function needsSyllabus(ctx) {
+  return (ctx.courses || []).filter((c) => !c.unavailable && !state.userdata.syllabusSkip?.[c.id] && !hasTimes(findProfile(c)));
+}
+
+export const skipSyllabus = (courseId) =>
+  updateUser((ud) => {
+    ud.syllabusSkip = { ...(ud.syllabusSkip || {}), [courseId]: true };
+  });
+
+export const openSyllabus = (courseId) => openDrawer('syllabus', courseId);
+
+// Home: a clear "finish setting up" card until every class has its times.
+export function syllabusSetupCard(ctx) {
+  const list = needsSyllabus(ctx);
+  if (!list.length) return null;
+  return h(
+    'section',
+    { class: 'setup-todo', 'aria-label': 'Finish setting up' },
+    h('div', { class: 'setup-todo-head' }, h('strong', null, 'Finish setting up: add your syllabi'), h('span', null, 'Canvas doesn’t share when your classes meet. Add each syllabus (or type the class times) so classes, exams and deadlines show on your calendar. About a minute per class.')),
+    h(
+      'div',
+      { class: 'setup-todo-list' },
+      list.map((c) => h('button', { class: 'setup-todo-chip', 'data-key': `k23-add:${c.id}`, onclick: () => openSyllabus(c.id) }, dot(c.color), h('span', null, c.nick), h('span', { class: 'setup-todo-add' }, icon('plus', 14), 'Add')))
+    )
+  );
+}
+
+// Calendar: a one-line reminder above the grid.
+export function syllabusCalendarBanner(ctx) {
+  const list = needsSyllabus(ctx);
+  if (!list.length) return null;
+  return h(
+    'div',
+    { class: 'banner tone-amber cal-k23', role: 'status' },
+    icon('alert'),
+    h('span', null, `${list.length === 1 ? `${list[0].nick} doesn’t` : `${list.length} classes don’t`} have class times yet, so ${list.length === 1 ? 'it isn’t' : 'they aren’t'} on your calendar. Add a syllabus or type the times:`),
+    h('span', { class: 'cal-k23-links' }, list.map((c) => h('button', { class: 'link-btn', 'data-key': `k23-cal:${c.id}`, onclick: () => openSyllabus(c.id) }, c.nick)))
+  );
+}

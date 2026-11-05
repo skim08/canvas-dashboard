@@ -3,6 +3,7 @@
 
 import { dayKey, addDays, dayDiff, weekOf, DEFAULT_TZ, instantAt, weekdayOfKey, userTz } from './time.js';
 import { findProfile } from './profiles.js';
+import { expandEvents } from './events.js';
 import { COURSE_COLORS } from './defaults.js';
 import { looksLikeClass } from './normalize.js';
 import { syllabusSchedule } from './syllabus.js';
@@ -35,6 +36,7 @@ export function detectType(item) {
   const group = item.groupName || '';
   if (item.kind === 'todo') return item.type || 'todo';
   if (item.syllabusType) return item.syllabusType; // G10: the syllabus says it's a quiz or an exam
+  if (item.ownType) return item.ownType; // G12: what you said your event is
   if (item.kind === 'event') return EXAM_RE.test(name) && !NOT_EXAM_EVENT_RE.test(name) ? 'exam' : 'event';
   if (EXAM_RE.test(name) || /\bexams?\b|midterm/i.test(group)) return 'exam';
   // Homework set up as a Canvas quiz (auto-graded) is still homework.
@@ -199,7 +201,9 @@ export function allItems(cache, ud, settings, now) {
   // G10, G11: exams, deadlines and class meetings from your syllabi.
   const syl = syllabusSchedule(visible, cache?.items || [], { tz, dates: settings.features?.syllabusDates !== false, classes: settings.features?.classSchedule !== false });
   const canvas = (cache?.items || []).map((i) => (syl.patch[i.id] ? { ...i, ...syl.patch[i.id] } : i));
-  const items = [...canvas, ...syl.add, ...todos, ...sessions].filter((i) => !i.courseId || !hiddenCourses.has(i.courseId));
+  // G12: your own events, one item per occurrence.
+  const own = settings.features?.customEvents !== false ? expandEvents(ud.events || [], { tz }) : [];
+  const items = [...canvas, ...syl.add, ...todos, ...own, ...sessions].filter((i) => !i.courseId || !hiddenCourses.has(i.courseId));
   const otherCourses = new Set(separateOther(settings) ? courses.filter((c) => courseRole(c, settings) === 'other').map((c) => c.id) : []);
   const promoted = ud.promoted || {};
   const separateOH = settings.features?.officeHours !== false;

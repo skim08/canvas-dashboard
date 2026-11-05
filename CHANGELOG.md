@@ -2,6 +2,14 @@
 
 Newest first. The app shows the newest entry once after an update (Settings → What's new). Keep this file, `src/lib/changelog.js` and the version in `manifest.json` in step; a test checks.
 
+## 0.3.0 (2026-11-05)
+
+- Themes tab (palette icon, top right): pick Neko the cat, Matcha the frog, Finn the shark, Yuki the polar bear or Honey the shiba, each with its own colors.
+- Our cat mascot is now called Neko.
+- Your own events: click + Event on the Calendar (or an empty time slot) for pre-class readings, study sessions and more. They can repeat weekly.
+- Adding syllabi is now front and center: Home, the Calendar and Settings show which classes still need their class times.
+- Long details in compact lists now shorten neatly instead of overlapping.
+
 ## 0.2.0 (2026-10-20)
 
 - Works with any school's Canvas: choose yours in setup (Settings → General → School).

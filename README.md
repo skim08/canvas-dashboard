@@ -6,7 +6,7 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
 
 *Not affiliated with Instructure (the makers of Canvas) or any school.*
 
-![Home: what's due, grades at a glance, exams and Mochi](store/screenshots/1-home.png)
+![Home: what's due, grades at a glance, exams and Neko the cat](store/screenshots/1-home.png)
 
 | Grades | Courses |
 |---|---|
@@ -21,7 +21,8 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
 - **Calendar:** day, week (hour blocks like Apple Calendar), month, term timeline and list views, with class meetings and exams.
 - **Syllabus import:** reads PDF and Word syllabi on your computer with no libraries, finds exams, deadlines, class times and days off, and lets you review each one before it's saved.
 - **Course content:** announcements, modules, pages, files, discussions and the inbox, without leaving the dashboard.
-- **Mochi:** a cat mascot who answers schedule questions from your own data, optionally using Chrome's on-device AI.
+- **Neko and friends:** a cat mascot (or a frog, shark, polar bear or shiba, with matching color themes) who answers schedule questions from your own data, optionally using Chrome's on-device AI.
+- **Your own events:** add pre-class readings, study sessions or anything Canvas doesn't list, including weekly repeats.
 - **Works at any school:** you pick your school's Canvas during setup. Quarters or semesters, letter or decimal grades.
 - **Demo mode:** try everything with a made-up student, no Canvas account needed.
 

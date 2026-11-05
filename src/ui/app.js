@@ -16,6 +16,7 @@ import { renderCourse } from './pages/course.js';
 import { renderAnnouncements } from './pages/announcements.js';
 import { renderInbox } from './pages/inbox.js';
 import { renderPinned } from './pages/pinned.js';
+import { renderThemes } from './pages/themes.js';
 import { renderCompleted } from './pages/completed.js';
 import { watchDay } from './celebrate.js';
 import { installTooltips } from './tooltip.js';
@@ -65,6 +66,7 @@ function parseRoute() {
   if (id === 'inbox' && feat('inbox')) return { page: 'inbox', nav: 'courses' };
   if (id === 'pinned' && feat('pins')) return { page: 'pinned', nav: 'home' }; // I2
   if (id === 'completed' && feat('completedList')) return { page: 'completed', nav: 'home' }; // D8
+  if (id === 'themes') return { page: 'themes', nav: 'themes' }; // J8
   const page = id === 'settings' || pagesShown().some((p) => p.id === id) ? id : 'home';
   return { page, nav: page };
 }
@@ -137,6 +139,7 @@ function topBar(ctx, current) {
           state.cache?.fetchedAt ? `Updated ${formatTime(state.cache.fetchedAt, ctx.tz)}` : syncing ? 'Loading…' : ''
         ),
         iconButton('refresh', 'Refresh from Canvas (r)', manualRefresh, { class: syncing ? 'is-spinning' : '', key: 'refresh' }),
+        h('a', { href: '#/themes', class: ['icon-btn', current === 'themes' && 'is-on'], title: 'Themes', 'aria-label': 'Themes', 'data-key': 'nav:themes' }, icon('palette')), // J8
         h('a', { href: '#/settings', class: ['icon-btn', current === 'settings' && 'is-on'], title: 'Settings', 'aria-label': 'Settings', 'data-key': 'nav:settings' }, icon('gear'))
       )
     )
@@ -330,6 +333,8 @@ function render() {
           ? renderAnnouncements(ctx)
           : r.page === 'inbox'
             ? renderInbox(ctx)
+            : r.page === 'themes'
+              ? renderThemes(ctx)
             : r.page === 'pinned'
               ? renderPinned(ctx)
               : r.page === 'completed'
@@ -436,6 +441,7 @@ function onKey(e) {
   }
   else if (k === 'i' && feat('inbox')) location.hash = '#/inbox';
   else if (k === 'm' && feat('askMochi')) openDrawer('mochi'); // J4
+  else if (k === 'e' && feat('customEvents')) openDrawer('event', 'new'); // G12
   else if (k === 'x' || k === 'p') {
     const id = focusedItemId();
     const item = id && buildCtx().allItems.find((i) => i.id === id);

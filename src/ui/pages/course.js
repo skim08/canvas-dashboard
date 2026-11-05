@@ -2,6 +2,7 @@
 // Tabs the class doesn't use (per Canvas's own navigation) are hidden.
 
 import { h } from '../dom.js';
+import { needsSyllabus } from '../syllabusDrawer.js';
 import { icon } from '../icons.js';
 import { state } from '../store.js';
 import { ui, setUi, openDrawer } from '../actions.js';
@@ -69,7 +70,8 @@ export function renderCourse(ctx, courseId, tabId) {
         'div',
         { class: 'course-head-actions' },
         ...markButtons(MARK_KEY.course(course.id), { type: 'course', title: ctx.nickOf(course.id), courseId: course.id, ref: course.id }, { afterHide: null }), // I2
-        feat('syllabusDates') || feat('classSchedule') ? button('Syllabus dates', () => openDrawer('syllabus', course.id), { key: 'course-syllabus', iconName: 'clock' }) : null, // K5–K7
+        // K5–K7; K23: a primary "Add syllabus" until the class has its times.
+        feat('syllabusDates') || feat('classSchedule') ? (needsSyllabus(ctx).some((c) => c.id === course.id) ? button('Add syllabus', () => openDrawer('syllabus', course.id), { key: 'course-syllabus', iconName: 'clock', kind: 'primary' }) : button('Syllabus dates', () => openDrawer('syllabus', course.id), { key: 'course-syllabus', iconName: 'clock' })) : null,
         h('a', { class: 'btn btn-secondary', href: course.url, target: '_blank', rel: 'noopener', 'data-key': 'course-canvas' }, 'Open in Canvas', icon('external'))
       )
     ),

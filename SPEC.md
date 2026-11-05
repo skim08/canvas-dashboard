@@ -38,7 +38,7 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 
 **Structure**
 1. Top-level pages: **Home, Courses, Grades, Calendar**, plus **Other** for non-class courses and events (B11, added 2026-10-01 at the owner's request; it disappears if turned off). Settings sits behind an icon. No other top-level navigation.
-2. Home stays small. Since 2026-10-07 (your layout): Due soon in the middle at the top, with a slim alert strip above it only when there's something to act on; a side column with **Grades at a glance** and the **exam countdown** (C16); Mochi's panel (J3) on the right. Medium windows share one side column; narrow windows stack Due soon first.
+2. Home stays small. Since 2026-10-07 (your layout): Due soon in the middle at the top, with a slim alert strip above it only when there's something to act on; a side column with **Grades at a glance** and the **exam countdown** (C16); Neko's panel (J3) on the right. Medium windows share one side column; narrow windows stack Due soon first.
 3. **Details open on click** in a large centered window (about 90% of the screen, like Gmail's expanded compose; your choice, 2026-10-07), with ✕, Esc or a click outside to close. A button in its header switches to the original side panel, and the choice is remembered. Lists show one line per item; everything else lives in the details. No stacked windows.
 4. Lists show at most **7 items** before a "Show all" link.
 5. Every feature must have an obvious single home. If it doesn't fit a page cleanly, it goes in a detail view, not on the main surface.
@@ -60,9 +60,9 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 15. All text meets WCAG AA contrast in both light and dark mode.
 
 **Motion and feel**
-16. Transitions 150–200ms. Respect "reduce motion" in macOS settings. Celebrations (J6) and Mochi's little bob and blink are short and stop completely with reduce motion.
+16. Transitions 150–200ms. Respect "reduce motion" in macOS settings. Celebrations (J6) and Neko's little bob and blink are short and stop completely with reduce motion.
 17. One icon set (outline style, 16/20px).
-18. Every empty state has a short, friendly message ("Nothing due this week"). Happy ones ("You're all caught up") may show Mochi (J7).
+18. Every empty state has a short, friendly message ("Nothing due this week"). Happy ones ("You're all caught up") may show Neko (J7).
 19. Loading shows the last saved data immediately, then updates quietly. No full-screen spinners.
 
 ---
@@ -117,8 +117,9 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 | 3 | Course content | Section F (except F13, F14, F15) |
 | 4 | Planning and notifications | Sections G and H, plus C7. Approved by you 2026-10-06 |
 | 5 | Extras | Section I, F13, F14, plus D8 and D9 (added 2026-10-06) |
-| 6 | Look and feel | Section J (added 2026-10-06 at your request): soft pink theme, Mochi, Ask Mochi, celebrations; plus C16 exam countdown (2026-10-07) |
+| 6 | Look and feel | Section J (added 2026-10-06 at your request): soft pink theme, Neko, Ask Neko, celebrations; plus C16 exam countdown (2026-10-07) |
 | 7 | Any student (approved by you 2026-10-20; built 2026-10-20, waiting on your checks and choices) | Section K (added 2026-10-20 at your request): works at any school's Canvas, syllabus import, setup, and what's needed to publish free on the Chrome Web Store |
+| 8 | After launch | Requests from the owner and friends after publishing (2026-11-04): G12 custom events, J8 themes tab with animal mascots, K23 syllabus setup comes first. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
 
 A feature always lands in the same phase as, or a later phase than, any feature it depends on.
 
@@ -971,6 +972,16 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Cancelled days are marked. Overlapping blocks in the Day view sit side by side. Can be turned off in Settings → Features.
   - A date with no time shows as all-day ("time not listed") instead of a made-up time, in lists, the Day view's All-day row, details and the calendar export.
 
+#### G12 · Custom events
+- **Status:** [x] done — “+ Event” on the Calendar, a click on an empty time slot in Day or Week, or the E key opens the event form: what, date, start and end (no start = all day), class (for its color), kind (event, reading, something to make, task), weekly repeat on chosen weekdays until a date (16 weeks if none), note. Events are time blocks in Day and Week, appear in Month, List, Home and Ask Neko like any calendar item, can be checked off, and their details have Edit, Delete this one and Delete every time. Saved in your data (backup included); switch in Settings → Features; E listed under ?. Tested: weekday repeats with skipped days, Pacific times across the November time change, all-day events, the switch and backup · **Phase:** 8
+- **What:** Add your own events to the calendar, for things Canvas doesn't list (pre-class readings, slides to make, study sessions). *(Added 2026-11-04 at the owner's request, from a friend's feedback.)*
+- **Done when:**
+  - A "+ Event" button on the Calendar, and a click on an empty time slot in Day or Week view, open a form: title, date, start and end time (or all day), an optional class (for its color), and an optional note.
+  - An event can repeat on chosen weekdays until a date (like "Mon and Wed until Dec 11").
+  - Events show as blocks in Day and Week, in Month and List, and in "Ask Neko" answers about your schedule.
+  - Events can be marked done like to-dos, edited, and deleted: one occurrence or the whole series.
+  - Events are saved locally and included in backup and restore (A10).
+
 ### H. Notifications
 
 #### H1 · Deadline reminders
@@ -1046,7 +1057,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 *(Phase 6, added 2026-10-06 at the owner's request.)*
 
 #### J1 · Soft pink theme
-- **Status:** [x] done — soft-pink tinted backgrounds, a raspberry-pink accent and class colors softened to match, in light and dark. Every text color passes WCAG AA in both (tools/contrast.py checks pink and Classic, light and dark). Settings → Appearance → Color theme switches back to Classic. No flash of the wrong colors on open · **Phase:** 6
+- **Status:** [x] done — soft-pink tinted backgrounds, a raspberry-pink accent and class colors softened to match, in light and dark. Every text color passes WCAG AA in both (tools/contrast.py checks pink and Classic, light and dark). Settings → Appearance → Color theme switches back to Classic. No flash of the wrong colors on open (2026-11-04, J8: the color choice moved to the Themes tab, linked from Settings → Appearance; Classic is still there) · **Phase:** 6
 - **What:** A soft pink color scheme.
 - **Done when:**
   - The whole app uses the pink palette in light and dark mode, with all text meeting AA contrast.
@@ -1057,22 +1068,23 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **What:** A friendlier, rounded font for titles and numbers.
 - **Done when:** Headings and big numbers use the system's rounded font where the Mac has it, falling back to the normal system font.
 
-#### J3 · Mochi's daily greeting
-- **Status:** [x] done — Mochi, an original cat drawn in code (no image files), greets you at the top of Home ("Good morning, Sam!") with up to three lines from your own data, in priority order: overdue work, a quiz or exam in the next 3 days, what's due today (or "Everything due today is done"), your next class with room, your streak, classes at risk. Mood follows your day: worried (overdue or a test within a day), celebrating (today's work done), happy (on a streak), sleepy (late night). On Home she's a panel in the right column with the chat built in (J4). On wide windows the panel is exactly as tall as the Grades + Exams column, so both sides weigh the same; the chat fills the space and scrolls inside it. There's no hide button (your choice, 2026-10-07); Settings → Features turns her off. Gentle bob and blink, off with reduce motion · **Phase:** 6
+#### J3 · Neko's daily greeting
+- **Note:** the mascot was called Mochi until 2026-11-04, when the owner renamed her Neko (the main mascot, like the app). Other themes have their own mascots (J8).
+- **Status:** [x] done — Neko, an original cat drawn in code (no image files), greets you at the top of Home ("Good morning, Sam!") with up to three lines from your own data, in priority order: overdue work, a quiz or exam in the next 3 days, what's due today (or "Everything due today is done"), your next class with room, your streak, classes at risk. Mood follows your day: worried (overdue or a test within a day), celebrating (today's work done), happy (on a streak), sleepy (late night). On Home she's a panel in the right column with the chat built in (J4). On wide windows the panel is exactly as tall as the Grades + Exams column, so both sides weigh the same; the chat fills the space and scrolls inside it. There's no hide button (your choice, 2026-10-07); Settings → Features turns her off. Gentle bob and blink, off with reduce motion · **Phase:** 6
 - **What:** A cute cat mascot who greets you with a tiny summary of your day.
 - **Done when:**
-  - Home shows Mochi with a greeting and 1–3 lines about today, written from your data with no AI and nothing sent anywhere.
+  - Home shows Neko with a greeting and 1–3 lines about today, written from your data with no AI and nothing sent anywhere.
   - Her mood matches your day; she can be hidden for the day or turned off in Settings → Features.
 
-#### J4 · Ask Mochi: built-in answers
-- **Status:** [x] done — a chat built into Mochi's panel on Home (and a full-size version with m) that answers from your data instantly and privately: what's due (today, tomorrow, a weekday, next week, 11/27, Nov 26…), next exams or quizzes, when and where a lecture or quiz section is, why there's no class or section (holidays, async days, a quiz or exam taking that slot, or "it only meets Wednesdays and Fridays"; all from your syllabi; fixed 2026-10-07 to count quizzes and to read "next week on Wednesday" as that day), grades and GPA, overdue work, office hours, what to work on next, what you finished, your streak. Understands class names, codes and everyday words ("accounting", "stats", "real estate"). Answers link to the items. Example questions are picked from your data and only shown when they apply (a cancelled class coming up, your next in-person quiz or exam, overdue work, your lowest class), and Mochi can answer each one (2026-10-07). The conversation isn't saved · **Phase:** 6
+#### J4 · Ask Neko: built-in answers
+- **Status:** [x] done — a chat built into Neko's panel on Home (and a full-size version with m) that answers from your data instantly and privately: what's due (today, tomorrow, a weekday, next week, 11/27, Nov 26…), next exams or quizzes, when and where a lecture or quiz section is, why there's no class or section (holidays, async days, a quiz or exam taking that slot, or "it only meets Wednesdays and Fridays"; all from your syllabi; fixed 2026-10-07 to count quizzes and to read "next week on Wednesday" as that day), grades and GPA, overdue work, office hours, what to work on next, what you finished, your streak. Understands class names, codes and everyday words ("accounting", "stats", "real estate"). Answers link to the items. Example questions are picked from your data and only shown when they apply (a cancelled class coming up, your next in-person quiz or exam, overdue work, your lowest class), and Neko can answer each one (2026-10-07). The conversation isn't saved · **Phase:** 6
 - **What:** Ask questions about your schedule and assignments, like "Why don't I have a quiz section next week?"
 - **Done when:**
   - Common questions about dates, classes, exams, grades and work get exact answers from your data.
   - Questions it doesn't recognize go to J5, or get a friendly list of example questions.
 
-#### J5 · Ask Mochi: on-device AI
-- **Status:** [~] partial — verify in Chrome: questions the built-in answers don't recognize go to Chrome's built-in AI (Gemini Nano, the Prompt API), which runs on your Mac. It gets a short summary of your next 14 days, grades and class meetings and is told to answer only from it; answers are labeled "On-device AI · double-check important details". If the model isn't downloaded yet, Mochi offers a one-time download (done by Chrome itself); if your Mac can't run it, Mochi sticks to J4. Tested with sample data up to the download offer; real answers depend on your Mac · **Phase:** 6
+#### J5 · Ask Neko: on-device AI
+- **Status:** [~] partial — verify in Chrome: questions the built-in answers don't recognize go to Chrome's built-in AI (Gemini Nano, the Prompt API), which runs on your Mac. It gets a short summary of your next 14 days, grades and class meetings and is told to answer only from it; answers are labeled "On-device AI · double-check important details". If the model isn't downloaded yet, Neko offers a one-time download (done by Chrome itself); if your Mac can't run it, Neko sticks to J4. Tested with sample data up to the download offer; real answers depend on your Mac · **Phase:** 6
 - **What:** Natural conversation for anything the built-in answers don't cover, without your data leaving your computer.
 - **Done when:**
   - When Chrome's on-device model is available, unrecognized questions are answered from your schedule, streaming in, labeled as AI.
@@ -1083,12 +1095,28 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **What:** Small moments of delight.
 - **Done when:** Checking off shows a quick pop; completing the day shows confetti once; reduce motion turns it all off; can be turned off in Settings → Features.
 
-#### J7 · Mochi in empty states
-- **Status:** [x] done — happy empty states show Mochi: Home's "You're all caught up", Next up's "Nothing left to work on", Calendar's "Nothing due", Completed and Pinned when empty. Follows the Mochi switch · **Phase:** 6
+#### J7 · Neko in empty states
+- **Status:** [x] done — happy empty states show Neko: Home's "You're all caught up", Next up's "Nothing left to work on", Calendar's "Nothing due", Completed and Pinned when empty. Follows the Neko switch · **Phase:** 6
 - **What:** Friendly empty states.
-- **Done when:** Happy empty states show a small Mochi with the message.
+- **Done when:** Happy empty states show a small Neko with the message.
 
 ---
+
+#### J8 · Themes tab with animal mascots
+- **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Neko (pink cat, default), Matcha (green frog), Ocean (Finn the shark), Polar (Yuki the polar bear, white/grey/black), Honey (shiba) and Classic. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA · **Phase:** 8
+- **What:** Choose between animal themes, each with its own mascot, name and colors. *(Added 2026-11-04 at the owner's request.)*
+- **Done when:**
+  - A Themes tab (from the top bar and Settings → Appearance) shows each theme as a card with its mascot and colors. One click applies it everywhere.
+  - Five themes:
+    - **Neko**, the pink cat (default)
+    - **Matcha**, a green frog
+    - **Finn**, a blue ocean shark
+    - **Yuki**, a minimalist white, grey and black polar bear
+    - **Honey**, a golden shiba dog
+  - Classic stays available.
+  - Each mascot is drawn in code in the same style, with the same five moods (content, happy, worried, sleepy, celebrating). Its name is used in the greeting, the chat ("Ask Matcha") and empty states.
+  - Every theme has light and dark colors that pass WCAG AA contrast (`tools/contrast.py` checks them all).
+  - The choice is saved and included in backup.
 
 ### K. Any student
 
@@ -1110,7 +1138,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **Done when:** All dates, "due today", calendars, reminders and syllabus times use the computer's time zone, with tests for a non-Pacific zone and a daylight-saving change.
 
 #### K3 · Grading scale presets
-- **Status:** [x] done — Settings → Grades → Grading system: letter grades with + and −, letters without, or UW 4.0 decimal. Grades show as letters (A−) in letter systems everywhere: Home, Grades, class details, Mochi, alerts. "Need 91.2% for an A−" uses letters too. Canvas letter schemes (A, A-, B+ …) are imported. Usual credits per class and credits to graduate default to the system’s norm (3 and 120, or 5 and 180), labeled "assumed". P/NP added to pass/fail. Your existing data stays UW decimal with 180 credits. Hand-calculated tests: cutoffs at 93/92.99/87/80/70/60/59.99, letters without +/−, percent needed, and a 3-class GPA (3.12) · **Phase:** 7
+- **Status:** [x] done — Settings → Grades → Grading system: letter grades with + and −, letters without, or UW 4.0 decimal. Grades show as letters (A−) in letter systems everywhere: Home, Grades, class details, Neko, alerts. "Need 91.2% for an A−" uses letters too. Canvas letter schemes (A, A-, B+ …) are imported. Usual credits per class and credits to graduate default to the system’s norm (3 and 120, or 5 and 180), labeled "assumed". P/NP added to pass/fail. Your existing data stays UW decimal with 180 credits. Hand-calculated tests: cutoffs at 93/92.99/87/80/70/60/59.99, letters without +/−, percent needed, and a 3-class GPA (3.12) · **Phase:** 7
 - **What:** Common grading systems, not just UW's.
 - **Done when:**
   - Presets: UW 4.0 decimal, US letter grades with plus/minus (A = 4.0, A− = 3.7, …), letter grades without plus/minus, and custom. Chosen once for your school, changeable per class.
@@ -1118,7 +1146,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Grade and GPA math for every preset has tests with hand-calculated answers.
 
 #### K4 · Semesters and quarters
-- **Status:** [x] done — the kind of term is detected from Canvas’s term names (Autumn/Winter → quarters, "Semester" → semesters) or else term length (98+ days → semester), or chosen in Settings → General → Terms. Wording follows it everywhere: "Semester GPA", "Calendar → Semester", "This semester", "Past semesters", the archive and Mochi. With no clue it says "term" · **Phase:** 7
+- **Status:** [x] done — the kind of term is detected from Canvas’s term names (Autumn/Winter → quarters, "Semester" → semesters) or else term length (98+ days → semester), or chosen in Settings → General → Terms. Wording follows it everywhere: "Semester GPA", "Calendar → Semester", "This semester", "Past semesters", the archive and Neko. With no clue it says "term" · **Phase:** 7
 - **What:** Works with semester schools as well as quarter schools.
 - **Done when:** Term type (quarter, semester, trimester) is detected from Canvas term dates or chosen in setup, and the archive (I1), quarter timeline (C7), GPA wording and "this quarter" text all follow it.
 
@@ -1138,7 +1166,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 #### K7 · Class meeting editor
 - **Status:** [x] done — the same screen edits class meetings by hand (name, day buttons, start, end, room) and days off; a class page’s **Syllabus dates** button opens it, and saved dates can be edited later. Meetings missing days or a start time are flagged and left off the calendar · **Phase:** 7
 - **What:** Enter or fix class times, rooms and your section by hand.
-- **Done when:** Each class has an editor for meetings (lecture, section, lab: days, times, room, dates, cancelled days), feeding the calendar (G11) and Ask Mochi.
+- **Done when:** Each class has an editor for meetings (lecture, section, lab: days, times, room, dates, cancelled days), feeding the calendar (G11) and Ask Neko.
 
 #### K8 · Your syllabi become your data
 - **Status:** [~] partial — the three hand-written syllabi moved out of the code into `owner-data/syllabi.js`. On first run they’re copied into your saved data (storage key `syllabi`, included in backup), so the published zip contains no one’s schedule (a test checks this). Saved syllabi for one Canvas course win over course-code matches. **Check in Chrome:** after reloading, your calendar, exams and grades look the same as before · **Phase:** 7
@@ -1233,6 +1261,17 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - **Done when:**
   - The name stays a placeholder until the owner chooses.
   - Descriptions say "works with Canvas", the Canvas logo is never used, and the not-affiliated note appears everywhere the name appears (extension, store listing, site).
+
+#### K23 · Syllabus setup comes first
+- **Status:** [x] done — setup’s syllabus step now explains it’s how classes get on your calendar (“This is how your classes get on your calendar…”) and says Home will remind you. Until every class has class times (or is marked “not needed”, e.g. online classes, from its syllabus screen), Home shows a “Finish setting up: add your syllabi” card with a chip per class; the Calendar shows a banner naming those classes; course cards say “No class times yet”; the class page’s button becomes a primary “Add syllabus”; and Settings has a “Syllabi & class times” list with Add/Edit for every class. All open the class’s syllabus screen · **Phase:** 8
+- **What:** Make adding syllabi and class times an obvious, early task, so new students get class blocks on their calendar. *(Added 2026-11-04 at the owner's request: friends couldn't find where to add syllabi after skipping that setup step.)*
+- **Done when:**
+  - Setup says why syllabi matter (class times, exams and deadlines on the calendar).
+  - Until every class has a syllabus or class times (or is marked "no syllabus"), Home shows a clear "Finish setting up" card listing those classes with an Add button each.
+  - The Calendar shows a banner when classes are missing their class times.
+  - Course cards show "Add syllabus" until they have one.
+  - Settings has a "Syllabi & class times" section listing every class with Add or Edit.
+  - All of these open the class's syllabus screen (K5–K7).
 
 **Your tasks before publishing (not features, listed so they aren't forgotten):**
 - Choose the name (K11).
@@ -1354,6 +1393,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | G9 | Day view | 4 | [x] |
 | G10 | Dates from your syllabi | 4 | [x] |
 | G11 | Class meetings and weekly topics | 4 | [~] |
+| G12 | Custom events | 8 | [x] |
 | H1 | Deadline reminders | 4 | [~] |
 | H2 | Icon badge | 4 | [~] |
 | H3 | Morning summary | 4 | [~] |
@@ -1365,11 +1405,12 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | I2 | Pin, notes and hide everywhere | 5 | [x] |
 | J1 | Soft pink theme | 6 | [x] |
 | J2 | Rounded headings | 6 | [x] |
-| J3 | Mochi's daily greeting | 6 | [x] |
-| J4 | Ask Mochi: built-in answers | 6 | [x] |
-| J5 | Ask Mochi: on-device AI | 6 | [~] |
+| J3 | Neko's daily greeting | 6 | [x] |
+| J4 | Ask Neko: built-in answers | 6 | [x] |
+| J5 | Ask Neko: on-device AI | 6 | [~] |
 | J6 | Celebrations | 6 | [x] |
-| J7 | Mochi in empty states | 6 | [x] |
+| J7 | Neko in empty states | 6 | [x] |
+| J8 | Themes tab with animal mascots | 8 | [x] |
 | K1 | Choose your school | 7 | [~] |
 | K2 | Your time zone | 7 | [x] |
 | K3 | Grading scale presets | 7 | [x] |
@@ -1392,5 +1433,6 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K20 | What's new | 7 | [x] |
 | K21 | Git repository | 7 | [x] |
 | K22 | "Works with Canvas" wording | 7 | [x] |
+| K23 | Syllabus setup comes first | 8 | [x] |
 
-**Total: 144 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Done: 117 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
+**Total: 147 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 3 · Done: 120 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0

@@ -45,8 +45,9 @@ export const FEATURES = [
   { id: 'syllabusDates', label: 'Dates from your syllabi', desc: 'Exams and deadlines from your syllabi, when Canvas doesn’t list them.' },
   { id: 'classSchedule', label: 'Class meetings', desc: 'Lectures and quiz sections, with each week’s topics, in the calendar’s Day and Week views.' },
   { id: 'roundedType', label: 'Rounded headings', desc: 'Your Mac’s rounded font for titles and big numbers.' },
-  { id: 'mochi', label: 'Mochi', desc: 'A little cat on Home with a summary of your day.' },
-  { id: 'askMochi', label: 'Ask Mochi', desc: 'Ask questions about your schedule and grades. Answers stay on your computer.' },
+  { id: 'mochi', label: 'Mascot', desc: 'Neko (or your theme’s mascot) on Home with a summary of your day.' },
+  { id: 'askMochi', label: 'Ask your mascot', desc: 'Ask questions about your schedule and grades. Answers stay on your computer.' },
+  { id: 'customEvents', label: 'Your own events', desc: 'Add events to the calendar for things Canvas doesn’t list, like pre-class readings or study sessions. Press E to add one.' },
   { id: 'feedbackPrompt', label: 'Feedback request', desc: 'After a week of use, one “How’s it going?” card with links to give feedback or a rating. Counted on this computer only.' },
   { id: 'celebrations', label: 'Celebrations', desc: 'A little pop when you check things off, and confetti when your day is done.' },
   { id: 'examCountdown', label: 'Exam countdown', desc: 'Your next exams and in-person quizzes, with days to go, on Home.' },
@@ -128,6 +129,8 @@ export const DEFAULT_USERDATA = {
   focusLog: {}, // G7: itemId -> seconds of focus time
   nextPinned: {}, // G5: itemId -> pinnedAt
   nextSkipped: {}, // G5: itemId -> skip until (ms)
+  events: [], // G12: your own calendar events (see lib/events.js)
+  syllabusSkip: {}, // K23: courseId -> true: no syllabus or class times needed (e.g. an online class)
   marks: {}, // I2: pins and hides on announcements, pages, files, discussions, messages, modules, classes: key -> { type, title, courseId, ref, pinned, hidden }
 };
 
