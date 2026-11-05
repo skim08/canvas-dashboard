@@ -105,6 +105,18 @@ for p in files:
 canvas_src = content("src/lib/canvas.js")
 if "if (method !== 'GET' && !writeAllowed(url, method)) throw new ReadOnlyError();" not in canvas_src: problems.append("canvas.js: the read-only guard is missing")
 if "const MESSAGE_WRITES = { POST: /^\\/api\\/v1\\/conversations(\\/\\d+\\/add_message)?$/, PUT: /^\\/api\\/v1\\/conversations\\/\\d+$/ };" not in canvas_src: problems.append("canvas.js: the inbox-only write rule (K25) changed; check it still allows only conversations")
+# K17: the website's patch notes come from CHANGELOG.md, refreshed on every build.
+def changelog_entries():
+    out = []
+    for line in open("CHANGELOG.md", encoding="utf-8"):
+        m = re.match(r"^## (\S+) \((\d{4}-\d{2}-\d{2})\)", line)
+        if m: out.append({"version": m.group(1), "date": m.group(2), "items": []})
+        elif line.startswith("- ") and out: out[-1]["items"].append(line[2:].strip())
+    return out
+notes = changelog_entries()
+open(os.path.join("docs", "changelog.json"), "w", encoding="utf-8").write(json.dumps({"versions": notes}, indent=2, ensure_ascii=False) + "\n")
+if not notes or notes[0]["version"] != json.load(open("manifest.json"))["version"]: problems.append("CHANGELOG.md's newest entry isn't this version")
+
 # K14: the website, README and store screenshots must show this version.
 shots = os.path.join("docs", "img", "screenshots.json")
 shot_version = json.load(open(shots)).get("version") if os.path.exists(shots) else None

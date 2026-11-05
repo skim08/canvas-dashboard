@@ -501,6 +501,12 @@ test('K20', 'version is the same in manifest.json, CHANGELOG.md and the app', as
   const md = await (await fetch('../../CHANGELOG.md')).text();
   eq([VERSION, manifest.version, md.match(/^## (\S+)/m)[1]], [manifest.version, VERSION, VERSION]);
 });
+test('K20', 'the website’s patch notes match the changelog (rebuild with tools/build_zip.py)', async () => {
+  const { CHANGES } = await import('../lib/changelog.js');
+  const site = await (await fetch('../../docs/changelog.json', { cache: 'no-store' })).json();
+  const plain = (t) => t.replace(/[’‘]/g, "'");
+  eq(site.versions.map((v) => [v.version, v.date, v.items.length, plain(v.items[0])]), CHANGES.map((c) => [c.version, c.date, c.items.length, plain(c.items[0])]));
+});
 test('K20', 'notes show once per update, newest first', async () => {
   const { unseen, newer, VERSION, CHANGES } = await import('../lib/changelog.js');
   const previous = CHANGES[1].version;

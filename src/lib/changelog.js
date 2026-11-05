@@ -12,12 +12,6 @@ export const CHANGES = [
       'Canvas groups: your project teams and study groups now have their own pages (Courses → Your groups) with announcements, discussions, pages, files and members.',
       'Classes that post assignments the week they’re due no longer show as At risk: points not posted yet count as work to come, not zeros.',
       'No syllabus for a class? Its syllabus window now lets you type in exams, deadlines, class times and grading (including a class total, like 1000 points).',
-    ],
-  },
-  {
-    version: '0.3.0',
-    date: '2026-11-05',
-    items: [
       'Themes tab (palette icon, top right): pick Neko the cat, Kero the frog, Nami the shark, Yumi the polar bear or Hachi the shiba, each with its own colors.',
       'Our cat mascot is now called Neko.',
       'Your own events: click New event on the Calendar (or an empty time slot) for pre-class readings, study sessions and more. They can repeat weekly.',

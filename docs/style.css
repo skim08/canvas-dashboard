@@ -68,3 +68,19 @@ footer { padding: var(--s6) 0 var(--s7); color: var(--text-muted); font-size: 14
 footer nav { display: flex; flex-wrap: wrap; gap: var(--s4); margin-bottom: var(--s2); }
 footer a { color: var(--text-muted); }
 .features strong::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: var(--s2); border-radius: 50%; background: var(--pink); vertical-align: 1px; }
+
+/* K17: patch notes (and the latest one on the home page) */
+.lead { color: var(--text-muted); }
+.updates { display: grid; gap: var(--s4); margin-top: var(--s5); }
+.update { padding: var(--s4) var(--s5); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.update header { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2) var(--s3); }
+.update h2 { margin: 0; font-size: 18px; }
+.doc .update h2 { margin: 0; }
+.update time { color: var(--text-muted); font-size: 14px; }
+.update ul { margin: var(--s3) 0 0; padding-left: var(--s5); }
+.update li { margin: var(--s1) 0; color: var(--text); }
+.update .more { margin: var(--s3) 0 0; font-size: 14px; }
+.tag-latest { padding: 2px var(--s2); border-radius: 999px; background: var(--pink); color: #2a0d18; font-size: 12px; font-weight: 600; }
+.latest { max-width: 720px; margin: 0 auto; padding: var(--s2) 0 0; border-top: 0; }
+.latest:empty { display: none; }
+.latest .kicker { margin: 0 0 var(--s2); color: var(--text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
