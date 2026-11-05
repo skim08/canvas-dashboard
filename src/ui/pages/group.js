@@ -11,7 +11,7 @@ import { relativeAgo, formatDate } from '../../lib/time.js';
 import { CANVAS_ORIGIN } from '../../lib/env.js';
 import { useContent, groupKey } from '../content.js';
 import { pagesTab, filesTab, discussionsTab, statusView } from './course.js';
-import { newMessage, isMe } from './inbox.js';
+import { newMessage, isMe, canCompose } from './inbox.js';
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
@@ -57,7 +57,7 @@ function overviewTab(ctx, g, key) {
 function peopleTab(ctx, g, key) {
   const r = useContent('members', key);
   if (r.status !== 'ready') return statusView(r, 'members');
-  const canSend = feat('sendMessages');
+  const canSend = canCompose();
   return h(
     'div',
     { class: 'rows' },
@@ -97,7 +97,7 @@ export function renderGroup(ctx, groupId, tabId) {
       h(
         'div',
         { class: 'course-head-actions' },
-        feat('sendMessages') ? button('Message the group', () => newMessage(`group_${g.id}`, { id: `group_${g.id}`, name: `Everyone in ${g.name}` }), { kind: 'primary', iconName: 'mail', key: 'g-message' }) : null,
+        canCompose() ? button('Message the group', () => newMessage(`group_${g.id}`, { id: `group_${g.id}`, name: `Everyone in ${g.name}` }), { kind: 'primary', iconName: 'mail', key: 'g-message' }) : null,
         h('a', { class: 'btn btn-secondary', href: g.url || `${CANVAS_ORIGIN}/groups/${g.id}`, target: '_blank', rel: 'noopener', 'data-key': 'g-canvas' }, 'Open in Canvas', icon('external'))
       )
     ),

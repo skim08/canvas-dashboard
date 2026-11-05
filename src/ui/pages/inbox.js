@@ -14,6 +14,9 @@ import { star } from '../inboxActions.js';
 
 const shown = notHidden((c) => MARK_KEY.conversation(c.id)); // I2
 
+// F18: writing needs both the Inbox and Send messages switches on.
+export const canCompose = () => feat('inbox') && feat('sendMessages');
+
 export const isUnread = (c) => c.unread && !isRead('conv', c.id);
 
 export function unreadMessages() {
@@ -50,10 +53,12 @@ function listFor(scope) {
 
 // Everyone in the conversation but you (Canvas lists you too).
 // Is this name (and id, when known) you?
+// Before the first sync with ids, only an exact full-name match counts (a classmate
+// with your first name isn't you).
 export function isMe(name, id = null) {
   const p = state.cache?.profile || {};
   if (id != null && p.id) return String(id) === p.id;
-  return !!name && (name === p.fullName || name === p.name || (!!p.name && name.startsWith(`${p.name} `)));
+  return !!name && !!p.fullName && name === p.fullName;
 }
 
 export const others = (c) => {
@@ -79,7 +84,7 @@ function row(c, ctx, scope) {
       h(
         'span',
         { class: 'row-main' },
-        h('span', { class: 'row-title' }, unread ? h('span', { class: 'unread-dot', 'aria-label': 'Unread' }) : null, pinMark(MARK_KEY.conversation(c.id)), h('span', { class: 'conv-subject' }, c.subject), c.count > 1 ? h('span', { class: 'conv-count muted' }, String(c.count)) : null),
+        h('span', { class: 'row-title' }, unread ? h('span', { class: 'unread-dot', role: 'img', 'aria-label': 'Unread' }) : null, pinMark(MARK_KEY.conversation(c.id)), h('span', { class: 'conv-subject' }, c.subject), c.count > 1 ? h('span', { class: 'conv-count muted' }, String(c.count)) : null),
         h('span', { class: 'row-meta' }, where.name ? h('span', { class: 'conv-where' }, where.color ? dot(where.color) : icon('users', 12), where.name) : null, h('span', null, [scope === 'sent' ? `To ${others(c).slice(0, 3).join(', ')}` : others(c).slice(0, 3).join(', '), c.lastAt ? relativeAgo(c.lastAt, ctx.now) : null].filter(Boolean).join(' · '))),
         c.lastMessage ? h('span', { class: 'ann-snippet' }, c.lastMessage.slice(0, 160)) : null
       )
@@ -100,7 +105,7 @@ export function renderInbox(ctx) {
   }
   const list = (data || []).filter((c) => !filter || (c.courseId ? `course_${c.courseId}` : c.groupId ? `group_${c.groupId}` : '') === filter);
   const unread = unreadMessages().length;
-  const canSend = feat('sendMessages');
+  const canSend = canCompose();
   return h(
     'div',
     { class: 'page inbox-page' },

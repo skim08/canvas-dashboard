@@ -127,7 +127,20 @@ const QUESTIONS = [
 
 let onFinish = () => {};
 
+// After picking a choice, move on once (a double-click or a quick Next mustn't skip a question).
+let pending = null;
+function autoNext() {
+  if (pending) return;
+  const at = pq.i;
+  pending = setTimeout(() => {
+    pending = null;
+    if (pq.i === at) next();
+  }, 180);
+}
+
 function next() {
+  clearTimeout(pending);
+  pending = null;
   const q = QUESTIONS[pq.i];
   q.save?.();
   if (pq.i < QUESTIONS.length - 1) pq.i += 1;
@@ -163,7 +176,7 @@ export function personalizeQuiz({ done, setupStep = null }) {
     h('div', { class: 'pq-head' }, mochiSvg('happy', 64), h('p', { class: 'setup-step' }, `${setupStep ? `${setupStep} · ` : ''}Question ${pq.i + 1} of ${QUESTIONS.length}`), h('div', { class: 'pq-dots', 'aria-hidden': 'true' }, QUESTIONS.map((_, k) => h('span', { class: ['pq-dot', k <= pq.i && 'is-on'] })))),
     h('h1', { class: 'setup-title' }, q.title()),
     h('p', { class: 'setup-lead' }, q.why),
-    h('div', { class: 'pq-body', onclick: q.auto ? (e) => e.target.closest('.pq-choice') && setTimeout(next, 180) : null }, q.body()),
+    h('div', { class: 'pq-body', onclick: q.auto ? (e) => e.target.closest('.pq-choice') && autoNext() : null }, q.body()),
     h(
       'div',
       { class: 'setup-actions' },

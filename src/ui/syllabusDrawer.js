@@ -10,6 +10,7 @@ import { icon } from './icons.js';
 import { textFromFile } from '../lib/fileText.js';
 import { htmlToText } from '../lib/sanitize.js';
 import { extractSyllabus, toSyllabus, fromSyllabus } from '../lib/syllabusImport.js';
+import { placesClassMeetings } from '../lib/syllabus.js';
 import { findProfile } from '../lib/profiles.js';
 import { formatDate } from '../lib/time.js';
 import { aiExtract, aiReady } from './syllabusAI.js';
@@ -170,13 +171,13 @@ function startScreen(course) {
       h('h3', null, 'Class times'),
       typedTimes(course.id)
         ? h('p', null, (state.userdata.classTimes[course.id] || []).map((r) => `${r.name}: ${r.days.join(', ')}`).join(' · '))
-        : hasTimes(mine || builtIn)
+        : hasTimes(course, mine || builtIn)
           ? h('p', null, 'From your syllabus.')
           : h('p', { class: 'setup-error' }, 'No class times yet, so lectures and sections aren’t on your calendar.'),
-      button(typedTimes(course.id) ? 'Edit class times' : 'Add class times', () => openDrawer('classTimes', course.id), { key: 'syl-class-times', kind: typedTimes(course.id) || hasTimes(mine || builtIn) ? 'secondary' : 'primary', iconName: 'clock' })
+      button(typedTimes(course.id) ? 'Edit class times' : 'Add class times', () => openDrawer('classTimes', course.id), { key: 'syl-class-times', kind: typedTimes(course.id) || hasTimes(course, mine || builtIn) ? 'secondary' : 'primary', iconName: 'clock' })
     ),
     // K23: online or self-paced classes have no class times; stop asking for them.
-    !state.userdata.syllabusSkip?.[course.id] && !hasTimes(mine || builtIn)
+    !state.userdata.syllabusSkip?.[course.id] && !hasTimes(course, mine || builtIn)
       ? h('p', { class: 'caption' }, 'No set class times, like an online class? ', h('button', { class: 'link-btn', 'data-key': 'syl-skip', onclick: () => (skipSyllabus(course.id), toast(`OK: ${course.nick || course.code} won’t ask for class times`)) }, 'Mark as not needed'))
       : null,
   ];
@@ -323,13 +324,13 @@ export const syllabusSession = (courseId) => st(courseId);
 // ---------- K23: syllabus setup comes first ----------
 
 // A class has its times once its syllabus lists weekly meetings or dated sessions.
-const hasTimes = (p) => !!p && ((p.schedule?.classes || []).some((c) => (c.days && c.days.length) || (p.schedule?.sessions || []).some((m) => m.in === c.id)));
+const hasTimes = (course, p) => placesClassMeetings(course, p);
 
 const typedTimes = (courseId) => (state.userdata.classTimes?.[courseId] || []).length > 0; // G13
 
 // Classes still missing their syllabus or class times (unless you said they don't need one).
 export function needsSyllabus(ctx) {
-  return (ctx.courses || []).filter((c) => !c.unavailable && !state.userdata.syllabusSkip?.[c.id] && !hasTimes(findProfile(c)) && !typedTimes(c.id));
+  return (ctx.courses || []).filter((c) => !c.unavailable && !state.userdata.syllabusSkip?.[c.id] && !hasTimes(c, findProfile(c)) && !typedTimes(c.id));
 }
 
 // What a class still needs: its syllabus, or (syllabus added, no times found) just its class times.

@@ -20,6 +20,7 @@ export function setUi(patch) {
 
 export function openDrawer(type, id = null) {
   ui.drawer = { type, id };
+  ui.drawerSeq = (ui.drawerSeq || 0) + 1; // forms start fresh each time they open (G12, G13)
   ui.menu = null;
   ui.snoozeOpen = false;
   notify();

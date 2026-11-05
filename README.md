@@ -35,7 +35,7 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
   - The public build only reads from Canvas, except for messages you choose to send or manage, and asks Chrome for the minimum permissions.
   - A strict content security policy, and Canvas HTML is sanitized before it's shown.
 - **Tested:**
-  - 325 browser tests, including hand-calculated grade and GPA math.
+  - 350 browser tests, including hand-calculated grade and GPA math.
   - Build tests that check the published zip.
   - Design checks: design tokens only, and WCAG AA contrast in every theme.
 - **Spec-driven:** [`SPEC.md`](SPEC.md) lists every feature with acceptance criteria and status. [`CLAUDE.md`](CLAUDE.md) holds the working rules.

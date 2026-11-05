@@ -51,16 +51,19 @@ export function setTransport(fn) {
   transport = fn;
 }
 
-// K25: the Canvas inbox's own addresses: list, send, reply, and update one conversation
-// (read/unread, star, archive). Nothing else on Canvas can be changed through it, and
-// nothing can be deleted (archiving is the most it does).
-export const isMessagePath = (url) => /^\/api\/v1\/conversations(\/\d+(\/add_message)?)?$/.test(String(url).replace(/^[a-z]+:\/\/[^/]+/i, '').split(/[?#]/)[0]);
-const writeAllowed = (url, method) => canWrite() || (canMessage() && (method === 'POST' || method === 'PUT') && isMessagePath(url));
+// K25: the Canvas inbox's own writes, and nothing else: send a message (POST
+// /conversations), reply (POST /conversations/<id>/add_message) and update one
+// conversation (PUT /conversations/<id>: read/unread, star, archive). PUT on
+// /conversations itself is Canvas's batch update, which can delete, so it's refused.
+const pathOf = (url) => String(url).replace(/^[a-z]+:\/\/[^/]+/i, '').split(/[?#]/)[0];
+const MESSAGE_WRITES = { POST: /^\/api\/v1\/conversations(\/\d+\/add_message)?$/, PUT: /^\/api\/v1\/conversations\/\d+$/ };
+export const isMessageWrite = (url, method) => !!MESSAGE_WRITES[method]?.test(pathOf(url));
+const writeAllowed = (url, method) => canWrite() || (canMessage() && isMessageWrite(url, method));
 
 // K15: the public build only reads (except the inbox, K25). Anything else that would change Canvas stops here.
 export class ReadOnlyError extends Error {
   constructor() {
-    super('This version of the dashboard only reads from Canvas');
+    super('This version of Neko can’t make that change in Canvas (it only reads, apart from your messages)');
     this.name = 'ReadOnlyError';
   }
 }

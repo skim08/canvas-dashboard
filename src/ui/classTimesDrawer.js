@@ -3,7 +3,7 @@
 
 import { h } from './dom.js';
 import { state, updateUser } from './store.js';
-import { closeDrawer, openDrawer, setUi, toast } from './actions.js';
+import { ui, closeDrawer, openDrawer, setUi, toast } from './actions.js';
 import { button, iconButton, emptyState } from './components.js';
 import { findProfile } from '../lib/profiles.js';
 import { addDays, dayKey, formatTime, instantAt } from '../lib/time.js';
@@ -61,10 +61,10 @@ export function classTimesDrawer(courseId, ctx) {
   const raw = [...ctx.courses, ...(ctx.otherCourses || [])].find((c) => c.id === courseId) || ctx.allCourses.find((c) => c.id === courseId);
   if (!raw) return emptyState('Class not found.');
   const course = { ...raw, nick: raw.nick || ctx.nickOf?.(courseId) || raw.autoNick || raw.code };
-  if (draftFor !== courseId || !draft) {
+  if (draftFor !== `${courseId}#${ui.drawerSeq}` || !draft) {
     const saved = state.userdata.classTimes?.[courseId] || [];
     draft = saved.length ? structuredClone(saved).map((r) => ({ ...r, where: r.where || '', end: r.end || '' })) : [{ id: uid(), name: 'Lecture', days: [], start: '', end: '', where: '' }];
-    draftFor = courseId;
+    draftFor = `${courseId}#${ui.drawerSeq}`;
   }
   const already = fromSyllabus(course);
   const range = termRange(course, ctx);

@@ -135,7 +135,7 @@ export function mascotMarkup(animal = 'cat', mood = 'neutral', size = 64) {
   const a = ANIMALS[animal] || ANIMALS.cat;
   const m = MOODS.includes(mood) ? mood : 'neutral';
   const k = a.k;
-  return `<svg width="${size}" height="${Math.round(size * 0.92)}" viewBox="0 0 120 110" aria-hidden="true">${a.back(k)}<g class="mochi-eyes">${eyes[m](k, a.eyesAt)}</g>${mouths[m](k, a.mouthY)}${extras[m] ? extras[m](k) : ''}</svg>`;
+  return `<svg width="${size}" height="${Math.round(size * 0.92)}" viewBox="0 0 120 110" aria-hidden="true">${a.back(k)}${m === 'neutral' ? `<g class="mochi-eyes">${eyes[m](k, a.eyesAt)}</g>` : eyes[m](k, a.eyesAt)}${mouths[m](k, a.mouthY)}${extras[m] ? extras[m](k) : ''}</svg>`;
 }
 
 export const MASCOT_MOODS = MOODS;

@@ -23,7 +23,7 @@ The public build only reads from Canvas (K15), with one exception: the Canvas in
 | `storage`, `unlimitedStorage` | Keeps your settings, notes, to-dos and a copy of your Canvas data on your computer. A full term of courses can be more than Chrome's default 10 MB. |
 | `alarms` | Refreshes your Canvas data in the background and checks for deadline reminders every few minutes. |
 | `notifications` | Deadline reminders and new-grade and announcement alerts, which you can turn off in Settings. |
-| Optional host access (`https://*/*`) | Asked for at runtime for **one site only**: the Canvas address you type in during setup. The extension reads your courses from that site with your existing login. The only things it changes there are Canvas messages you choose to send, reply to, star, archive or mark read. Announcements you open are marked read on your computer only. |
+| Optional host access (`https://*/*`) | Asked for at runtime for **one site only**: the Canvas address you type in during setup. The extension reads your courses from that site with your existing login. The only things it changes there are Canvas messages you choose to send, reply to, star, archive or mark read or unread. Announcements you open are marked read on your computer only. |
 | `cookies` | Used for one thing: reading Canvas's security token (the `_csrf_token` cookie on your school's Canvas site) when you send or manage a message, because Canvas requires it for any change. No other cookie is read, and nothing is stored or sent anywhere else. |
 | `chrome_url_overrides.newtab` | The dashboard opens in new tabs. You can turn this off in Settings. |
 
@@ -72,17 +72,16 @@ Paste this into **Test instructions** in the developer dashboard:
 > To see every feature:
 > - **Home:** due soon, Next up, grades at a glance, the exam countdown, and Neko (type "what's due tomorrow?").
 > - **Themes** (palette icon, top right): five animal themes, each with its own mascot.
-> - **Calendar:** click **+ Event** or an empty time slot to add your own event.
 > - **Courses:** pick CSE 143. Try the Modules, Pages, Files, Discussions, Syllabus and People tabs, and the **Syllabus dates** button (paste any syllabus text to see the review screen).
 > - **Inbox** (top tab): open a message, reply, star or archive it; click **New message**, pick CSE 143 and **CSE 143 instructors**, and send. In demo mode nothing is sent anywhere; the message just appears under **Sent**.
 > - **Courses → Your groups → PA Team 4:** a Canvas group's announcements, discussions, pages, files and members.
 > - **Grades:** class details, What-if mode, Trends and History.
-> - **Calendar:** Day, Week (class times and topics), Month, Quarter and List.
-> - **Settings:** themes, density, features, backup.
+> - **Calendar:** Day, Week (class times and topics), Month, Quarter and List. Click **New event** or an empty time slot to add your own event.
+> - **Settings:** light or dark, density, features, backup, and **Make Neko yours**.
 >
 > Click any item to open its details. Press `?` for keyboard shortcuts. **Exit demo** in the banner (or Settings → General) deletes the sample data.
 >
-> With a real school, the extension asks for access to that one Canvas site and only reads from it.
+> With a real school, the extension asks for access to that one Canvas site. It reads from it, and changes nothing there except Canvas messages the student chooses to send, reply to, star, archive or mark read or unread.
 
 ## Screenshots
 

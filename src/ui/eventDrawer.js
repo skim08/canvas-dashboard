@@ -3,9 +3,9 @@
 
 import { h } from './dom.js';
 import { state, updateUser } from './store.js';
-import { closeDrawer, openDrawer, setUi, toast } from './actions.js';
+import { ui, closeDrawer, openDrawer, setUi, toast } from './actions.js';
 import { button } from './components.js';
-import { dayKey } from '../lib/time.js';
+import { dayKey, weekdayOfKey } from '../lib/time.js';
 import { occurrences } from '../lib/events.js';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -16,9 +16,10 @@ const TYPES = [
   ['todo', 'Task'],
 ];
 const uid = () => Math.random().toString(36).slice(2, 10);
+// An hour later, but never past 11:59 PM (so a late start still has an end after it).
 const plusHour = (t) => {
   const [hh, mm] = t.split(':').map(Number);
-  return `${String(Math.min(23, hh + 1)).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+  return hh >= 23 ? '23:59' : `${String(hh + 1).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 };
 
 let draft = null;
@@ -70,7 +71,8 @@ const redraw = () => setUi({});
 
 // Turning on the first day makes the event weekly; turning off the last makes it one-time.
 function toggleDay(d, x) {
-  const days = d.repeat?.days || [];
+  // Starting to repeat: the event's own date is one of its days too.
+  const days = d.repeat?.days?.length ? d.repeat.days : d.day && weekdayOfKey(d.day) !== x ? [weekdayOfKey(d.day)] : [];
   const next = days.includes(x) ? days.filter((y) => y !== x) : DAYS.filter((y) => y === x || days.includes(y));
   d.repeat = next.length ? { days: next, until: d.repeat?.until || '' } : null;
   redraw();
@@ -79,9 +81,10 @@ const field = (label, control) => h('label', { class: 'form-field' }, h('span', 
 
 export function eventDrawer(id, ctx) {
   const isNew = String(id).startsWith('new');
-  if (draftFor !== id || !draft) {
+  const key = `${id}#${ui.drawerSeq}`; // closing without saving throws the changes away
+  if (draftFor !== key || !draft) {
     draft = startDraft(id, ctx);
-    draftFor = id;
+    draftFor = key;
   }
   const d = draft;
   const repeating = !!d.repeat;

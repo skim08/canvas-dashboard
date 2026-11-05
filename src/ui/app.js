@@ -14,7 +14,7 @@ import { renderSettings } from './pages/settings.js';
 import { renderOther } from './pages/other.js';
 import { renderCourse } from './pages/course.js';
 import { renderAnnouncements } from './pages/announcements.js';
-import { renderInbox, unreadMessages } from './pages/inbox.js';
+import { renderInbox, unreadMessages, canCompose } from './pages/inbox.js';
 import { renderGroup } from './pages/group.js';
 import { renderPinned } from './pages/pinned.js';
 import { renderThemes } from './pages/themes.js';
@@ -334,7 +334,7 @@ function onKey(e) {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (t.closest?.('input, textarea, select, [contenteditable="true"]')) return;
   const k = e.key;
-  const pages = { 1: 'home', 2: 'courses', 3: 'grades', 4: 'calendar', ...(feat('otherTab') ? { 5: 'other' } : {}) };
+  const pages = Object.fromEntries(pagesShown().map((p, i) => [String(i + 1), p.id])); // B9: the tabs, left to right
   if (pages[k]) location.hash = `#/${pages[k]}`;
   else if (k === ',') location.hash = '#/settings';
   else if (k === 'j') moveFocus(1);
@@ -358,7 +358,7 @@ function onKey(e) {
     nav.click();
   }
   else if (k === 'i' && feat('inbox')) location.hash = '#/inbox';
-  else if (k === 'c' && feat('inbox') && feat('sendMessages')) openDrawer('compose', ''); // F18
+  else if (k === 'c' && canCompose()) openDrawer('compose', ''); // F18
   else if (k === 'm' && feat('askMochi')) openDrawer('mochi'); // J4
   else if (k === 'e' && feat('customEvents')) openDrawer('event', 'new'); // G12
   else if (k === 'x' || k === 'p') {

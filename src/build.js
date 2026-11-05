@@ -8,5 +8,5 @@ export const BUILD = { kind: 'owner', beta: false };
 export const canWrite = () => BUILD.kind === 'owner';
 
 // K25: every build may use the Canvas inbox (send, reply, star, archive, mark read),
-// and nothing else: see isMessagePath in lib/canvas.js.
+// and nothing else: see isMessageWrite in lib/canvas.js.
 export const canMessage = () => true;

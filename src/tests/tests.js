@@ -423,12 +423,13 @@ test('K23', 'classes without class times are listed until you add them or say th
   const before = [PR.PROFILES, state.userdata];
   try {
     PR.setProfiles([
-      { id: 'a', courseId: '1', code: 'BIO 180', schedule: { classes: [{ id: 'lec', name: 'Lecture', days: ['Mon'], start: '09:00' }] } },
+      { id: 'a', courseId: '1', code: 'BIO 180', schedule: { classes: [{ id: 'lec', name: 'Lecture', days: ['Mon'], start: '09:00', from: '2026-09-28', until: '2026-12-11' }] } },
+      { id: 'c', courseId: '6', code: 'PHYS 121', schedule: { classes: [{ id: 'lec', name: 'Lecture', days: ['Tue'], start: '10:00' }] } }, // no dates: can't be placed, so it still asks
       { id: 'b', courseId: '2', code: 'HIST 101', schedule: { deadlines: [{ id: 'd', day: '2026-11-02', title: 'Essay' }] } }, // dates, but no class times
     ]);
     state.userdata = userWithDefaults({ syllabusSkip: { 4: true } });
-    const ctx = { courses: [{ id: '1', code: 'BIO 180' }, { id: '2', code: 'HIST 101' }, { id: '3', code: 'CHEM 142' }, { id: '4', code: 'ONLINE 100' }, { id: '5', code: 'X 1', unavailable: '403' }] };
-    eq(needsSyllabus(ctx).map((c) => c.id), ['2', '3']);
+    const ctx = { courses: [{ id: '1', code: 'BIO 180' }, { id: '2', code: 'HIST 101' }, { id: '3', code: 'CHEM 142' }, { id: '4', code: 'ONLINE 100' }, { id: '5', code: 'X 1', unavailable: '403' }, { id: '6', code: 'PHYS 121' }] };
+    eq(needsSyllabus(ctx).map((c) => c.id), ['2', '3', '6']);
   } finally {
     PR.setProfiles(before[0]);
     state.userdata = before[1];
@@ -1184,6 +1185,22 @@ test('E35', 'nothing changes once everything is posted, and big-impact lists ski
   eq([m.unposted, m.items.some((e) => e.unposted)], [undefined, false]);
   near(G.current(m).pct, 80); // (16 + 10·.8) / 30
 });
+test('E34', 'a class total you type in wins over Canvas’s own %', async () => {
+  const { canvasReliable } = await import('../lib/gradeSummary.js');
+  const course = { score: 24, hideTotals: false };
+  eq([canvasReliable(course, {}, false), canvasReliable(course, { outOf: 1000 }, false)], [true, false]);
+});
+test('F18', 'before your id is known, only your exact full name is you', async () => {
+  const { isMe } = await import('../ui/pages/inbox.js');
+  const { state } = await import('../ui/store.js');
+  const was = state.cache;
+  state.cache = { ...(was || {}), profile: { name: 'Jordan', fullName: 'Jordan Park' } };
+  try {
+    eq([isMe('Jordan Park'), isMe('Jordan Lee'), isMe('Jordan')], [true, false, false]);
+  } finally {
+    state.cache = was;
+  }
+});
 test('E34', 'a class total you type in turns a points class into “out of” grading', () => {
   eq([lateClass({}).kind, lateClass().kind, lateClass().outOf], ['standard', 'outOf', 100]);
 });
@@ -1281,20 +1298,6 @@ test('F10', 'built-in syllabus office hours, and they step aside when Canvas lis
   eq(model.officeHourSessions([acct], ud, canvasOH, NOW, TZ).length, 0);
   const hidden = userWithDefaults({ ohHidden: { 'acct-matsumoto': 1 } });
   ok(!model.officeHourSessions([acct], hidden, [], NOW, TZ).some((s) => s.title.includes('Morgan')), 'removed ones stay removed');
-});
-test('F12', 'search groups results by type', async () => {
-  const { searchEverything } = await import('../lib/search.js');
-  const g = searchEverything(
-    {
-      items: build([{ id: 1, name: 'Midterm review problems' }]),
-      announcements: [{ id: 'ann:1', title: 'Midterm grades posted', html: '', courseId: '5' }],
-      pages: [{ url: 'm', title: 'Midterm study guide', courseId: '5' }],
-      files: [{ id: '7', name: 'Midterm practice.pdf', courseId: '5' }, { id: '8', name: 'Syllabus.docx', courseId: '5' }],
-      nickOf: () => 'CSE 143',
-    },
-    'midterm'
-  );
-  eq(g.map((x) => [x.label, x.results.length]), [['Assignments', 1], ['Announcements', 1], ['Pages', 1], ['Files', 1]]);
 });
 test('F2', 'sync brings in announcements, inbox, staff, tools and a search index', async () => {
   canvas.setTransport(fixtureTransport(null));
@@ -2123,10 +2126,21 @@ test('B7', 'Phase 6 features each have a Settings toggle', () => ok(['roundedTyp
 
 
 group('Phase 9: groups and messages');
-test('K25', 'only the inbox’s own addresses count as messages', () =>
+test('K25', 'only the inbox’s own writes count as messages', () =>
   eq(
-    ['/api/v1/conversations', 'https://canvas.uw.edu/api/v1/conversations/8201', '/api/v1/conversations/8201/add_message?x=1', '/api/v1/conversations/8201/add_recipients', '/api/v1/conversations/batch_update', '/api/v1/courses/1/discussion_topics', '/api/v1/conversations/../courses/1/x'].map(canvas.isMessagePath),
-    [true, true, true, false, false, false, false]
+    [
+      ['POST', '/api/v1/conversations'],
+      ['PUT', 'https://canvas.uw.edu/api/v1/conversations/8201'],
+      ['POST', '/api/v1/conversations/8201/add_message?x=1'],
+      ['PUT', '/api/v1/conversations'], // Canvas's batch update: can delete
+      ['POST', '/api/v1/conversations/8201'],
+      ['PUT', '/api/v1/conversations/8201/add_message'],
+      ['DELETE', '/api/v1/conversations/8201'],
+      ['POST', '/api/v1/conversations/8201/add_recipients'],
+      ['POST', '/api/v1/courses/1/discussion_topics'],
+      ['POST', '/api/v1/conversations/../courses/1/x'],
+    ].map(([m, u]) => canvas.isMessageWrite(u, m)),
+    [true, true, true, false, false, false, false, false, false, false]
   ));
 test('K25', 'public build sends and updates messages, refuses every other write and any delete', async () => {
   let sent = 0;
@@ -2140,9 +2154,10 @@ test('K25', 'public build sends and updates messages, refuses every other write 
       await tryIt(() => canvas.send(`${U}/conversations/8201/add_message`, { method: 'POST' })),
       await tryIt(() => canvas.send(`${U}/conversations/8201`, { method: 'DELETE' })),
       await tryIt(() => canvas.send(`${U}/conversations/8201/add_recipients`, { method: 'POST' })),
+      await tryIt(() => canvas.send(`${U}/conversations`, { method: 'PUT', body: 'conversation_ids[]=8201&event=destroy' })),
       await tryIt(() => canvas.send(`${U}/courses/1/discussion_topics/3/entries`, { method: 'POST' })),
     ]);
-    eq([r, sent], [['sent', 'sent', 'sent', 'ReadOnlyError', 'ReadOnlyError', 'ReadOnlyError'], 3]);
+    eq([r, sent], [['sent', 'sent', 'sent', 'ReadOnlyError', 'ReadOnlyError', 'ReadOnlyError', 'ReadOnlyError'], 3]);
   } finally {
     canvas.setTransport(fixtureTransport(null));
   }

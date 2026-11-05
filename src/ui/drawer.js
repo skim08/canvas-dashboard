@@ -476,7 +476,7 @@ function hiddenList(ctx) {
 }
 
 export const SHORTCUTS = [
-  ['1 – 5', 'Home, Courses, Grades, Calendar, Other'],
+  ['1 – 6', 'Tabs, left to right: Home, Courses, Grades, Calendar, Inbox, Other'],
   [',', 'Settings'],
   ['j / k', 'Next / previous item'],
   ['Enter', 'Open details'],

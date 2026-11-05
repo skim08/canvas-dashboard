@@ -26,18 +26,20 @@ function patchCached(id, fn) {
   return () => (hits.forEach((c, i) => Object.assign(c, before[i])), notify());
 }
 
-function refreshAll(id) {
+// `reopen`: reload the open conversation too. Not after "Mark unread": Canvas marks a
+// conversation read whenever it's fetched, which would undo it.
+function refreshAll(id, reopen = true) {
   for (const scope of msg.SCOPES) refreshContent('conversations', null, scope);
-  if (id) refreshContent('conversation', null, String(id));
+  if (id && reopen) refreshContent('conversation', null, String(id));
 }
 
-async function update(id, change, apply, done) {
+async function update(id, change, apply, done, reopen = true) {
   const undo = patchCached(id, apply);
   try {
     await canvasReady();
     await change();
     if (done) toast(done);
-    refreshAll(id);
+    refreshAll(id, reopen);
   } catch (e) {
     undo();
     toast(describeMessageError(e));
@@ -53,7 +55,7 @@ export const archive = (c) => update(c.id, () => msg.setState(c.id, 'archived'),
 export const unarchive = (c) => update(c.id, () => msg.setState(c.id, 'read'), (x) => (x.archived = false), 'Moved back to your inbox');
 export function markUnread(c) {
   forgetRead('conv', c.id); // so it shows as new again here too
-  return update(c.id, () => msg.setState(c.id, 'unread'), (x) => (x.unread = true), 'Marked unread');
+  return update(c.id, () => msg.setState(c.id, 'unread'), (x) => (x.unread = true), 'Marked unread', false);
 }
 export const markRead = (c) => (readLocally('conv', c.id), update(c.id, () => msg.setState(c.id, 'read'), (x) => (x.unread = false), null));
 

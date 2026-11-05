@@ -14,7 +14,7 @@ import { useContent, markAnnouncementRead, readLocally, postReply } from './cont
 import { slotText, openFile, openModuleItem } from './pages/course.js';
 import { ui, setUi, toast, closeDrawer } from './actions.js';
 import * as inbox from './inboxActions.js';
-import { others } from './pages/inbox.js';
+import { others, canCompose } from './pages/inbox.js';
 import { notify } from './store.js';
 import { markButtons, markNotes } from './marks.js';
 import { composer, draft, setDraft } from './composer.js';
@@ -177,7 +177,7 @@ function conversationView(id, ctx) {
   queueMicrotask(() => readLocally('conv', id)); // Canvas marked it read when we opened it
   const key = MARK_KEY.conversation(id);
   const st = (replying[id] ||= { text: '', busy: false, error: null });
-  const canSend = feat('sendMessages');
+  const canSend = canCompose();
   const sendIt = async () => {
     if (!st.text.trim()) return;
     st.busy = true;

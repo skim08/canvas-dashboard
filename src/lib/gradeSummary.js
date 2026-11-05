@@ -57,6 +57,7 @@ export function exclusionReason(course, cfg) {
 // E32: can Canvas's own current % be trusted for this class?
 export function canvasReliable(course, cfg, profileActive) {
   if (profileActive) return false; // the syllabus has rules Canvas can't represent
+  if (cfg.outOf > 0) return false; // E34: your class total changes the math
   if (course.score == null || course.hideTotals) return false;
   const has = (o) => o && Object.keys(o).length > 0;
   if (has(cfg.weights) || has(cfg.drops) || has(cfg.extraCredit)) return false;

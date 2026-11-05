@@ -47,7 +47,7 @@ export function renderHome(ctx) {
     h(
       'div',
       { class: 'home-layout' },
-      h('div', { class: 'home-main' }, syllabusSetupCard(ctx), feedbackCard(), shown('attention') ? alertStrip(ctx) : null, shown('due') ? dueSection(ctx) : null),
+      h('div', { class: 'home-main' }, feat('syllabusDates') || feat('classSchedule') ? syllabusSetupCard(ctx) : null, feedbackCard(), shown('attention') ? alertStrip(ctx) : null, shown('due') ? dueSection(ctx) : null),
       side.length ? h('aside', { class: 'home-left', 'aria-label': 'Grades and exams' }, side) : null,
       feat('mochi') ? h('aside', { class: 'home-right', 'aria-label': mascotName() }, mochiPanel(ctx)) : null
     )

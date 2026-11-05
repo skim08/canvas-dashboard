@@ -104,7 +104,7 @@ for p in files:
     if re.search(r"fetch\([^)]*method:\s*'(POST|PUT|DELETE|PATCH)'", src): problems.append(f"{p}: sends a write request")
 canvas_src = content("src/lib/canvas.js")
 if "if (method !== 'GET' && !writeAllowed(url, method)) throw new ReadOnlyError();" not in canvas_src: problems.append("canvas.js: the read-only guard is missing")
-if "export const isMessagePath = (url) => /^\\/api\\/v1\\/conversations(\\/\\d+(\\/add_message)?)?$/" not in canvas_src: problems.append("canvas.js: the inbox-only write rule (K25) changed; check it still allows only conversations")
+if "const MESSAGE_WRITES = { POST: /^\\/api\\/v1\\/conversations(\\/\\d+\\/add_message)?$/, PUT: /^\\/api\\/v1\\/conversations\\/\\d+$/ };" not in canvas_src: problems.append("canvas.js: the inbox-only write rule (K25) changed; check it still allows only conversations")
 if problems:
     print("\n".join(problems)); sys.exit(1)
 

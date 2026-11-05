@@ -25,7 +25,8 @@ let sessionFor = null;
 
 // One session per schedule snapshot; a new context starts a fresh session.
 export async function aiSession(context, onProgress = () => {}) {
-  if (session && sessionFor === context) return session;
+  const key = `${mascot().name}\n${context}`; // a new theme means a new mascot to answer as
+  if (session && sessionFor === key) return session;
   session?.destroy?.();
   session = await api().create({
     ...LANGS,
@@ -34,7 +35,7 @@ export async function aiSession(context, onProgress = () => {}) {
       m.addEventListener('downloadprogress', (e) => onProgress(e.loaded));
     },
   });
-  sessionFor = context;
+  sessionFor = key;
   return session;
 }
 

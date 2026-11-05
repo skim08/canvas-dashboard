@@ -1,6 +1,6 @@
 // F17 + F18 + K25: the Canvas inbox. Reading, and the only writes the public build may
 // make: send a message, reply, and mark a conversation read/unread, starred or archived.
-// lib/canvas.js refuses any other write in the public build (isMessagePath).
+// lib/canvas.js refuses any other write in the public build (isMessageWrite).
 // Writes need Canvas's CSRF token, read from its _csrf_token cookie ("cookies" permission).
 
 import { CANVAS_ORIGIN } from './env.js';

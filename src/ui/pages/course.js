@@ -16,6 +16,7 @@ import { folderTree, fileKind, formatSize } from '../../lib/contentNormalize.js'
 import { CANVAS_ORIGIN } from '../../lib/env.js';
 import { useContent, isRead } from '../content.js';
 import { openGradeDrawer } from './grades.js';
+import { canCompose } from './inbox.js';
 import * as F from '../fmt.js';
 
 const TABS = [
@@ -199,7 +200,7 @@ function personRow(course, p, slots) {
     h(
       'div',
       { class: 'person-actions' },
-      feat('inbox') && feat('sendMessages')
+      canCompose()
         ? h('button', { class: 'btn btn-sm btn-secondary', 'data-key': `msg:${p.id}`, onclick: () => openDrawer('compose', JSON.stringify({ context: `course_${course.id}`, to: { id: String(p.id), name: p.name } })) }, icon('mail', 14), 'Message') // F18
         : h('a', { class: 'btn btn-sm btn-secondary', href: `${CANVAS_ORIGIN}/conversations?context_id=course_${course.id}&user_id=${p.id}&user_name=${encodeURIComponent(p.name)}`, target: '_blank', rel: 'noopener', 'data-key': `msg:${p.id}` }, icon('mail', 14), 'Message'),
       button('Office hours', () => openDrawer('officehours', `${course.id}|${p.name}`), { key: `oh:${p.id}`, kind: 'ghost' })

@@ -13,13 +13,17 @@ const TICK = 'tick'; // H1/H3 reminders and the morning summary, every 5 minutes
 const FOCUS = 'focus'; // G7
 
 const BADGE = { red: '#bb3a22', accent: '#b03867' }; // J1: soft pink
+// J8: the toolbar badge in your theme's accent (light-mode values from tokens.css).
+const ACCENTS = { pink: '#b03867', classic: '#4255c9', matcha: '#376f34', ocean: '#1f6f99', polar: '#2a2a2a', honey: '#93550f' };
 
 async function show(n) {
   await chrome.notifications.create(n.key, { type: 'basic', iconUrl: chrome.runtime.getURL('src/icons/icon128.png'), title: n.title, message: n.message, priority: 1 });
 }
 async function setBadge(b) {
   await chrome.action.setBadgeText({ text: b.text });
-  await chrome.action.setBadgeBackgroundColor({ color: BADGE[b.color] || BADGE.accent });
+  const { settings } = await chrome.storage.local.get('settings');
+  const accent = ACCENTS[settings?.palette] || BADGE.accent;
+  await chrome.action.setBadgeBackgroundColor({ color: b.color === 'red' ? BADGE.red : accent });
   await chrome.action.setTitle({ title: b.title ? `${APP_NAME} · ${b.title}` : APP_NAME });
 }
 async function notifyNow() {

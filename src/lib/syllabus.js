@@ -43,6 +43,20 @@ function slotOf(course, c) {
   return { ...c, ...(code ? c.sections[code] || {} : {}), code };
 }
 
+// K23: does this syllabus put any class meeting on the calendar for this class? Same
+// rules as syllabusSchedule: your section must be known and the slot needs days, a
+// start time and a date range. (A class whose times can't be placed should still ask.)
+export function placesClassMeetings(course, profile) {
+  const s = profile?.schedule;
+  if (!s) return false;
+  const placed = (slot) => !!(slot && slot.start && slot.from && slot.until);
+  const weekly = (s.classes || []).filter((c) => c.days?.length).some((c) => {
+    const slot = slotOf(course, c);
+    return !(c.sections && !slot.code) && placed(slot);
+  });
+  return weekly || (s.sessions || []).some((m) => (s.classes || []).some((c) => c.id === m.in));
+}
+
 // Start/end on a day, or all-day when the time isn't known.
 function when(key, start, end, tz) {
   if (!start) return { dueAt: at(key, '23:59', tz), endAt: null, allDay: true, day: key };

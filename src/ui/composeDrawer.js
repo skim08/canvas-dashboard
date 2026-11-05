@@ -50,15 +50,22 @@ function search(text) {
   clearTimeout(searchTimer);
   const mine = m;
   searchTimer = setTimeout(async () => {
-    if (!mine.context) return;
+    const context = mine.context;
+    const query = mine.search.trim();
+    if (!context) return;
     mine.searching = true;
     redraw();
+    let results = [];
+    let error = null;
     try {
-      mine.results = (await findRecipients(mine.context, mine.search.trim())).filter((r) => r.type === 'user');
+      results = (await findRecipients(context, query)).filter((r) => r.type === 'user');
     } catch (e) {
-      mine.results = [];
-      mine.error = describeMessageError(e).replace(' Your text is still here.', '');
+      error = describeMessageError(e).replace(' Your text is still here.', '');
     }
+    // A newer search (or another class) wins: drop answers that arrive late.
+    if (mine.context !== context || mine.search.trim() !== query) return;
+    mine.results = results;
+    mine.error = error;
     mine.searching = false;
     if (m === mine) redraw();
   }, 250);

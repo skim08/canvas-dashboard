@@ -31,8 +31,8 @@ function whatsNew() {
   return h(
     'section',
     { class: 'whats-new', role: 'status' },
-    h('div', { class: 'whats-new-head' }, h('strong', null, `What’s new in ${list[0].version}`), button('Got it', () => updateSettings({ seenVersion: VERSION }), { key: 'whats-new-ok', kind: 'secondary' })),
-    list.map((c) => h('ul', { class: 'plain-list' }, c.items.map((t) => h('li', null, t))))
+    h('div', { class: 'whats-new-head' }, h('strong', null, list.length > 1 ? 'What’s new since you last looked' : `What’s new in ${list[0].version}`), button('Got it', () => updateSettings({ seenVersion: VERSION }), { key: 'whats-new-ok', kind: 'secondary' })),
+    list.map((c) => [list.length > 1 ? h('p', { class: 'whats-new-version' }, `Version ${c.version}`) : null, h('ul', { class: 'plain-list' }, c.items.map((t) => h('li', null, t)))])
   );
 }
 

@@ -133,78 +133,6 @@ h3 {
   white-space: nowrap;
 }
 
-/* ---------- Search (C12) ---------- */
-
-.search {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--s2);
-  padding: 0 var(--s3);
-  height: 32px;
-  width: 260px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-faint);
-}
-
-.search:focus-within {
-  border-color: var(--accent);
-}
-
-.search input {
-  border: 0;
-  background: transparent;
-  outline: none;
-  width: 100%;
-  color: var(--text);
-}
-
-.search input::-webkit-search-cancel-button {
-  display: none;
-}
-
-.search-results {
-  position: absolute;
-  top: calc(100% + var(--s1));
-  right: 0;
-  width: 420px;
-  max-height: 60vh;
-  overflow: auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--s1);
-  z-index: 20;
-}
-
-.search-result {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: none;
-  padding: var(--s2) var(--s3);
-  border-radius: var(--radius);
-  cursor: pointer;
-  gap: var(--s1);
-}
-
-.search-result.is-active,
-.search-result:hover {
-  background: var(--surface-2);
-}
-
-.search-empty {
-  margin: 0;
-  padding: var(--s3);
-  color: var(--text-muted);
-}
-
 /* ---------- Layout ---------- */
 
 .main {
@@ -1818,9 +1746,6 @@ kbd {
     flex-wrap: wrap;
     padding: var(--s2) var(--s4);
   }
-  .search {
-    width: 100%;
-  }
   .topbar-right {
     width: 100%;
   }
@@ -2951,14 +2876,6 @@ input[type='time'] {
   padding: 0 var(--s2);
 }
 
-.search-group {
-  padding: var(--s2) var(--s3) var(--s1);
-  font-size: var(--t-xs);
-  font-weight: var(--w-semibold);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
 
 .attn-row.tone-accent {
   background: var(--accent-soft);
@@ -5909,4 +5826,12 @@ button.chat-item {
 
 .syl-manual-row .btn {
   flex: none;
+}
+
+/* K20: one heading per version when several are new */
+.whats-new-version {
+  margin: var(--s2) 0 0;
+  color: var(--text-muted);
+  font-size: var(--t-xs);
+  font-weight: var(--w-semibold);
 }
