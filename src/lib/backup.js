@@ -84,6 +84,8 @@ export function summarize(data) {
     ['Classes with your own quick links', count(ud.links)],
     ['Classes with your own office hours', count(ud.officeHours)],
     ['Study groups', count(ud.studyGroups)],
+    ['Your own events', (ud.events || []).length], // G12
+    ['Classes with class times you typed in', count(ud.classTimes)], // G13
     ['Grading setups (scales, credits, weights)', count(data.grades?.courses)],
     ['Past terms', (data.grades?.past || []).length],
     ['Saved what-if scenarios', (data.grades?.scenarios || []).length],

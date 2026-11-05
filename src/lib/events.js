@@ -25,6 +25,13 @@ export function occurrences(ev) {
   return out;
 }
 
+// "Delete this one": skip that day. If no days are left, the event goes too.
+export function withoutOccurrence(events, eventId, day) {
+  return (events || [])
+    .map((e) => (e.id === eventId ? { ...e, skip: [...(e.skip || []), day] } : e))
+    .filter((e) => e.id !== eventId || occurrences(e).length > 0);
+}
+
 export const occurrenceId = (ev, day) => `ev:${ev.id}:${day}`;
 export const eventIdOf = (itemId) => (String(itemId).startsWith('ev:') ? String(itemId).split(':')[1] : null);
 

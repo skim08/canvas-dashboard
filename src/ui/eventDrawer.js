@@ -6,7 +6,7 @@ import { state, updateUser } from './store.js';
 import { ui, closeDrawer, openDrawer, setUi, toast } from './actions.js';
 import { button } from './components.js';
 import { dayKey, weekdayOfKey } from '../lib/time.js';
-import { occurrences } from '../lib/events.js';
+import { occurrences, withoutOccurrence } from '../lib/events.js';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const TYPES = [
@@ -40,10 +40,11 @@ function save(isNew) {
   if (!d.day) return toast('Pick a date.');
   if (d.start && d.end && d.end <= d.start) return toast('The end time is before the start time.');
   const clean = { ...d, title: d.title.trim(), start: d.start || null, end: d.start ? d.end || null : null, repeat: d.repeat?.days?.length ? { days: d.repeat.days, until: d.repeat.until || null } : null, note: d.note.trim() };
+  const n = occurrences(clean).length;
+  if (!n) return toast('This event wouldn’t show up on any day: check the date, the repeat days and “Until”.');
   updateUser((ud) => {
     ud.events = [...(ud.events || []).filter((e) => e.id !== clean.id), clean];
   });
-  const n = occurrences(clean).length;
   toast(isNew ? (n > 1 ? `Added ${n} times to your calendar` : 'Added to your calendar') : 'Event saved');
   draft = null;
   closeDrawer();
@@ -59,12 +60,15 @@ function remove(id) {
 }
 
 // "Delete this one" on a repeating event: that day is skipped, the rest stay.
+// Removing the last day left deletes the whole event (nothing invisible stays behind).
 export function removeOccurrence(eventId, day) {
+  const next = withoutOccurrence(state.userdata.events, eventId, day);
+  const gone = !next.some((e) => e.id === eventId);
   updateUser((ud) => {
-    ud.events = (ud.events || []).map((e) => (e.id === eventId ? { ...e, skip: [...(e.skip || []), day] } : e));
+    ud.events = next;
   });
   closeDrawer();
-  toast('Removed from that day');
+  toast(gone ? 'That was the last one, so the event is deleted' : 'Removed from that day');
 }
 
 const redraw = () => setUi({});

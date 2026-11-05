@@ -437,6 +437,19 @@ test('K23', 'classes without class times are listed until you add them or say th
 });
 
 // ---------- make Neko yours (K24) ----------
+test('A10', 'restore preview counts your own events and typed class times', async () => {
+  const { summarize } = await import('../lib/backup.js');
+  const rows = Object.fromEntries(summarize({ userdata: { events: [{ id: 'a' }, { id: 'b' }], classTimes: { 1001: [{ id: 'x' }] } } }));
+  eq([rows['Your own events'], rows['Classes with class times you typed in']], [2, 1]);
+});
+test('G12', 'deleting the last remaining day of a repeating event deletes the event', async () => {
+  const { withoutOccurrence } = await import('../lib/events.js');
+  const evs = [{ id: 'r', title: 'Reading', day: '2026-11-02', repeat: { days: ['Mon'], until: '2026-11-09' }, skip: [] }, { id: 'o', title: 'Other', day: '2026-11-03' }];
+  const one = withoutOccurrence(evs, 'r', '2026-11-02');
+  const two = withoutOccurrence(one, 'r', '2026-11-09');
+  eq([one.map((e) => e.id), one[0].skip, two.map((e) => e.id)], [['r', 'o'], ['2026-11-02'], ['o']]);
+});
+
 group('Make Neko yours (K24)');
 test('K24', 'six questions, in order; your chosen name is used in the greeting', async () => {
   const { PERSONALIZE_QUESTIONS } = await import('../ui/personalize.js');
