@@ -6,7 +6,7 @@ What to paste into the Chrome Web Store developer dashboard for **Neko**.
 
 1. Run `python3 tools/check_extension.py`.
 2. Run `python3 tools/test_builds.py` (checks the owner, public and beta builds).
-3. Run `python3 tools/build_zip.py`, which creates `dist/<name>-<version>.zip`: the public, read-only build.
+3. Run `python3 tools/build_zip.py`, which creates `dist/<name>-<version>.zip`: the public build (reads only, except Canvas messages).
 
 The zip leaves out the tests, tools, `owner-data/` (your personal syllabi and classes), the landing site (`docs/`) and these notes. It includes the made-up sample student for demo mode (K16). Upload that zip.
 
@@ -16,17 +16,18 @@ The zip leaves out the tests, tools, `owner-data/` (your personal syllabi and cl
 
 ## Permission reasons (public build)
 
-The public build only reads from Canvas (K15). Assignment submission and discussion replies are left out. The zip's generated manifest asks for just these:
+The public build only reads from Canvas (K15), with one exception: the Canvas inbox (K25), so students can message their instructors, TAs and classmates. Assignment submission and discussion replies are left out. The zip's generated manifest asks for just these:
 
 | Permission | Why it's needed |
 |---|---|
 | `storage`, `unlimitedStorage` | Keeps your settings, notes, to-dos and a copy of your Canvas data on your computer. A full term of courses can be more than Chrome's default 10 MB. |
 | `alarms` | Refreshes your Canvas data in the background and checks for deadline reminders every few minutes. |
 | `notifications` | Deadline reminders and new-grade and announcement alerts, which you can turn off in Settings. |
-| Optional host access (`https://*/*`) | Asked for at runtime for **one site only**: the Canvas address you type in during setup. The extension reads your courses from that site with your existing login and never changes anything there. Announcements you open are marked read on your computer only. |
+| Optional host access (`https://*/*`) | Asked for at runtime for **one site only**: the Canvas address you type in during setup. The extension reads your courses from that site with your existing login. The only things it changes there are Canvas messages you choose to send, reply to, star, archive or mark read. Announcements you open are marked read on your computer only. |
+| `cookies` | Used for one thing: reading Canvas's security token (the `_csrf_token` cookie on your school's Canvas site) when you send or manage a message, because Canvas requires it for any change. No other cookie is read, and nothing is stored or sent anywhere else. |
 | `chrome_url_overrides.newtab` | The dashboard opens in new tabs. You can turn this off in Settings. |
 
-It doesn't ask for `cookies` or any always-on host access. No remote code is loaded: everything ships in the package (content security policy `script-src 'self'`).
+It doesn't ask for any always-on host access. No remote code is loaded: everything ships in the package (content security policy `script-src 'self'`).
 
 ## Privacy practices tab
 
@@ -58,6 +59,7 @@ It doesn't ask for `cookies` or any always-on host access. No remote code is loa
 - **Syllabus import:** PDF or Word files, read on your computer. You review everything before it's saved.
 - **Neko and friends:** a friendly cat who answers questions about your schedule. Four more animal themes (Kero the frog, Nami the shark, Yumi the polar bear, Hachi the shiba) on the Themes tab.
 - **Your own events:** pre-class readings, study sessions and anything Canvas doesn't list, with weekly repeats.
+- **Inbox and groups:** read, star, archive and send Canvas messages to your instructors, TAs and classmates, and open your Canvas project groups, all from the dashboard.
 - **Private by design:** no account, no tracking, and nothing leaves your computer except requests to your own school's Canvas.
 - **Disclaimer:** "Not affiliated with Instructure or any school. Grades and GPA are estimates; always check Canvas."
 
@@ -72,6 +74,8 @@ Paste this into **Test instructions** in the developer dashboard:
 > - **Themes** (palette icon, top right): five animal themes, each with its own mascot.
 > - **Calendar:** click **+ Event** or an empty time slot to add your own event.
 > - **Courses:** pick CSE 143. Try the Modules, Pages, Files, Discussions, Syllabus and People tabs, and the **Syllabus dates** button (paste any syllabus text to see the review screen).
+> - **Inbox** (top tab): open a message, reply, star or archive it; click **New message**, pick CSE 143 and **CSE 143 instructors**, and send. In demo mode nothing is sent anywhere; the message just appears under **Sent**.
+> - **Courses → Your groups → PA Team 4:** a Canvas group's announcements, discussions, pages, files and members.
 > - **Grades:** class details, What-if mode, Trends and History.
 > - **Calendar:** Day, Week (class times and topics), Month, Quarter and List.
 > - **Settings:** themes, density, features, backup.

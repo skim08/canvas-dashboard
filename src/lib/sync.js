@@ -170,7 +170,7 @@ export async function fetchEverything() {
 
   return {
     fetchedAt: Date.now(),
-    profile: { name: profile.short_name || profile.name || '', timeZone: profile.time_zone || DEFAULT_TZ, calendarFeed: profile.calendar?.ics || null }, // G8
+    profile: { id: profile.id != null ? String(profile.id) : null, name: profile.short_name || profile.name || '', fullName: profile.name || '', timeZone: profile.time_zone || DEFAULT_TZ, calendarFeed: profile.calendar?.ics || null }, // G8
     courses,
     items: [...perCourse.flat(), ...plannerItems],
     announcements: announcements.map(normalizeAnnouncement).sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt)),

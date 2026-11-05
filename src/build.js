@@ -6,3 +6,7 @@ export const BUILD = { kind: 'owner', beta: false };
 
 // Only the owner build may change anything on Canvas (F2 mark read, F13, F14).
 export const canWrite = () => BUILD.kind === 'owner';
+
+// K25: every build may use the Canvas inbox (send, reply, star, archive, mark read),
+// and nothing else: see isMessagePath in lib/canvas.js.
+export const canMessage = () => true;

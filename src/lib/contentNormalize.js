@@ -29,10 +29,14 @@ export function normalizeConversation(c) {
     lastMessage: c.last_message || '',
     lastAt: c.last_message_at || c.last_authored_message_at || null,
     participants: (c.participants || []).map((p) => p.name).filter(Boolean),
+    // F17: everyone but you (Canvas's "audience" leaves you out).
+    audience: Array.isArray(c.audience) ? (c.participants || []).filter((p) => c.audience.map(String).includes(String(p.id))).map((p) => p.name).filter(Boolean) : null,
     context: c.context_name || '',
     courseId: c.context_code?.startsWith('course_') ? c.context_code.slice(7) : null,
+    groupId: c.context_code?.startsWith('group_') ? c.context_code.slice(6) : null, // F17
     count: c.message_count || 0,
     starred: !!c.starred,
+    archived: c.workflow_state === 'archived', // F17
   };
 }
 

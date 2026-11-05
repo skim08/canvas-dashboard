@@ -199,7 +199,9 @@ function personRow(course, p, slots) {
     h(
       'div',
       { class: 'person-actions' },
-      h('a', { class: 'btn btn-sm btn-secondary', href: `${CANVAS_ORIGIN}/conversations?context_id=course_${course.id}&user_id=${p.id}&user_name=${encodeURIComponent(p.name)}`, target: '_blank', rel: 'noopener', 'data-key': `msg:${p.id}` }, icon('mail', 14), 'Message'),
+      feat('inbox') && feat('sendMessages')
+        ? h('button', { class: 'btn btn-sm btn-secondary', 'data-key': `msg:${p.id}`, onclick: () => openDrawer('compose', JSON.stringify({ context: `course_${course.id}`, to: { id: String(p.id), name: p.name } })) }, icon('mail', 14), 'Message') // F18
+        : h('a', { class: 'btn btn-sm btn-secondary', href: `${CANVAS_ORIGIN}/conversations?context_id=course_${course.id}&user_id=${p.id}&user_name=${encodeURIComponent(p.name)}`, target: '_blank', rel: 'noopener', 'data-key': `msg:${p.id}` }, icon('mail', 14), 'Message'),
       button('Office hours', () => openDrawer('officehours', `${course.id}|${p.name}`), { key: `oh:${p.id}`, kind: 'ghost' })
     )
   );
@@ -216,7 +218,7 @@ function studyGroupSummary(course) {
     sg?.members?.length || sg?.meets
       ? h('div', { class: 'note' }, sg.members?.length ? h('div', null, sg.members.map((m) => m.name).join(', ')) : null, sg.meets ? h('div', { class: 'muted' }, `Meets: ${sg.meets}`) : null)
       : h('p', { class: 'caption' }, 'Keep your study group’s names, contact info and meeting time here.'),
-    canvasGroups.length ? h('div', { class: 'quick-links' }, canvasGroups.map((g) => h('a', { class: 'quick-link', href: g.url, target: '_blank', rel: 'noopener' }, icon('users'), `${g.name} (Canvas group)`))) : null
+    canvasGroups.length ? h('div', { class: 'quick-links' }, canvasGroups.map((g) => (feat('groups') ? h('a', { class: 'quick-link', href: `#/group/${g.id}`, 'data-key': `cgroup:${g.id}` }, icon('users'), `${g.name} (Canvas group)`) : h('a', { class: 'quick-link', href: g.url, target: '_blank', rel: 'noopener' }, icon('users'), `${g.name} (Canvas group)`, icon('external', 12))))) : null
   );
 }
 
@@ -337,7 +339,7 @@ function firstOpenModule(mods) {
   return i < 0 ? 0 : i;
 }
 
-function statusView(r, what) {
+export function statusView(r, what) {
   if (r.status === 'loading') return h('p', { class: 'empty' }, `Loading ${what}…`);
   if (r.status === 'hidden') return emptyState(`Your instructor hasn’t shared ${what} with students for this class.`);
   return emptyState(`Couldn’t load ${what} from Canvas. Try again later.`);
@@ -345,10 +347,10 @@ function statusView(r, what) {
 
 // ---------- Pages (F4) ----------
 
-function pagesTab(ctx, course) {
+export function pagesTab(ctx, course) {
   const r = useContent('pages', course.id);
   if (r.status !== 'ready') return statusView(r, 'pages');
-  if (!r.data.length) return emptyState('This class has no pages.');
+  if (!r.data.length) return emptyState(course.isGroup ? 'This group has no pages yet.' : 'This class has no pages.');
   const list = r.data.filter(notHidden((p) => MARK_KEY.page(course.id, p.url))).sort((a, b) => (b.front ? 1 : 0) - (a.front ? 1 : 0) || a.title.localeCompare(b.title));
   return h(
     'div',
@@ -372,11 +374,12 @@ const FILE_LABEL = { pdf: 'PDF', image: 'Image', video: 'Video', sheet: 'Spreads
 export function openFile(courseId, f) {
   const k = fileKind(f);
   // PDFs and images open in Canvas's viewer in a new tab; everything else downloads.
-  const url = k === 'pdf' || k === 'image' ? `${CANVAS_ORIGIN}/courses/${courseId}/files/${f.id}` : f.url || `${CANVAS_ORIGIN}/courses/${courseId}/files/${f.id}/download?download_frd=1`;
+  const where = String(courseId).startsWith('g') ? `groups/${String(courseId).slice(1)}` : `courses/${courseId}`; // F16
+  const url = k === 'pdf' || k === 'image' ? `${CANVAS_ORIGIN}/${where}/files/${f.id}` : f.url || `${CANVAS_ORIGIN}/${where}/files/${f.id}/download?download_frd=1`;
   window.open(url, '_blank', 'noopener');
 }
 
-function filesTab(ctx, course) {
+export function filesTab(ctx, course) {
   const r = useContent('files', course.id);
   if (r.status !== 'ready') return statusView(r, 'files');
   const { root, byId } = folderTree(r.data.folders, r.data.files);
@@ -446,10 +449,10 @@ function syllabusTab(ctx, course) {
 
 // ---------- Discussions (F7) ----------
 
-function discussionsTab(ctx, course) {
+export function discussionsTab(ctx, course) {
   const r = useContent('topics', course.id);
   if (r.status !== 'ready') return statusView(r, 'discussions');
-  if (!r.data.length) return emptyState('No discussions in this class.');
+  if (!r.data.length) return emptyState(course.isGroup ? 'No discussions in this group yet.' : 'No discussions in this class.');
   const list = r.data.filter(notHidden((t) => MARK_KEY.discussion(course.id, t.id))).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || new Date(b.lastReplyAt || b.postedAt || 0) - new Date(a.lastReplyAt || a.postedAt || 0));
   return h(
     'div',

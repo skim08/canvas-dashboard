@@ -14,7 +14,8 @@ import { renderSettings } from './pages/settings.js';
 import { renderOther } from './pages/other.js';
 import { renderCourse } from './pages/course.js';
 import { renderAnnouncements } from './pages/announcements.js';
-import { renderInbox } from './pages/inbox.js';
+import { renderInbox, unreadMessages } from './pages/inbox.js';
+import { renderGroup } from './pages/group.js';
 import { renderPinned } from './pages/pinned.js';
 import { renderThemes } from './pages/themes.js';
 import { renderCompleted } from './pages/completed.js';
@@ -38,6 +39,7 @@ const PAGES = [
   { id: 'courses', label: 'Courses', render: renderCourses },
   { id: 'grades', label: 'Grades', render: renderGrades },
   { id: 'calendar', label: 'Calendar', render: renderCalendar },
+  { id: 'inbox', label: 'Inbox', render: renderInbox, feature: 'inbox', count: () => unreadMessages().length }, // F17
   { id: 'other', label: 'Other', render: renderOther, feature: 'otherTab' },
 ];
 
@@ -57,12 +59,12 @@ function handleOpenLink() {
 }
 
 // Routes: #/home … #/other, #/settings, plus sub-pages that live under Courses:
-// #/course/<id>/<tab> (F1), #/announcements (F2), #/inbox (F8).
+// #/course/<id>/<tab> (F1), #/group/<id>/<tab> (F16), #/announcements (F2).
 function parseRoute() {
   const [id, a, b] = (location.hash.replace(/^#\/?/, '') || 'home').split('/');
   if (id === 'course' && a) return { page: 'course', courseId: a, tab: b || 'overview', nav: 'courses' };
   if (id === 'announcements' && feat('announcementsFeed')) return { page: 'announcements', nav: 'courses' };
-  if (id === 'inbox' && feat('inbox')) return { page: 'inbox', nav: 'courses' };
+  if (id === 'group' && a && feat('groups')) return { page: 'group', groupId: a, tab: b || 'overview', nav: 'courses' }; // F16
   if (id === 'pinned' && feat('pins')) return { page: 'pinned', nav: 'home' }; // I2
   if (id === 'completed' && feat('completedList')) return { page: 'completed', nav: 'home' }; // D8
   if (id === 'themes') return { page: 'themes', nav: 'themes' }; // J8
@@ -123,7 +125,10 @@ function topBar(ctx, current) {
       h(
         'nav',
         { class: 'nav', 'aria-label': 'Pages' },
-        pagesShown().map((p) => h('a', { href: `#/${p.id}`, class: ['nav-link', current === p.id && 'is-active'], 'aria-current': current === p.id ? 'page' : null, 'data-key': `nav:${p.id}` }, p.label)),
+        pagesShown().map((p) => {
+          const n = p.count?.() || 0; // F17: unread messages on the Inbox tab
+          return h('a', { href: `#/${p.id}`, class: ['nav-link', current === p.id && 'is-active'], 'aria-current': current === p.id ? 'page' : null, 'aria-label': n ? `${p.label}, ${n} unread` : null, 'data-key': `nav:${p.id}` }, p.label, n ? h('span', { class: 'nav-count' }, String(n)) : null);
+        }),
         BUILD.beta ? h('span', { class: 'beta-label', title: 'You’re testing an early version. Thanks! Feedback: Settings → About.' }, 'Beta') : null // K19
       ),
       h(
@@ -247,8 +252,8 @@ function render() {
         ? renderCourse(ctx, r.courseId, r.tab)
         : r.page === 'announcements'
           ? renderAnnouncements(ctx)
-          : r.page === 'inbox'
-            ? renderInbox(ctx)
+          : r.page === 'group'
+            ? renderGroup(ctx, r.groupId, r.tab)
             : r.page === 'themes'
               ? renderThemes(ctx)
             : r.page === 'pinned'
@@ -353,6 +358,7 @@ function onKey(e) {
     nav.click();
   }
   else if (k === 'i' && feat('inbox')) location.hash = '#/inbox';
+  else if (k === 'c' && feat('inbox') && feat('sendMessages')) openDrawer('compose', ''); // F18
   else if (k === 'm' && feat('askMochi')) openDrawer('mochi'); // J4
   else if (k === 'e' && feat('customEvents')) openDrawer('event', 'new'); // G12
   else if (k === 'x' || k === 'p') {

@@ -7,7 +7,7 @@ import { openDrawer } from '../actions.js';
 import { icon } from '../icons.js';
 import * as F from '../fmt.js';
 import { unreadAnnouncements } from './announcements.js';
-import { unreadMessages } from './inbox.js';
+import { groupsSection } from './group.js';
 import { dot, emptyState, loadingText, sectionHeader, dueText, group, feat, promoteButton } from '../components.js';
 import { listable, sortItems } from '../../lib/model.js';
 
@@ -56,8 +56,7 @@ export function renderCourses(ctx) {
       { class: 'section' },
       sectionHeader(
         'Courses',
-        feat('announcementsFeed') ? h('a', { class: 'btn btn-ghost', href: '#/announcements', 'data-key': 'go-ann' }, icon('megaphone'), 'Announcements', unreadAnnouncements(ctx).length ? h('span', { class: 'tag tag-accent' }, String(unreadAnnouncements(ctx).length)) : null) : null,
-        feat('inbox') ? h('a', { class: 'btn btn-ghost', href: '#/inbox', 'data-key': 'go-inbox' }, icon('mail'), 'Inbox', unreadMessages().length ? h('span', { class: 'tag tag-accent' }, String(unreadMessages().length)) : null) : null
+        feat('announcementsFeed') ? h('a', { class: 'btn btn-ghost', href: '#/announcements', 'data-key': 'go-ann' }, icon('megaphone'), 'Announcements', unreadAnnouncements(ctx).length ? h('span', { class: 'tag tag-accent' }, String(unreadAnnouncements(ctx).length)) : null) : null
       ),
       courses.length
         ? h(
@@ -88,6 +87,7 @@ export function renderCourses(ctx) {
           )
         : emptyState(state.cache ? 'No active courses found.' : loadingText())
     ),
+    feat('groups') ? groupsSection(ctx) : null, // F16
     feat('officeHours') ? officeHoursSection(ctx) : null
   );
 }

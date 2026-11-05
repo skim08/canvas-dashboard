@@ -4,6 +4,7 @@
 
 import * as canvas from '../lib/canvas.js';
 import * as write from '../lib/canvasWrite.js';
+import { listConversations } from '../lib/canvasMessages.js';
 import { canWrite } from '../build.js';
 import * as storage from '../lib/storage.js';
 import { isDev, isDemo, usesSample, devScenario } from '../lib/env.js';
@@ -22,19 +23,31 @@ function ensureTransport() {
   return transportReady;
 }
 
+// F16: a class's id ("1001"), or a Canvas group's as "g4401": pages, files and
+// discussions work the same for both.
+export const groupKey = (groupId) => `g${groupId}`;
+export const contentBase = (c) => (String(c).startsWith('g') ? `/api/v1/groups/${String(c).slice(1)}` : `/api/v1/courses/${c}`);
+const base = contentBase;
+
 const FETCHERS = {
-  modules: (c) => canvas.getAll(`/api/v1/courses/${c}/modules`, { 'include[]': ['items', 'content_details'] }).then(normalizeModules),
-  pages: (c) => canvas.getAll(`/api/v1/courses/${c}/pages`, { sort: 'title' }).then((list) => list.map(normalizePage)),
-  page: (c, url) => canvas.get(`/api/v1/courses/${c}/pages/${encodeURIComponent(url)}`).then(normalizePage),
-  frontPage: (c) => canvas.get(`/api/v1/courses/${c}/front_page`).then(normalizePage),
+  modules: (c) => canvas.getAll(`${base(c)}/modules`, { 'include[]': ['items', 'content_details'] }).then(normalizeModules),
+  pages: (c) => canvas.getAll(`${base(c)}/pages`, { sort: 'title' }).then((list) => list.map(normalizePage)),
+  page: (c, url) => canvas.get(`${base(c)}/pages/${encodeURIComponent(url)}`).then(normalizePage),
+  frontPage: (c) => canvas.get(`${base(c)}/front_page`).then(normalizePage),
   files: async (c) => {
-    const [folders, files] = await Promise.all([canvas.getAll(`/api/v1/courses/${c}/folders`), canvas.getAll(`/api/v1/courses/${c}/files`)]);
+    const [folders, files] = await Promise.all([canvas.getAll(`${base(c)}/folders`), canvas.getAll(`${base(c)}/files`)]);
     return { folders: folders.map(normalizeFolder), files: files.map(normalizeFile) };
   },
-  topics: (c) => canvas.getAll(`/api/v1/courses/${c}/discussion_topics`).then((list) => list.map(normalizeTopic)),
-  topic: (c, id) => canvas.get(`/api/v1/courses/${c}/discussion_topics/${id}`).then(normalizeTopic),
-  thread: (c, id) => canvas.get(`/api/v1/courses/${c}/discussion_topics/${id}/view`).then(normalizeThread),
+  topics: (c) => canvas.getAll(`${base(c)}/discussion_topics`).then((list) => list.map(normalizeTopic)),
+  topic: (c, id) => canvas.get(`${base(c)}/discussion_topics/${id}`).then(normalizeTopic),
+  thread: (c, id) => canvas.get(`${base(c)}/discussion_topics/${id}/view`).then(normalizeThread),
   conversation: (_c, id) => canvas.get(`/api/v1/conversations/${id}`).then(normalizeConversationDetail), // opening it marks it read in Canvas
+  // F16: a group's own details, members and announcements.
+  group: (c) => canvas.get(base(c)),
+  members: (c) => canvas.getAll(`${base(c)}/users`).then((list) => list.map((u) => ({ id: String(u.id), name: u.name || u.short_name || 'Member' }))),
+  groupNews: (c) => canvas.getAll(`${base(c)}/discussion_topics`, { only_announcements: 'true' }).then((list) => list.map(normalizeTopic)),
+  // F17: one inbox view ("inbox", "unread", "starred", "sent", "archived").
+  conversations: (_c, scope) => listConversations(scope || 'inbox'),
 };
 
 const keyOf = (kind, courseId, key) => `content:${kind}:${courseId || ''}:${key || ''}`;
@@ -51,6 +64,13 @@ export function useContent(kind, courseId, key = '') {
     load(k, kind, courseId, key, entry, false);
   }
   return entry;
+}
+
+// F17: every loaded copy of something (e.g. each inbox view's list), for instant updates.
+export function loadedContent(kind) {
+  const out = [];
+  for (const [k, e] of mem) if (k.startsWith(`content:${kind}:`) && e.data) out.push(e.data);
+  return out;
 }
 
 export function refreshContent(kind, courseId, key = '') {
@@ -95,7 +115,7 @@ export const canvasReady = () => ensureTransport();
 // F14: post a reply to a topic (parentId null) or to someone's post, then reload the thread.
 export async function postReply(courseId, topicId, parentId, html) {
   await ensureTransport();
-  const path = `/api/v1/courses/${courseId}/discussion_topics/${topicId}/entries${parentId ? `/${parentId}/replies` : ''}`;
+  const path = `${base(courseId)}/discussion_topics/${topicId}/entries${parentId ? `/${parentId}/replies` : ''}`; // F16: groups too
   const entry = await write.post(path, { message: html });
   refreshContent('thread', courseId, topicId);
   return entry;
@@ -126,6 +146,14 @@ export function readLocally(kind, id) {
   state.readLocally = readSet;
   storage.set({ [readKey]: readSet });
   notify();
+}
+export function forgetRead(kind, id) {
+  if (!isRead(kind, id)) return;
+  const next = { ...(readSet || state.readLocally || {}) };
+  delete next[`${kind}:${id}`];
+  readSet = next;
+  state.readLocally = readSet;
+  storage.set({ [readKey]: readSet });
 }
 export async function initReadState() {
   readSet = (await storage.get([readKey]))[readKey] || {};

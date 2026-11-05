@@ -20,7 +20,8 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
 - **Grades and GPA:** the course grade math Canvas uses (weights, dropped scores, extra credit), plus syllabus rules Canvas can't express. Letter or 4.0-decimal grading, what you need on what's left, what-if scores, trends and history.
 - **Calendar:** day, week (hour blocks like Apple Calendar), month, term timeline and list views, with class meetings and exams.
 - **Syllabus import:** reads PDF and Word syllabi on your computer with no libraries, finds exams, deadlines, class times and days off, and lets you review each one before it's saved.
-- **Course content:** announcements, modules, pages, files, discussions and the inbox, without leaving the dashboard.
+- **Course content:** announcements, modules, pages, files, discussions and your Canvas groups, without leaving the dashboard.
+- **Inbox:** read, star, archive and send Canvas messages to your instructors, TAs and classmates.
 - **Neko and friends:** a cat mascot (or a frog, shark, polar bear or shiba, with matching color themes) who answers schedule questions from your own data, optionally using Chrome's on-device AI.
 - **Your own events:** add pre-class readings, study sessions or anything Canvas doesn't list, including weekly repeats.
 - **Works at any school:** you pick your school's Canvas during setup. Quarters or semesters, letter or decimal grades.
@@ -31,7 +32,7 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
 - **Plain JavaScript modules, no build step and no dependencies.** A tiny DOM helper, whole-app rendering and Chrome Manifest V3.
 - **Private by design:**
   - Talks only to the one Canvas site you choose, checked on every request.
-  - The public build is read-only and asks Chrome for the minimum permissions.
+  - The public build only reads from Canvas, except for messages you choose to send or manage, and asks Chrome for the minimum permissions.
   - A strict content security policy, and Canvas HTML is sanitized before it's shown.
 - **Tested:**
   - 325 browser tests, including hand-calculated grade and GPA math.
@@ -65,7 +66,7 @@ It uses sample data. Add `?scenario=setup`, `otherschool`, `expired`, `offline` 
 | `python3 tools/lint_css.py` | Checks that only design tokens are used |
 | `python3 tools/contrast.py` | Checks WCAG AA contrast |
 | `python3 tools/test_builds.py` | Checks the owner, public and beta builds |
-| `python3 tools/build_zip.py` | Builds the public, read-only Chrome Web Store zip (`--beta` for a beta zip plus install steps) |
+| `python3 tools/build_zip.py` | Builds the public Chrome Web Store zip (read-only except Canvas messages) (`--beta` for a beta zip plus install steps) |
 
 ## Project layout
 

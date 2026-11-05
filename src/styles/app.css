@@ -5579,3 +5579,300 @@ button.chat-item {
   max-width: 560px;
   margin: 0 auto;
 }
+
+/* ---------- F17: Inbox tab ---------- */
+
+.nav-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: var(--s1);
+  padding: 0 var(--s1);
+  border-radius: 9px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--t-xs);
+  font-weight: var(--w-semibold);
+  line-height: 1;
+  vertical-align: 1px;
+}
+
+.inbox-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s3);
+}
+
+.inbox-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+.inbox-view {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  height: 30px;
+  padding: 0 var(--s3);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-muted);
+  font-weight: var(--w-semibold);
+  cursor: pointer;
+}
+
+.inbox-view:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.inbox-view.is-on {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.inbox-filter {
+  height: 30px;
+  max-width: 260px;
+}
+
+.conv-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.conv-row:last-child {
+  border-bottom: 0;
+}
+
+.conv-row .row {
+  border-bottom: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.conv-row .row-main {
+  min-width: 0;
+}
+
+/* Comfortable: each conversation (with its star) is one card. */
+:root[data-density='comfortable'] .page .conv-list .conv-row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+:root[data-density='comfortable'] .page .conv-list .conv-row .row {
+  border: 0;
+  border-radius: 0;
+}
+
+.conv-star {
+  align-self: center;
+  margin-right: var(--s3);
+  color: var(--text-faint);
+}
+
+.conv-star.is-on {
+  color: var(--accent);
+}
+
+.conv-star.is-on svg {
+  fill: currentColor;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.conv-row.is-unread .conv-subject {
+  font-weight: var(--w-semibold);
+  color: var(--text);
+}
+
+.conv-count {
+  font-size: var(--t-xs);
+  font-weight: var(--w-regular);
+}
+
+.conv-where {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  margin-right: var(--s2);
+  color: var(--text);
+}
+
+.inbox-note {
+  margin-top: var(--s3);
+}
+
+.btn.is-on svg {
+  fill: currentColor;
+}
+
+/* ---------- F18: writing messages ---------- */
+
+.compose-form,
+.conv-reply {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.compose-form .form-field > *,
+.cm-search > *,
+.conv-reply .form-field > * {
+  flex: none; /* full height in this column (see .event-form) */
+}
+
+.compose-form textarea.text-input,
+.conv-reply textarea.text-input {
+  height: auto;
+  min-height: 96px;
+  padding: var(--s2) var(--s3);
+  line-height: 1.5;
+  resize: vertical;
+  font-family: var(--font);
+}
+
+.cm-to .chip {
+  height: 26px;
+  cursor: default;
+}
+
+.cm-picks .chip {
+  height: 28px;
+}
+
+.cm-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  margin-top: var(--s1);
+}
+
+.cm-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 220px;
+  overflow: auto;
+}
+
+.cm-person {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  width: 100%;
+  padding: var(--s2) var(--s3);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--t-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.cm-results li:last-child .cm-person {
+  border-bottom: 0;
+}
+
+.cm-person:hover,
+.cm-person:focus-visible {
+  background: var(--surface-2);
+}
+
+.cm-person .muted {
+  margin-left: auto;
+  font-size: var(--t-xs);
+}
+
+/* ---------- F16: Canvas groups ---------- */
+
+.group-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s3);
+}
+
+.group-card {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  min-width: 0;
+}
+
+.group-card:hover {
+  text-decoration: none;
+  background: var(--surface-2);
+}
+
+.group-card-icon {
+  display: inline-flex;
+  padding: var(--s2);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.group-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  flex: 1;
+  min-width: 0;
+}
+
+.group-card-name {
+  font-weight: var(--w-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.group-card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  color: var(--text-muted);
+  font-size: var(--t-xs);
+}
+
+.group-course {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  color: inherit;
+}
+
+.page-group .course-title .icon {
+  color: var(--accent);
+}
+
+.group-members {
+  color: var(--text-muted);
+  margin: 0;
+}

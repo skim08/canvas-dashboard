@@ -114,12 +114,13 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 |---|---|---|
 | 1 | Core | Foundation, design system, Home, due dates, submission status, dark mode |
 | 2 | Grades and GPA | All of section E. Built and tested with sample data; owner confirmation with real Canvas deferred (see `GPA-CHECKLIST.md`) |
-| 3 | Course content | Section F (except F13, F14, F15) |
+| 3 | Course content | Section F (except F13–F18) |
 | 4 | Planning and notifications | Sections G and H, plus C7. Approved by you 2026-10-06 |
 | 5 | Extras | Section I, F13, F14, plus D8 and D9 (added 2026-10-06) |
 | 6 | Look and feel | Section J (added 2026-10-06 at your request): soft pink theme, Neko, Ask Neko, celebrations; plus C16 exam countdown (2026-10-07) |
 | 7 | Any student (approved by you 2026-10-20; built 2026-10-20, waiting on your checks and choices) | Section K (added 2026-10-20 at your request): works at any school's Canvas, syllabus import, setup, and what's needed to publish free on the Chrome Web Store |
 | 8 | After launch | Requests from the owner and friends after publishing (2026-11-04/05): G12 custom events, G13 class times you type in, J8 themes tab with animal mascots, K23 syllabus setup comes first. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
+| 9 | Groups and messages | Requested by the owner 2026-11-05: F16 Canvas group pages, F17 Inbox tab, F18 write and reply to messages, K25 messaging in the public build (the owner chose this). Also on the `after-launch` branch |
 
 A feature always lands in the same phase as, or a later phase than, any feature it depends on.
 
@@ -831,6 +832,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Conversations are listed with sender, subject, course and date. Unread ones are highlighted.
   - Opening one shows the full thread, including attachments.
   - Unread messages appear in Needs attention on Home, and there's a link to reply in Canvas. (Replying from the dashboard isn't part of F8.)
+- **Note (2026-11-05):** F17 moves the inbox to its own top tab and F18 adds replying here, so the "Reply in Canvas" link shows only when Send messages is turned off.
 
 #### F9 · Quick links
 - **Status:** [x] done (hardened 2026-10-20: your links are checked again when shown, so only ordinary web addresses work, even from a restored backup) · **Phase:** 3
@@ -885,6 +887,30 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Quizzes and exams show their details (due date, time limit, attempts allowed, points) and a **Take in Canvas** button.
   - The dashboard never tries to show or run a quiz itself.
 - **Note:** placed in Phase 1 instead of 3 because quizzes appear in the Phase 1 due-date lists and need this behavior from the start.
+
+#### F16 · Canvas group pages
+- **Status:** [~] partial — Courses → **Your groups** lists your Canvas groups (project teams, study groups set up by an instructor) with their class and member count. Each opens a group page (`#/group/<id>`) with tabs **Overview** (group announcements, recent discussions, members), **Discussions**, **Pages**, **Files** and **People**, plus **Message the group** and **Open in Canvas**. Pages, files and discussions open in the same detail windows as a class's, labeled with the group's name; the class page's study group links to the group page instead of Canvas. Settings → Features → Canvas groups turns it off. Tested with a sample group (PA Team 4) in light and dark, roomy and compact, and with automated tests. **Check in Chrome:** open one of your real Canvas groups · **Phase:** 9
+- **What:** Your Canvas groups, each with its own page, without opening Canvas. *(Added 2026-11-05 at the owner's request.)*
+- **Done when:**
+  - Your Canvas groups are listed under Courses, with their class.
+  - A group's announcements, discussions, pages, files and members can be read in the dashboard.
+  - From a group you can message the whole group or one member (F18), or open it in Canvas.
+
+#### F17 · Inbox tab
+- **Status:** [~] partial — **Inbox** is a top tab (after Calendar) with an unread count. Views: **Inbox**, **Unread**, **Starred**, **Sent** and **Archived**, plus a menu to show one class or group. Each row shows the class, the other people, when, and the latest message; star from the row. Opening a message marks it read; inside it: **Star**, **Archive** (or **Move to inbox**) and **Mark unread**. Changes show instantly and are undone with a message if Canvas refuses. Press **I** to open it. Tested with sample data and automated tests. **Check in Chrome:** star, archive and mark unread on a real message, and see that Canvas shows the same · **Phase:** 9
+- **What:** Your Canvas inbox as its own tab, to read and organize messages with instructors, TAs and classmates. *(Added 2026-11-05 at the owner's request; replaces F8's place under Courses.)*
+- **Done when:**
+  - Inbox is a top tab with an unread count, and shows Canvas's Inbox, Unread, Starred, Sent and Archived views.
+  - Messages can be filtered by class or group.
+  - You can star, archive, move back to the inbox and mark unread, and Canvas shows the same.
+
+#### F18 · Write and reply to messages
+- **Status:** [~] partial — **New message** (Inbox tab, or press **C**): pick a class or group, then who: one click for the class's **instructors** or **TAs** or **everyone in the group**, or search for a person by name (Canvas decides who you're allowed to message). Subject is optional. Each open message has a reply box (⌘/Ctrl + Enter sends) that goes to everyone in the conversation. **Message** buttons on a class's instructors and TAs and on group members open the window with that person filled in. A failed send keeps your text and says why. Attachments: a link to Canvas's inbox. Settings → Features → Send messages turns it off (then F8's "Reply in Canvas" link comes back). Tested with sample data (including a refused send) and automated tests. **Check in Chrome:** send yourself or a classmate a real message, and reply · **Phase:** 9
+- **What:** Message your instructors, TAs and classmates through Canvas without leaving the dashboard. *(Added 2026-11-05 at the owner's request.)*
+- **Done when:**
+  - You can write a new message to a class's instructors, its TAs, a group, or particular people.
+  - You can reply to a conversation.
+  - Messages go through Canvas (they appear in Canvas's inbox and its email notifications). If sending fails, your text is kept and you're told why.
 
 ### G. Planning and time
 
@@ -1220,6 +1246,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Marking announcements read (F2) works in the public build by remembering read state on your computer, without Canvas's security token.
   - `tools/build_zip.py` generates the public manifest, which asks only for what the public build uses (no `cookies` and no upload host). `store/LISTING.md` gives a reason for each permission.
   - Tests cover both builds.
+- **Note (2026-11-05):** K25 makes one exception: the Canvas inbox works in the public build, and its manifest asks for `cookies` again for that.
 
 #### K16 · Demo mode
 - **Status:** [~] partial — “Try it with sample data” on the first setup screen and in Settings → General. Demo mode loads a made-up student (CSE 143, MATH 126, PSYCH 101, ENGL 131, with class times, weekly topics and finals) and shows a “Demo — sample data” banner with Exit demo. Its data lives under separate `demo:` keys, never mixes with yours, and is deleted on exit, which returns to setup or your dashboard. It points at a school that can’t exist and loads nothing over the network. Your three classes and real instructor names moved out of the sample into `owner-data/fixtures.js` (test mode only). Every page and calendar view tested in test mode with no errors and no outside requests; reviewer instructions are in `store/LISTING.md`. **Check in Chrome:** try demo mode in the real extension once · **Phase:** 7
@@ -1305,6 +1332,14 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 - Turn on 2-step verification (security key or authenticator app) for the Google account that will publish the extension, and keep it the only account with access.
 - Pay the $5 Chrome Web Store developer fee and answer the trader question.
 - Find 2–3 testers at other schools (K10).
+
+#### K25 · Messages in the public build
+- **Status:** [~] partial — the public build stays read-only (K15) with one exception: the Canvas inbox. `lib/canvas.js` lets a public build send only POST or PUT requests to the inbox's own addresses (`/api/v1/conversations`, `/conversations/<id>` and `/conversations/<id>/add_message`): send, reply, read/unread, star and archive. Everything else, and any delete, is refused before anything is sent. Messages need Canvas's security token, so the public manifest asks for `cookies` again; only `src/lib/canvasMessages.js` reads it, and `tools/build_zip.py` and `tools/test_builds.py` check that. The store listing and privacy policy say so. Tested with automated tests in both builds. **Your tasks:** upload the new zip; the Chrome Web Store may ask you to explain the new `cookies` permission (the reason is in `store/LISTING.md`) · **Phase:** 9
+- **What:** Students using the Chrome Web Store version can send and manage Canvas messages. *(Added 2026-11-05: the owner chose “public can message”. Changes K15 for the inbox only.)*
+- **Done when:**
+  - The public build can send, reply to, star, archive and mark messages, and can't change anything else in Canvas.
+  - The public manifest's extra permission is explained in the listing and privacy policy.
+  - Tests cover both builds.
 
 ---
 
@@ -1407,6 +1442,9 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | F13 | Submit from the dashboard | 5 | [~] |
 | F14 | Reply to discussions | 5 | [~] |
 | F15 | Quizzes and exams link out | 1 | [x] |
+| F16 | Canvas group pages | 9 | [~] |
+| F17 | Inbox tab | 9 | [~] |
+| F18 | Write and reply to messages | 9 | [~] |
 | G1 | Weekly calendar | 4 | [x] |
 | G2 | Monthly calendar | 4 | [x] |
 | G3 | Time estimates | 4 | [x] |
@@ -1461,5 +1499,6 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K22 | "Works with Canvas" wording | 7 | [x] |
 | K23 | Syllabus setup comes first | 8 | [x] |
 | K24 | Make Neko yours | 8 | [x] |
+| K25 | Messages in the public build | 9 | [~] |
 
-**Total: 149 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13, K24 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 5 · Done: 120 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0
+**Total: 153 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13, K24 added 2026-11-05; F16–F18, K25 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 5 · Phase 9: 4 · Done: 120 · Partial: 30 (20 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 3 (C6, C12, F12) · Not started: 0

@@ -4,7 +4,7 @@
 // Instructure's file storage (inst-fs), the server Canvas itself sends them to.
 
 import { CANVAS_ORIGIN } from './env.js';
-import { canWrite } from '../build.js';
+import { canWrite, canMessage } from '../build.js';
 
 export class AuthError extends Error {
   constructor() {
@@ -51,7 +51,13 @@ export function setTransport(fn) {
   transport = fn;
 }
 
-// K15: the public build only reads. Anything that would change Canvas stops here.
+// K25: the Canvas inbox's own addresses: list, send, reply, and update one conversation
+// (read/unread, star, archive). Nothing else on Canvas can be changed through it, and
+// nothing can be deleted (archiving is the most it does).
+export const isMessagePath = (url) => /^\/api\/v1\/conversations(\/\d+(\/add_message)?)?$/.test(String(url).replace(/^[a-z]+:\/\/[^/]+/i, '').split(/[?#]/)[0]);
+const writeAllowed = (url, method) => canWrite() || (canMessage() && (method === 'POST' || method === 'PUT') && isMessagePath(url));
+
+// K15: the public build only reads (except the inbox, K25). Anything else that would change Canvas stops here.
 export class ReadOnlyError extends Error {
   constructor() {
     super('This version of the dashboard only reads from Canvas');
@@ -81,7 +87,7 @@ export function checkTarget(url) {
 
 async function fetchTransport(url, opts = {}) {
   const method = opts.method || 'GET';
-  if (method !== 'GET' && !canWrite()) throw new ReadOnlyError(); // K15
+  if (method !== 'GET' && !writeAllowed(url, method)) throw new ReadOnlyError(); // K15, K25
   if (opts.external) {
     if (!externalSender) throw new ReadOnlyError();
     return externalSender(url, opts);
@@ -146,7 +152,7 @@ export async function get(path, params) {
 // For canvasWrite.js: the same connection (sample data in test and demo mode).
 // K15: checked here as well, so sample data (test and demo mode) obeys it too.
 export function send(url, opts = {}) {
-  if ((opts.method || 'GET') !== 'GET' && !canWrite()) return Promise.reject(new ReadOnlyError());
+  if ((opts.method || 'GET') !== 'GET' && !writeAllowed(url, opts.method)) return Promise.reject(new ReadOnlyError());
   return transport(url, opts);
 }
 

@@ -24,6 +24,7 @@ import { mascotName } from './mochi.js';
 import { syllabusDrawer } from './syllabusDrawer.js';
 import { eventDrawer, ownEventActions } from './eventDrawer.js';
 import { classTimesDrawer } from './classTimesDrawer.js';
+import { composeDrawer } from './composeDrawer.js';
 import { personalizeQuiz } from './personalize.js';
 import { hiddenMarks } from '../lib/marks.js';
 import { unhideMark } from './marks.js';
@@ -66,6 +67,9 @@ export function renderDrawer(ctx) {
   } else if (d.type === 'classTimes') {
     title = 'Class times';
     body = classTimesDrawer(d.id, ctx); // G13
+  } else if (d.type === 'compose') {
+    title = 'New message';
+    body = composeDrawer(d.id, ctx); // F18
   } else if (d.type === 'event') {
     title = 'Your event';
     body = eventDrawer(d.id, ctx); // G12
@@ -482,6 +486,7 @@ export const SHORTCUTS = [
   ['w', 'What-if mode on / off'],
   ['a', 'Announcements'],
   ['i', 'Inbox'],
+  ['c', 'Write a new Canvas message'],
   ['m', 'Ask your mascot (Neko, or your theme’s)'],
   ['e', 'Add your own event to the calendar'],
   ['f', 'Start or stop focus on the selected item'],

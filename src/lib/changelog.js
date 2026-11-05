@@ -3,6 +3,16 @@
 
 export const CHANGES = [
   {
+    version: '0.4.0',
+    date: '2026-11-05',
+    items: [
+      'Inbox tab: your Canvas messages in their own tab, with Unread, Starred, Sent and Archived views and a filter by class.',
+      'Message your instructors, TAs and classmates without opening Canvas: write a new message (press C) or reply right in the conversation. Messages go through Canvas.',
+      'Star, archive and mark messages unread; Canvas shows the same.',
+      'Canvas groups: your project teams and study groups now have their own pages (Courses → Your groups) with announcements, discussions, pages, files and members.',
+    ],
+  },
+  {
     version: '0.3.0',
     date: '2026-11-05',
     items: [

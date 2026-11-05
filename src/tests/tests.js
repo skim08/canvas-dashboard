@@ -488,8 +488,9 @@ test('K20', 'version is the same in manifest.json, CHANGELOG.md and the app', as
   eq([VERSION, manifest.version, md.match(/^## (\S+)/m)[1]], [manifest.version, VERSION, VERSION]);
 });
 test('K20', 'notes show once per update, newest first', async () => {
-  const { unseen, newer, VERSION } = await import('../lib/changelog.js');
-  eq([unseen('0.2.0').map((c) => c.version), unseen('0.1.0')[0].version, unseen(VERSION).length, newer('0.10.0', '0.9.1'), newer('0.2.0', '0.2.0')], [[VERSION], VERSION, 0, true, false]);
+  const { unseen, newer, VERSION, CHANGES } = await import('../lib/changelog.js');
+  const previous = CHANGES[1].version;
+  eq([unseen(previous).map((c) => c.version), unseen('0.1.0').map((c) => c.version), unseen(VERSION).length, newer('0.10.0', '0.9.1'), newer('0.2.0', '0.2.0')], [[VERSION], CHANGES.slice(0, -1).map((c) => c.version), 0, true, false]);
 });
 
 // ---------- feedback prompt (K18) ----------
@@ -2089,6 +2090,113 @@ test('J5', 'the AI is told to answer only from the schedule', () => ok(/ONLY fro
 group('Look and feel (J1, J2, J6, J7)');
 test('J1', 'soft pink is the default color theme; classic is kept', () => eq([withDefaults(null).palette, withDefaults({ palette: 'classic' }).palette], ['pink', 'classic']));
 test('B7', 'Phase 6 features each have a Settings toggle', () => ok(['roundedType', 'mochi', 'askMochi', 'celebrations'].every((id) => FEATURES.some((f) => f.id === id))));
+
+
+group('Phase 9: groups and messages');
+test('K25', 'only the inbox’s own addresses count as messages', () =>
+  eq(
+    ['/api/v1/conversations', 'https://canvas.uw.edu/api/v1/conversations/8201', '/api/v1/conversations/8201/add_message?x=1', '/api/v1/conversations/8201/add_recipients', '/api/v1/conversations/batch_update', '/api/v1/courses/1/discussion_topics', '/api/v1/conversations/../courses/1/x'].map(canvas.isMessagePath),
+    [true, true, true, false, false, false, false]
+  ));
+test('K25', 'public build sends and updates messages, refuses every other write and any delete', async () => {
+  let sent = 0;
+  canvas.setTransport(async () => (sent++, { json: {} }));
+  const tryIt = async (fn) => { try { await fn(); return 'sent'; } catch (e) { return e.name; } };
+  const U = 'https://canvas.uw.edu/api/v1';
+  try {
+    const r = await asPublic(async () => [
+      await tryIt(() => canvas.send(`${U}/conversations`, { method: 'POST' })),
+      await tryIt(() => canvas.send(`${U}/conversations/8201`, { method: 'PUT' })),
+      await tryIt(() => canvas.send(`${U}/conversations/8201/add_message`, { method: 'POST' })),
+      await tryIt(() => canvas.send(`${U}/conversations/8201`, { method: 'DELETE' })),
+      await tryIt(() => canvas.send(`${U}/conversations/8201/add_recipients`, { method: 'POST' })),
+      await tryIt(() => canvas.send(`${U}/courses/1/discussion_topics/3/entries`, { method: 'POST' })),
+    ]);
+    eq([r, sent], [['sent', 'sent', 'sent', 'ReadOnlyError', 'ReadOnlyError', 'ReadOnlyError'], 3]);
+  } finally {
+    canvas.setTransport(fixtureTransport(null));
+  }
+});
+test('K25', 'messaging is on in the public build; submit and replies stay off', async () => {
+  const { feat } = await import('../ui/components.js');
+  eq(await asPublic(() => [feat('inbox'), feat('sendMessages'), feat('groups'), feat('submit')]), [true, true, true, false]);
+});
+test('F17', 'each inbox view lists the right conversations', async () => {
+  const M = await import('../lib/canvasMessages.js');
+  canvas.setTransport(fixtureTransport(null));
+  const ids = async (scope) => (await M.listConversations(scope)).map((c) => c.id).filter((id) => id >= 8200 && id < 8300); // the generic sample inbox (owner-data may add more)
+  const r = [await ids('inbox'), await ids('unread'), await ids('starred'), await ids('archived')];
+  eq(r, [['8201', '8202'], ['8201'], [], []]);
+});
+test('F17', 'star, archive and mark unread change the views; then put back', async () => {
+  const M = await import('../lib/canvasMessages.js');
+  canvas.setTransport(fixtureTransport(null));
+  const ids = async (scope) => (await M.listConversations(scope)).map((c) => c.id).filter((id) => id >= 8200 && id < 8300); // the generic sample inbox (owner-data may add more)
+  try {
+    await M.setStarred('8202', true);
+    await M.setState('8201', 'archived');
+    const after = [await ids('inbox'), await ids('starred'), await ids('archived')];
+    const one = (await M.listConversations('archived')).find((c) => c.id === '8201');
+    eq([after, one.archived, one.unread], [[['8202'], ['8202'], ['8201']], true, false]);
+  } finally {
+    await M.setStarred('8202', false);
+    await M.setState('8201', 'unread');
+  }
+  eq(await ids('unread'), ['8201']);
+});
+test('F17', 'conversations know their class or group', () => {
+  const { normalizeConversation } = CN;
+  const a = normalizeConversation({ id: 1, workflow_state: 'archived', context_code: 'group_4401', participants: [] });
+  const b = normalizeConversation({ id: 2, workflow_state: 'unread', starred: true, context_code: 'course_1001', participants: [] });
+  eq([a.groupId, a.courseId, a.archived, b.courseId, b.groupId, b.unread, b.starred], ['4401', null, true, '1001', null, true, true]);
+});
+test('F18', 'a new message goes to Canvas with its people, class and text', async () => {
+  const M = await import('../lib/canvasMessages.js');
+  let seen = null;
+  canvas.setTransport(async (url, opts = {}) => {
+    if (opts.method === 'POST') seen = { url: new URL(url).pathname, to: opts.body.getAll('recipients[]'), subject: opts.body.get('subject'), body: opts.body.get('body'), ctx: opts.body.get('context_code'), group: opts.body.get('group_conversation') };
+    return { json: [{ id: 1, subject: 'Q', workflow_state: 'read', participants: [] }] };
+  });
+  try {
+    await M.sendMessage({ recipients: ['course_1001_teachers', '502'], subject: 'Q', body: 'Hi', contextCode: 'course_1001' });
+    eq(seen, { url: '/api/v1/conversations', to: ['course_1001_teachers', '502'], subject: 'Q', body: 'Hi', ctx: 'course_1001', group: 'true' });
+  } finally {
+    canvas.setTransport(fixtureTransport(null));
+  }
+});
+test('F18', 'sending and replying show up in the sample inbox; a refusal says why', async () => {
+  const M = await import('../lib/canvasMessages.js');
+  canvas.setTransport(fixtureTransport(null));
+  const [made] = await M.sendMessage({ recipients: ['501'], subject: 'Office hours?', body: 'Are you in today?', contextCode: 'course_1001' });
+  const r = await M.reply(made.id, 'Thanks!');
+  const sent = (await M.listConversations('sent')).map((c) => c.subject);
+  let err = null;
+  try { await M.reply(made.id, 'FAIL'); } catch (e) { err = e.name; }
+  eq([r.messages.map((m) => m.body), sent.includes('Office hours?'), err], [['Are you in today?', 'Thanks!'], true, 'HttpError']);
+});
+test('F18', 'who you can message: quick groups and people, by class or group', async () => {
+  const M = await import('../lib/canvasMessages.js');
+  canvas.setTransport(fixtureTransport(null));
+  const course = await M.searchRecipients('course_1001', '');
+  const group = await M.searchRecipients('group_4401', '');
+  const found = await M.searchRecipients('course_1001', 'ana');
+  eq(
+    [course.filter((r) => r.type === 'context').map((r) => r.id), group.map((r) => r.name), found.map((r) => [r.name, r.roles])],
+    [['course_1001_teachers', 'course_1001_tas'], ['PA Team 4 (everyone)', 'Jordan Lee', 'Priya Shah', 'Diego Ramos'], [['Ana Ortiz', ['TaEnrollment']]]]
+  );
+});
+test('F16', 'a group’s things load from the group’s own Canvas addresses', async () => {
+  const content = await import('../ui/content.js');
+  canvas.setTransport(fixtureTransport(null));
+  const b = content.contentBase(content.groupKey('4401'));
+  const [pages, members, news, topics] = await Promise.all([canvas.getAll(`${b}/pages`), canvas.getAll(`${b}/users`), canvas.getAll(`${b}/discussion_topics`, { only_announcements: 'true' }), canvas.getAll(`${b}/discussion_topics`)]);
+  eq([b, content.contentBase('1001'), pages.map((p) => p.url), members.length, news.map((a) => a.title), topics.length > 0], ['/api/v1/groups/4401', '/api/v1/courses/1001', ['team-plan'], 4, ['Meeting moved to Thursday'], true]);
+});
+test('F16', 'your groups sync with their class', async () => {
+  canvas.setTransport(fixtureTransport(null));
+  const g = (await canvas.getAll('/api/v1/users/self/groups')).map(CN.normalizeGroup);
+  eq(g.map((x) => [x.id, x.name, x.courseId, x.members]), [['4401', 'PA Team 4', '1001', 4]]);
+});
 
 async function run() {
   // The sample classes' syllabi (a renamed copy of the owner's, K8).

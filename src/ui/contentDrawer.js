@@ -12,7 +12,9 @@ import { findProfile } from '../lib/profiles.js';
 import { CANVAS_ORIGIN } from '../lib/env.js';
 import { useContent, markAnnouncementRead, readLocally, postReply } from './content.js';
 import { slotText, openFile, openModuleItem } from './pages/course.js';
-import { ui, setUi, toast } from './actions.js';
+import { ui, setUi, toast, closeDrawer } from './actions.js';
+import * as inbox from './inboxActions.js';
+import { others } from './pages/inbox.js';
 import { notify } from './store.js';
 import { markButtons, markNotes } from './marks.js';
 import { composer, draft, setDraft } from './composer.js';
@@ -37,8 +39,16 @@ export function renderContentDrawer(type, id, ctx) {
 }
 
 const prose = (html, courseId) => h('article', { class: 'prose' }, sanitizeHtml(html, { courseId }).fragment);
+// F16: a group's things ("g4401") are labeled with the group's name.
+const groupName = (key) => (state.cache?.groups || []).find((g) => `g${g.id}` === key)?.name || 'Group';
 const header = (ctx, courseId, title, sub) =>
-  h('header', { class: 'd-header' }, courseId ? h('span', { class: 'd-course' }, dot(ctx.colorOf(courseId)), ctx.nickOf(courseId)) : null, h('h2', { class: 'd-title' }, title), sub ? h('p', { class: 'd-due' }, sub) : null);
+  h(
+    'header',
+    { class: 'd-header' },
+    courseId ? (String(courseId).startsWith('g') ? h('span', { class: 'd-course' }, icon('users', 12), groupName(courseId)) : h('span', { class: 'd-course' }, dot(ctx.colorOf(courseId)), ctx.nickOf(courseId))) : null,
+    h('h2', { class: 'd-title' }, title),
+    sub ? h('p', { class: 'd-due' }, sub) : null
+  );
 const canvasLink = (url, label = 'Open in Canvas', kind = 'secondary') => (url ? h('a', { class: `btn btn-${kind}`, href: url, target: '_blank', rel: 'noopener', 'data-key': 'open-canvas' }, label, icon('external')) : null);
 const canvasButton = (url, label) => (url ? h('div', { class: 'd-actions' }, canvasLink(url, label)) : null);
 // I2: Canvas link plus pin and hide, in one row.
@@ -158,19 +168,36 @@ function discussionView(id, ctx) {
   ];
 }
 
-// F8
+// F8, F17, F18: one conversation: read it, reply, star, archive or mark it unread.
+const replying = {}; // conversation id -> { text, busy, error }
 function conversationView(id, ctx) {
   const r = useContent('conversation', null, id);
   if (r.status !== 'ready') return loading(r, 'message');
   const c = r.data;
   queueMicrotask(() => readLocally('conv', id)); // Canvas marked it read when we opened it
   const key = MARK_KEY.conversation(id);
+  const st = (replying[id] ||= { text: '', busy: false, error: null });
+  const canSend = feat('sendMessages');
+  const sendIt = async () => {
+    if (!st.text.trim()) return;
+    st.busy = true;
+    st.error = null;
+    notify();
+    const res = await inbox.sendReply(id, st.text.trim());
+    st.busy = false;
+    if (res.ok) st.text = '';
+    else st.error = res.error;
+    notify();
+  };
   return [
-    header(ctx, c.courseId, c.subject, [c.participants.join(', '), c.context].filter(Boolean).join(' · ')),
+    header(ctx, c.courseId, c.subject, [others(c).join(', '), c.context].filter(Boolean).join(' · ')),
     h(
       'div',
       { class: 'd-actions' },
-      h('a', { class: 'btn btn-primary', href: `${CANVAS_ORIGIN}/conversations`, target: '_blank', rel: 'noopener', 'data-key': 'reply-canvas' }, 'Reply in Canvas', icon('external')),
+      canSend ? null : h('a', { class: 'btn btn-primary', href: `${CANVAS_ORIGIN}/conversations`, target: '_blank', rel: 'noopener', 'data-key': 'reply-canvas' }, 'Reply in Canvas', icon('external')),
+      button(c.starred ? 'Starred' : 'Star', () => inbox.star(c), { key: 'conv-star', iconName: 'star', kind: c.starred ? 'secondary is-on' : 'ghost' }),
+      c.archived ? button('Move to inbox', () => inbox.unarchive(c), { key: 'conv-unarchive', iconName: 'mail', kind: 'ghost' }) : button('Archive', () => (inbox.archive(c), closeDrawer()), { key: 'conv-archive', iconName: 'archive', kind: 'ghost' }),
+      button('Mark unread', () => (inbox.markUnread(c), closeDrawer()), { key: 'conv-unread', kind: 'ghost' }),
       ...markButtons(key, { type: 'conversation', title: c.subject, courseId: c.courseId || null, ref: id })
     ),
     h(
@@ -186,6 +213,21 @@ function conversationView(id, ctx) {
         )
       )
     ),
+    canSend
+      ? h(
+          'form',
+          {
+            class: 'reply-box conv-reply',
+            onsubmit: (e) => {
+              e.preventDefault();
+              sendIt();
+            },
+          },
+          h('label', { class: 'form-field' }, h('span', null, `Reply to ${others(c).join(', ') || 'everyone'}`), h('textarea', { class: 'text-input cm-body', rows: 4, value: st.text, placeholder: 'Write a reply…', 'data-key': `conv-reply:${id}`, disabled: st.busy, oninput: (e) => (st.text = e.target.value), onkeydown: (e) => (e.metaKey || e.ctrlKey) && e.key === 'Enter' && (e.preventDefault(), sendIt()) })),
+          st.error ? h('div', { class: 'submit-error', role: 'alert' }, h('p', null, st.error), h('a', { class: 'link-btn', href: `${CANVAS_ORIGIN}/conversations`, target: '_blank', rel: 'noopener' }, 'Reply in Canvas instead')) : null,
+          h('div', { class: 'd-actions' }, button(st.busy ? 'Sending…' : 'Send reply', null, { kind: 'primary', type: 'submit', iconName: 'send', key: `conv-send:${id}`, disabled: st.busy }), h('span', { class: 'caption' }, 'Everyone in this conversation gets it. ⌘/Ctrl + Enter sends.'))
+        )
+      : null,
     markNotes(key),
   ];
 }
@@ -381,7 +423,7 @@ function studyGroupEditor(courseId, ctx) {
     ),
     h('label', { class: 'form-field' }, h('span', null, 'When you meet'), h('input', { class: 'text-input', value: sg.meets || '', placeholder: 'Sundays 4 PM, Odegaard 2nd floor', 'data-key': 'sg-meets', onchange: (e) => edit((g) => (g.meets = e.target.value.trim())) })),
     h('label', { class: 'form-field' }, h('span', null, 'Notes'), h('textarea', { class: 'notes', rows: '4', value: sg.notes || '', 'data-key': 'sg-notes', onchange: (e) => edit((g) => (g.notes = e.target.value)) })),
-    canvasGroups.length ? h('section', { class: 'd-block' }, h('h3', null, 'Your Canvas groups'), h('ul', { class: 'files' }, canvasGroups.map((g) => h('li', null, h('a', { href: g.url, target: '_blank', rel: 'noopener' }, icon('users'), h('span', null, `${g.name}${g.members ? ` · ${g.members} members` : ''}`), icon('external')))))) : null,
+    canvasGroups.length ? h('section', { class: 'd-block' }, h('h3', null, 'Your Canvas groups'), h('ul', { class: 'files' }, canvasGroups.map((g) => h('li', null, feat('groups') ? h('a', { href: `#/group/${g.id}`, onclick: () => setUi({ drawer: null }) }, icon('users'), h('span', null, `${g.name}${g.members ? ` · ${g.members} members` : ''}`)) : h('a', { href: g.url, target: '_blank', rel: 'noopener' }, icon('users'), h('span', null, `${g.name}${g.members ? ` · ${g.members} members` : ''}`), icon('external')))))) : null,
   ];
 }
 

@@ -236,13 +236,75 @@ function announcements() {
 }
 // A made-up inbox for the sample student.
 const CONVERSATIONS = [
-  { id: 8201, subject: 'Extension on PA2?', workflow_state: 'unread', last_message: 'Yes, you have until Sunday night. Good luck!', last_message_at: at(0, 8, 40), participants: [{ id: 1, name: 'Test Student' }, { id: 501, name: 'Brett Stuart' }], context_name: 'CSE 143 A Au 26', context_code: 'course_1001', message_count: 2 },
-  { id: 8202, subject: 'Study group for Midterm 1', workflow_state: 'read', last_message: 'Thursday at 6 in the library works for me.', last_message_at: at(-2, 19, 0), participants: [{ id: 1, name: 'Test Student' }, { id: 77, name: 'Jordan Lee' }], context_name: 'MATH 126 C Au 26', context_code: 'course_1002', message_count: 2 },
+  { id: 8201, subject: 'Extension on PA2?', workflow_state: 'unread', last_message: 'Yes, you have until Sunday night. Good luck!', last_message_at: at(0, 8, 40), participants: [{ id: 1, name: 'Test Student' }, { id: 501, name: 'Brett Stuart' }], audience: [501], context_name: 'CSE 143 A Au 26', context_code: 'course_1001', message_count: 2 },
+  { id: 8202, subject: 'Study group for Midterm 1', workflow_state: 'read', last_message: 'Thursday at 6 in the library works for me.', last_message_at: at(-2, 19, 0), participants: [{ id: 1, name: 'Test Student' }, { id: 77, name: 'Jordan Lee' }], audience: [77], context_name: 'MATH 126 C Au 26', context_code: 'course_1002', message_count: 2 },
 ];
 const CONVERSATION_DETAIL = {
   8201: { ...CONVERSATIONS[0], messages: [{ id: 12, author_id: 501, body: 'Yes, you have until Sunday night. Good luck!', created_at: at(0, 8, 40), attachments: [] }, { id: 11, author_id: 1, body: 'Hi Professor, could I have one extra day for PA2? I was sick this week.', created_at: at(-1, 21, 5), attachments: [] }] },
   8202: { ...CONVERSATIONS[1], messages: [{ id: 14, author_id: 77, body: 'Thursday at 6 in the library works for me.', created_at: at(-2, 19, 0), attachments: [{ display_name: 'practice-problems.pdf', url: '/files/1/download' }] }, { id: 13, author_id: 1, body: 'Want to study for Midterm 1 together?', created_at: at(-2, 15, 0), attachments: [] }] },
 };
+let nextConversationId = 8300;
+// F17: which conversations each inbox view shows.
+function conversationsIn(scope) {
+  if (scope === 'unread') return CONVERSATIONS.filter((c) => c.workflow_state === 'unread');
+  if (scope === 'starred') return CONVERSATIONS.filter((c) => c.starred);
+  if (scope === 'archived') return CONVERSATIONS.filter((c) => c.workflow_state === 'archived');
+  if (scope === 'sent') return CONVERSATIONS.filter((c) => c.sent || (CONVERSATION_DETAIL[c.id]?.messages || []).some((x) => x.author_id === 1));
+  return CONVERSATIONS.filter((c) => c.workflow_state !== 'archived');
+}
+function updateConversation(id, body) {
+  const c = CONVERSATIONS.find((x) => String(x.id) === String(id));
+  if (!c) throw new HttpError(404, `/api/v1/conversations/${id}`);
+  const state = field(body, 'conversation[workflow_state]');
+  const star = field(body, 'conversation[starred]');
+  if (state) c.workflow_state = state;
+  if (star != null) c.starred = star === 'true';
+  return c;
+}
+const contextName = (code) => CONVERSATIONS.find((c) => c.context_code === code)?.context_name || SAMPLE_GROUPS.find((g) => `group_${g.id}` === code)?.name || '';
+// F18: who you can message in a class or group (Canvas's /search/recipients).
+function recipients(context, search) {
+  const people = [
+    { id: '501', name: 'Brett Stuart', ctx: 'course_1001', role: 'TeacherEnrollment' },
+    { id: '502', name: 'Ana Ortiz', ctx: 'course_1001', role: 'TaEnrollment' },
+    { id: '77', name: 'Jordan Lee', ctx: 'course_1001', role: 'StudentEnrollment', groups: ['group_4401'] },
+    { id: '78', name: 'Priya Shah', ctx: 'course_1001', role: 'StudentEnrollment', groups: ['group_4401'] },
+    { id: '79', name: 'Diego Ramos', ctx: 'course_1001', role: 'StudentEnrollment', groups: ['group_4401'] },
+    { id: '601', name: 'Prof. Okafor', ctx: 'course_1002', role: 'TeacherEnrollment' },
+    { id: '602', name: 'Priya (TA)', ctx: 'course_1002', role: 'TaEnrollment' },
+  ];
+  const contexts = [
+    { id: 'course_1001_teachers', name: 'CSE 143: Instructors', user_count: 1, ctx: 'course_1001' },
+    { id: 'course_1001_tas', name: 'CSE 143: TAs', user_count: 1, ctx: 'course_1001' },
+    { id: 'group_4401', name: 'PA Team 4 (everyone)', user_count: 4, ctx: 'group_4401' },
+    { id: 'course_1002_teachers', name: 'MATH 126: Instructors', user_count: 1, ctx: 'course_1002' },
+    { id: 'course_1002_tas', name: 'MATH 126: TAs', user_count: 1, ctx: 'course_1002' },
+  ];
+  const q = search.toLowerCase();
+  const inCtx = (x) => !context || x.ctx === context || (x.groups || []).includes(context);
+  return [
+    ...contexts.filter((c) => inCtx(c) && (!q || c.name.toLowerCase().includes(q))).map((c) => ({ id: c.id, name: c.name, type: 'context', user_count: c.user_count })),
+    ...people.filter((x) => inCtx(x) && (!q || x.name.toLowerCase().includes(q))).map((x) => ({ id: x.id, name: x.name, type: 'user', common_courses: { [x.ctx.slice(7)]: [x.role] } })),
+  ];
+}
+// F16: the sample student's Canvas group, with its own discussions, pages and files.
+const SAMPLE_GROUPS = [
+  {
+    id: 4401,
+    name: 'PA Team 4',
+    course_id: 1001,
+    members_count: 4,
+    description: 'Programming assignment team for CSE 143.',
+    members: [[1, 'Test Student'], [77, 'Jordan Lee'], [78, 'Priya Shah'], [79, 'Diego Ramos']],
+    announcements: [{ id: 9601, title: 'Meeting moved to Thursday', message: '<p>Let’s meet Thursday at 6 in the library instead.</p>', author: { display_name: 'Jordan Lee' }, posted_at: at(-1, 18, 0), discussion_subentry_count: 0, unread_count: 0, read_state: 'unread', html_url: '/groups/4401/discussion_topics/9601' }],
+    topics: [
+      { id: 9602, title: 'Who’s doing which part of PA3?', message: '<p>I can take the recursion part. Anyone want testing?</p>', author: { display_name: 'Priya Shah' }, posted_at: at(-2, 20, 0), last_reply_at: at(0, 9, 0), discussion_subentry_count: 3, unread_count: 1, read_state: 'read', html_url: '/groups/4401/discussion_topics/9602' },
+    ],
+    pages: [{ url: 'team-plan', title: 'Team plan', front_page: true, updated_at: at(-3), body: '<h2>PA3 plan</h2><ul><li>Jordan: merge sort</li><li>Priya: recursion</li><li>Diego + you: tests</li></ul>' }],
+    files: [{ id: 64401, display_name: 'PA3 notes.pdf', size: 120000, 'content-type': 'application/pdf', mime_class: 'pdf', folder_id: 44010, updated_at: at(-2), url: '/files/64401/download' }],
+  },
+];
+
 const MODULES = {
   1001: [
     { id: 11, name: 'Week 1: Review of Java', position: 1, state: 'completed', items: [
@@ -278,6 +340,11 @@ const VIEWS = {
     { id: 3, user_id: 77, message: '<p>Is recursion allowed in merge sort?</p>', created_at: at(0, 6, 30), replies: [{ id: 4, user_id: 502, message: '<p>Yes.</p>', created_at: at(0, 7, 0) }] },
   ] },
   9302: { participants: [], unread_entries: [], view: [] },
+  // F16: PA Team 4's discussion
+  9602: { participants: [{ id: 1, display_name: 'Test Student' }, { id: 77, display_name: 'Jordan Lee' }, { id: 79, display_name: 'Diego Ramos' }], unread_entries: [9613], view: [
+    { id: 9611, user_id: 77, message: '<p>I’ll do merge sort.</p>', created_at: at(-1, 10, 0), replies: [] },
+    { id: 9612, user_id: 79, message: '<p>I can do testing with whoever’s free.</p>', created_at: at(-1, 12, 0), replies: [{ id: 9613, user_id: 77, message: '<p>Sounds good. Let’s finish by Sunday.</p>', created_at: at(0, 9, 0) }] },
+  ] },
 };
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -324,6 +391,30 @@ function fixturePost(p, body, u, opts) {
       (parent.replies ||= []).push(entry);
     } else view.view.push(entry);
     return { json: entry };
+  }
+  // F18: new messages and replies, kept until the page reloads. "FAIL" in the text is refused.
+  if (p === '/api/v1/conversations') {
+    const text = field(body, 'body') || '';
+    if (/FAIL/.test(text)) throw new HttpError(400, p, 'Message could not be sent');
+    const to = body?.getAll ? body.getAll('recipients[]') : [];
+    const id = ++nextConversationId;
+    const names = to.map((r) => recipients('', '').find((x) => String(x.id) === r)?.name || r);
+    const c = { id, subject: field(body, 'subject') || '(no subject)', workflow_state: 'read', last_message: text, last_message_at: new Date().toISOString(), participants: [{ id: 1, name: 'Test Student' }, ...names.map((n, k) => ({ id: 9000 + k, name: n }))], audience: names.map((_, k) => 9000 + k), context_name: contextName(field(body, 'context_code')), context_code: field(body, 'context_code') || null, message_count: 1, starred: false, sent: true };
+    CONVERSATIONS.unshift(c);
+    CONVERSATION_DETAIL[id] = { ...c, messages: [{ id: ++nextEntryId, author_id: 1, body: text, created_at: c.last_message_at, attachments: [] }] };
+    return { json: [c] };
+  }
+  if ((m = p.match(/^\/api\/v1\/conversations\/(\d+)\/add_message$/))) {
+    const text = field(body, 'body') || '';
+    if (/FAIL/.test(text)) throw new HttpError(400, p, 'Message could not be sent');
+    const d = CONVERSATION_DETAIL[m[1]];
+    if (!d) throw new HttpError(404, p);
+    const msg = { id: ++nextEntryId, author_id: 1, body: text, created_at: new Date().toISOString(), attachments: [] };
+    d.messages = [msg, ...d.messages];
+    const c = CONVERSATIONS.find((x) => String(x.id) === m[1]);
+    Object.assign(c, { last_message: text, last_message_at: msg.created_at, message_count: (c.message_count || 1) + 1, sent: true });
+    Object.assign(d, c, { messages: d.messages });
+    return { json: d };
   }
   throw new Error(`No fixture for POST ${p}`);
 }
@@ -383,7 +474,7 @@ export function fixtureTransport(scenario) {
     const p = u.pathname;
     const page = Number(u.searchParams.get('page') || 1);
     let m;
-    if (p === '/api/v1/users/self/profile') return { json: { name: 'Test Student', short_name: 'Test', time_zone: TZ, calendar: { ics: `${CANVAS_ORIGIN}/feeds/calendars/user_sampleFeedToken.ics` } } };
+    if (p === '/api/v1/users/self/profile') return { json: { id: 1, name: 'Test Student', short_name: 'Test', time_zone: TZ, calendar: { ics: `${CANVAS_ORIGIN}/feeds/calendars/user_sampleFeedToken.ics` } } };
     if (p === '/api/v1/courses') return { json: scenario === 'empty' ? [] : COURSES.map(course) };
     if ((m = p.match(/^\/api\/v1\/courses\/(\d+)\/assignments$/))) {
       if (m[1] === '283480000000000350') throw new HttpError(403, p);
@@ -417,6 +508,7 @@ export function fixtureTransport(scenario) {
     // Phase 3 content
     if (opts.method === 'PUT') {
       if ((m = p.match(/discussion_topics\/(\d+)\/read$/))) annRead.add(m[1]);
+      if ((m = p.match(/^\/api\/v1\/conversations\/(\d+)$/))) return { json: updateConversation(m[1], opts.body) }; // F17
       return { json: null };
     }
     if ((m = p.match(/^\/api\/v1\/courses\/(\d+)\/tabs$/))) return { json: COURSE_TABS[m[1]] || TABS(ALL_TABS) };
@@ -425,9 +517,33 @@ export function fixtureTransport(scenario) {
       const codes = u.searchParams.getAll('context_codes[]');
       return { json: announcements().filter((a) => codes.includes(a.context_code)) };
     }
-    if (p === '/api/v1/conversations') return { json: CONVERSATIONS };
-    if ((m = p.match(/^\/api\/v1\/conversations\/(\d+)$/))) return { json: CONVERSATION_DETAIL[m[1]] };
-    if (p === '/api/v1/users/self/groups') return { json: [{ id: 4401, name: 'PA Team 4', course_id: 1001, members_count: 4 }] };
+    if (p === '/api/v1/conversations') return { json: conversationsIn(u.searchParams.get('scope') || 'inbox') }; // F17
+    if ((m = p.match(/^\/api\/v1\/conversations\/(\d+)$/))) {
+      const c = CONVERSATIONS.find((x) => String(x.id) === m[1]);
+      if (c && c.workflow_state === 'unread') c.workflow_state = 'read'; // opening a message reads it, like Canvas
+      return { json: { ...(CONVERSATION_DETAIL[m[1]] || {}), ...(c || {}) } };
+    }
+    if (p === '/api/v1/search/recipients') return { json: recipients(u.searchParams.get('context') || '', u.searchParams.get('search') || '') }; // F18
+    if (p === '/api/v1/users/self/groups') return { json: SAMPLE_GROUPS.map(({ id, name, course_id, members_count }) => ({ id, name, course_id, members_count })) };
+    // F16: a group's own pages
+    if ((m = p.match(/^\/api\/v1\/groups\/(\d+)(\/[a-z_]+)?$/))) {
+      const g = SAMPLE_GROUPS.find((x) => String(x.id) === m[1]);
+      if (!g) throw new HttpError(404, p);
+      const what = m[2] || '';
+      if (!what) return { json: { id: g.id, name: g.name, course_id: g.course_id, members_count: g.members.length, description: g.description, html_url: `/groups/${g.id}` } };
+      if (what === '/users') return { json: g.members.map(([id, name]) => ({ id, name })) };
+      if (what === '/discussion_topics') return { json: u.searchParams.get('only_announcements') ? g.announcements : g.topics };
+      if (what === '/pages') return { json: g.pages.map(({ body, ...rest }) => rest) };
+      if (what === '/files') return { json: g.files };
+      if (what === '/folders') return { json: [{ id: g.id * 10, name: 'group files', full_name: 'group files', parent_folder_id: null }] };
+      return { json: [] };
+    }
+    if ((m = p.match(/^\/api\/v1\/groups\/(\d+)\/pages\/([^/]+)$/))) {
+      const page = SAMPLE_GROUPS.find((x) => String(x.id) === m[1])?.pages.find((x) => x.url === decodeURIComponent(m[2]));
+      if (!page) throw new HttpError(404, p);
+      return { json: { ...page, html_url: `/groups/${m[1]}/pages/${page.url}` } };
+    }
+    if ((m = p.match(/^\/api\/v1\/groups\/(\d+)\/discussion_topics\/(\d+)\/view$/))) return { json: VIEWS[m[2]] || { participants: [], unread_entries: [], view: [] } };
     if ((m = p.match(/^\/api\/v1\/courses\/(\d+)\/modules$/))) return { json: MODULES[m[1]] || [] };
     if ((m = p.match(/^\/api\/v1\/courses\/(\d+)\/pages$/))) {
       if (m[1] === '1009') throw new HttpError(404, p);

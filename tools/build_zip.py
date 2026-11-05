@@ -1,8 +1,11 @@
 """K14 + K15 + K19: builds the public Chrome Web Store upload (dist/<name>-<version>.zip).
 
-The public build is read-only (K15): src/build.js says so, src/lib/canvasWrite.js is
-replaced by a stub that refuses, and the manifest is generated without the "cookies"
-permission or Instructure's upload host. Your own folder (the owner build) is untouched.
+The public build only reads from Canvas (K15), except for the Canvas inbox (K25): it can
+send and reply to messages and star, archive or mark them read. src/build.js says so,
+src/lib/canvasWrite.js is replaced by a stub that refuses, lib/canvas.js refuses every other
+write, and the manifest is generated without Instructure's upload host. It keeps the
+"cookies" permission, used only by src/lib/canvasMessages.js to read Canvas's CSRF token.
+Your own folder (the owner build) is untouched.
 
 Leaves out everything that isn't the extension itself: tests and their sample files,
 the tools, the owner's personal syllabi and sample classes (owner-data/), the spec and
@@ -32,6 +35,8 @@ PRIVATE = [w for w in PRIVATE if w and not w.startswith("#")]
 BUILD_JS = f"""// K15 + K19: the public build{' (beta)' if BETA else ''}, written by tools/build_zip.py. Reads only.
 export const BUILD = {{ kind: 'public', beta: {'true' if BETA else 'false'} }};
 export const canWrite = () => false;
+// K25: the Canvas inbox (send, reply, star, archive, mark read) works in every build.
+export const canMessage = () => true;
 """
 WRITE_STUB = """// K15: the public build only reads from Canvas. Nothing here can change anything there.
 import { ReadOnlyError } from './canvas.js';
@@ -52,7 +57,7 @@ REPLACED = {"src/build.js": BUILD_JS, "src/lib/canvasWrite.js": WRITE_STUB}
 
 def public_manifest():
     m = json.load(open("manifest.json"))
-    m["permissions"] = [p for p in m["permissions"] if p != "cookies"]  # only writes used the CSRF cookie
+    # "cookies" stays (K25): messages need Canvas's CSRF token.
     m.pop("host_permissions", None)  # Instructure's upload host was only for F13
     if BETA:
         m["name"] = f"{m['name']} (Beta)"
@@ -83,7 +88,7 @@ problems = []
 refs = list(manifest["icons"].values()) + list(manifest["action"]["default_icon"].values()) + [manifest["action"]["default_popup"], manifest["background"]["service_worker"], manifest["chrome_url_overrides"]["newtab"]]
 for r in refs:
     if r not in shipped: problems.append(f"manifest names {r}, which isn't in the zip")
-if "cookies" in manifest["permissions"] or manifest.get("host_permissions"): problems.append("public manifest still asks for cookies or a host")
+if manifest.get("host_permissions"): problems.append("public manifest still asks for a host")
 for p in files:
     if not p.endswith(".js"): continue
     src = content(p)
@@ -95,10 +100,11 @@ for p in files:
     hits = [w for w in PRIVATE if w in src]
     if hits: problems.append(f"{p}: contains private details ({len(hits)} word(s) from owner-data/private-words.txt)")
     # K15: no write paths. Only canvas.js may fetch with a method, and it refuses non-GET in this build.
-    if "chrome.cookies" in src: problems.append(f"{p}: reads cookies (public build doesn't ask for them)")
+    if "chrome.cookies" in src and p != "src/lib/canvasMessages.js": problems.append(f"{p}: reads cookies (only the inbox may, K25)")
     if re.search(r"fetch\([^)]*method:\s*'(POST|PUT|DELETE|PATCH)'", src): problems.append(f"{p}: sends a write request")
 canvas_src = content("src/lib/canvas.js")
-if "if (method !== 'GET' && !canWrite()) throw new ReadOnlyError();" not in canvas_src: problems.append("canvas.js: the read-only guard is missing")
+if "if (method !== 'GET' && !writeAllowed(url, method)) throw new ReadOnlyError();" not in canvas_src: problems.append("canvas.js: the read-only guard is missing")
+if "export const isMessagePath = (url) => /^\\/api\\/v1\\/conversations(\\/\\d+(\\/add_message)?)?$/" not in canvas_src: problems.append("canvas.js: the inbox-only write rule (K25) changed; check it still allows only conversations")
 if problems:
     print("\n".join(problems)); sys.exit(1)
 
@@ -126,4 +132,4 @@ To update, unzip the new version over the same folder, then click the reload arr
 Not affiliated with Instructure or any school. Works with Canvas.
 """)
 size = os.path.getsize(out) / 1024
-print(f"Built {out}: {len(files) + 1} files, {size:.0f} KB. Public, read-only{' beta' if BETA else ''} build: no cookies or upload host; left out tests, tools, owner-data and notes." + (f" Wrote {os.path.join(OUT, 'INSTALL.md')}." if BETA else ""))
+print(f"Built {out}: {len(files) + 1} files, {size:.0f} KB. Public{' beta' if BETA else ''} build: reads only, except Canvas messages (K25); no upload host; left out tests, tools, owner-data and notes." + (f" Wrote {os.path.join(OUT, 'INSTALL.md')}." if BETA else ""))
