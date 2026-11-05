@@ -105,6 +105,10 @@ for p in files:
 canvas_src = content("src/lib/canvas.js")
 if "if (method !== 'GET' && !writeAllowed(url, method)) throw new ReadOnlyError();" not in canvas_src: problems.append("canvas.js: the read-only guard is missing")
 if "const MESSAGE_WRITES = { POST: /^\\/api\\/v1\\/conversations(\\/\\d+\\/add_message)?$/, PUT: /^\\/api\\/v1\\/conversations\\/\\d+$/ };" not in canvas_src: problems.append("canvas.js: the inbox-only write rule (K25) changed; check it still allows only conversations")
+# K17: fresh links to the website's stylesheet and script (see tools/stamp_site.py).
+import importlib.util as _iu
+_spec = _iu.spec_from_file_location("stamp_site", os.path.join("tools", "stamp_site.py")); _m = _iu.module_from_spec(_spec); _spec.loader.exec_module(_m); _m.stamp()
+
 # K17: the website's patch notes come from CHANGELOG.md, refreshed on every build.
 def changelog_entries():
     out = []
