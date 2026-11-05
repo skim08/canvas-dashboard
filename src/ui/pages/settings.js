@@ -42,8 +42,13 @@ function syllabusSettings(ctx) {
   if (!classes.length) return [h('p', { class: 'field-desc' }, 'Your classes will appear here once they load from Canvas.')];
   return classes.map((c) => {
     const p = findProfile(c);
-    const status = missing.has(c.id) ? (p ? 'Syllabus added, but no class times yet' : 'No syllabus yet') : state.userdata.syllabusSkip?.[c.id] ? `${p ? 'Syllabus added · ' : ''}No class times needed` : 'Class times and dates added';
-    return field(c.nick, status, button(missing.has(c.id) ? 'Add' : 'Edit', () => openDrawer('syllabus', c.id), { key: `set-syl:${c.id}`, kind: missing.has(c.id) ? 'primary' : 'secondary' }));
+    const typed = (state.userdata.classTimes?.[c.id] || []).length;
+    const status = missing.has(c.id) ? (p ? 'Syllabus added, but no class times yet' : 'No syllabus yet') : state.userdata.syllabusSkip?.[c.id] ? `${p ? 'Syllabus added · ' : ''}No class meetings` : `${p ? 'Syllabus added' : 'No syllabus'} · ${typed ? 'class times typed in' : 'class times from the syllabus'}`;
+    return field(
+      c.nick,
+      status,
+      h('span', { class: 'set-syl-btns' }, button('Syllabus', () => openDrawer('syllabus', c.id), { key: `set-syl:${c.id}`, kind: missing.has(c.id) && !p ? 'primary' : 'secondary' }), button('Class times', () => openDrawer('classTimes', c.id), { key: `set-ct:${c.id}`, kind: missing.has(c.id) && p ? 'primary' : 'secondary' }))
+    );
   });
 }
 

@@ -6,9 +6,9 @@
 // `swatch` previews the light colors on the theme's card.
 export const THEMES = [
   { id: 'pink', mascot: 'cat', title: 'Neko', blurb: 'Soft pink, with Neko the cat.', swatch: ['#fdf5f7', '#fbe4ed', '#b03867'] },
-  { id: 'matcha', mascot: 'frog', title: 'Matcha', blurb: 'Calm greens, with Matcha the frog.', swatch: ['#f4f8f1', '#e3f0dc', '#376f34'] },
+  { id: 'matcha', mascot: 'frog', title: 'Matcha', blurb: 'Calm greens, with Kero the frog.', swatch: ['#f4f8f1', '#e3f0dc', '#376f34'] },
   { id: 'ocean', mascot: 'shark', title: 'Ocean', blurb: 'Blues and seafoam, with Finn the shark.', swatch: ['#f2f8fb', '#dff0f8', '#1f6f99'] },
-  { id: 'polar', mascot: 'bear', title: 'Polar', blurb: 'Minimal white, grey and black, with Yuki the polar bear.', swatch: ['#f6f6f6', '#e8e8e8', '#2a2a2a'] },
+  { id: 'polar', mascot: 'bear', title: 'Polar', blurb: 'Minimal white, grey and black, with Yumi the polar bear.', swatch: ['#f6f6f6', '#e8e8e8', '#2a2a2a'] },
   { id: 'honey', mascot: 'shiba', title: 'Honey', blurb: 'Warm golds, with Honey the shiba.', swatch: ['#fdf8ef', '#f9ebd4', '#93550f'] },
   { id: 'classic', mascot: 'cat', title: 'Classic', blurb: 'The original look: neutral, with a blue accent.', swatch: ['#f7f7f5', '#e9ecfb', '#4255c9'] },
 ];
@@ -16,9 +16,9 @@ export const themeOf = (palette) => THEMES.find((t) => t.id === palette) || THEM
 
 export const MASCOTS = {
   cat: { name: 'Neko', animal: 'cat' },
-  frog: { name: 'Matcha', animal: 'frog' },
+  frog: { name: 'Kero', animal: 'frog' },
   shark: { name: 'Finn', animal: 'shark' },
-  bear: { name: 'Yuki', animal: 'polar bear' },
+  bear: { name: 'Yumi', animal: 'polar bear' },
   shiba: { name: 'Honey', animal: 'shiba' },
 };
 
@@ -97,7 +97,7 @@ const ANIMALS = {
     eyesAt: { l: 45, r: 75, y: 56 },
     mouthY: 69,
   },
-  // Yuki: a minimalist polar bear in white, grey and black.
+  // Yumi: a minimalist polar bear in white, grey and black.
   bear: {
     k: { ink: '#2a2a2a', fur: '#ffffff', inner: '#d6d6d6', muzzle: '#f1f1f1', cheek: '#e4e4e4', tongue: '#bdbdbd' },
     back: (k) =>

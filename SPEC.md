@@ -119,7 +119,7 @@ The reason this project exists is that Canvas is cluttered. These rules apply to
 | 5 | Extras | Section I, F13, F14, plus D8 and D9 (added 2026-10-06) |
 | 6 | Look and feel | Section J (added 2026-10-06 at your request): soft pink theme, Neko, Ask Neko, celebrations; plus C16 exam countdown (2026-10-07) |
 | 7 | Any student (approved by you 2026-10-20; built 2026-10-20, waiting on your checks and choices) | Section K (added 2026-10-20 at your request): works at any school's Canvas, syllabus import, setup, and what's needed to publish free on the Chrome Web Store |
-| 8 | After launch | Requests from the owner and friends after publishing (2026-11-04): G12 custom events, J8 themes tab with animal mascots, K23 syllabus setup comes first. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
+| 8 | After launch | Requests from the owner and friends after publishing (2026-11-04/05): G12 custom events, G13 class times you type in, J8 themes tab with animal mascots, K23 syllabus setup comes first. Built on the `after-launch` git branch so the published version and GitHub stay as they are until approved |
 
 A feature always lands in the same phase as, or a later phase than, any feature it depends on.
 
@@ -973,7 +973,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - A date with no time shows as all-day ("time not listed") instead of a made-up time, in lists, the Day view's All-day row, details and the calendar export.
 
 #### G12 · Custom events
-- **Status:** [x] done — “+ Event” on the Calendar, a click on an empty time slot in Day or Week, or the E key opens the event form: what, date, start and end (no start = all day), class (for its color), kind (event, reading, something to make, task), weekly repeat on chosen weekdays until a date (16 weeks if none), note. Events are time blocks in Day and Week, appear in Month, List, Home and Ask Neko like any calendar item, can be checked off, and their details have Edit, Delete this one and Delete every time. Saved in your data (backup included); switch in Settings → Features; E listed under ?. Tested: weekday repeats with skipped days, Pacific times across the November time change, all-day events, the switch and backup · **Phase:** 8
+- **Status:** [x] done — “+ Event” on the Calendar, a click on an empty time slot in Day or Week, or the E key opens the event form: what, date, start and end (no start = all day), class (for its color), kind (event, reading, something to make, task), weekly repeat on chosen weekdays until a date (16 weeks if none), note. Events are time blocks in Day and Week, appear in Month, List, Home and Ask Neko like any calendar item, can be checked off, and their details have Edit, Delete this one and Delete every time. Saved in your data (backup included); switch in Settings → Features; E listed under ?. Tested: weekday repeats with skipped days, Pacific times across the November time change, all-day events, the switch and backup (2026-11-05: the button is now “New event”, at the right end of the row with Today and the arrows) · **Phase:** 8
 - **What:** Add your own events to the calendar, for things Canvas doesn't list (pre-class readings, slides to make, study sessions). *(Added 2026-11-04 at the owner's request, from a friend's feedback.)*
 - **Done when:**
   - A "+ Event" button on the Calendar, and a click on an empty time slot in Day or Week view, open a form: title, date, start and end time (or all day), an optional class (for its color), and an optional note.
@@ -981,6 +981,15 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Events show as blocks in Day and Week, in Month and List, and in "Ask Neko" answers about your schedule.
   - Events can be marked done like to-dos, edited, and deleted: one occurrence or the whole series.
   - Events are saved locally and included in backup and restore (A10).
+
+#### G13 · Class times you type in
+- **Status:** [x] done — a “Class times” screen for each class (from the Home setup card, the Calendar banner, the class’s syllabus screen and Settings → Syllabi & class times). Add each meeting with one tap (Lecture, Quiz section, Lab, Discussion): days, start, end, room. Meetings repeat weekly through the term, skip the syllabus’s days off, and show as blocks in Day and Week. Meetings the syllabus already lists are shown, so only missing ones are added. “This class has no class meetings (online)” stops the reminders. When an imported syllabus has no class times, the review screen asks for them right there. Saved in your data (backup included). Tested: weekly blocks with a day off, typed times without any syllabus, and which classes still need setup · **Phase:** 8
+- **What:** When a syllabus doesn't list lecture or section times, type them in, because seeing lectures and quiz sections as blocks is a main reason to use the calendar. *(Added 2026-11-05 at the owner's request.)*
+- **Done when:**
+  - Each class has a way to add its meeting times (name, days, start, end, room) that repeat weekly through the term.
+  - It's reachable from every place that says class times are missing.
+  - Imported syllabi without class times ask for them during review.
+  - Classes without meetings (online) can say so.
 
 ### H. Notifications
 
@@ -1103,18 +1112,18 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 ---
 
 #### J8 · Themes tab with animal mascots
-- **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Neko (pink cat, default), Matcha (green frog), Ocean (Finn the shark), Polar (Yuki the polar bear, white/grey/black), Honey (shiba) and Classic. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA · **Phase:** 8
+- **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Neko (pink cat, default), Matcha (green frog), Ocean (Finn the shark), Polar (Yumi the polar bear, white/grey/black), Honey (shiba) and Classic. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA (2026-11-05: the frog is Kero and the polar bear is Yumi, at your request) · **Phase:** 8
 - **What:** Choose between animal themes, each with its own mascot, name and colors. *(Added 2026-11-04 at the owner's request.)*
 - **Done when:**
   - A Themes tab (from the top bar and Settings → Appearance) shows each theme as a card with its mascot and colors. One click applies it everywhere.
   - Five themes:
     - **Neko**, the pink cat (default)
-    - **Matcha**, a green frog
+    - **Matcha**, with Kero the green frog
     - **Finn**, a blue ocean shark
-    - **Yuki**, a minimalist white, grey and black polar bear
+    - **Polar**, with Yumi the minimalist white, grey and black polar bear
     - **Honey**, a golden shiba dog
   - Classic stays available.
-  - Each mascot is drawn in code in the same style, with the same five moods (content, happy, worried, sleepy, celebrating). Its name is used in the greeting, the chat ("Ask Matcha") and empty states.
+  - Each mascot is drawn in code in the same style, with the same five moods (content, happy, worried, sleepy, celebrating). Its name is used in the greeting, the chat ("Ask Kero") and empty states.
   - Every theme has light and dark colors that pass WCAG AA contrast (`tools/contrast.py` checks them all).
   - The choice is saved and included in backup.
 
@@ -1263,7 +1272,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
   - Descriptions say "works with Canvas", the Canvas logo is never used, and the not-affiliated note appears everywhere the name appears (extension, store listing, site).
 
 #### K23 · Syllabus setup comes first
-- **Status:** [x] done — setup’s syllabus step now explains it’s how classes get on your calendar (“This is how your classes get on your calendar…”) and says Home will remind you. Until every class has class times (or is marked “not needed”, e.g. online classes, from its syllabus screen), Home shows a “Finish setting up: add your syllabi” card with a chip per class; the Calendar shows a banner naming those classes; course cards say “No class times yet”; the class page’s button becomes a primary “Add syllabus”; and Settings has a “Syllabi & class times” list with Add/Edit for every class. All open the class’s syllabus screen · **Phase:** 8
+- **Status:** [x] done — setup’s syllabus step now explains it’s how classes get on your calendar (“This is how your classes get on your calendar…”) and says Home will remind you. Until every class has class times (or is marked “not needed”, e.g. online classes, from its syllabus screen), Home shows a “Finish setting up: add your syllabi” card with a chip per class; the Calendar shows a banner naming those classes; course cards say “No class times yet”; the class page’s button becomes a primary “Add syllabus”; and Settings has a “Syllabi & class times” list with Add/Edit for every class. All open the class’s syllabus screen (2026-11-05: a class whose syllabus is added but lists no class times now asks for class times only (G13), not for its syllabus again; the Calendar banner spans the calendar’s full width with an “Add … times” button per class) · **Phase:** 8
 - **What:** Make adding syllabi and class times an obvious, early task, so new students get class blocks on their calendar. *(Added 2026-11-04 at the owner's request: friends couldn't find where to add syllabi after skipping that setup step.)*
 - **Done when:**
   - Setup says why syllabi matter (class times, exams and deadlines on the calendar).
@@ -1394,6 +1403,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | G10 | Dates from your syllabi | 4 | [x] |
 | G11 | Class meetings and weekly topics | 4 | [~] |
 | G12 | Custom events | 8 | [x] |
+| G13 | Class times you type in | 8 | [x] |
 | H1 | Deadline reminders | 4 | [~] |
 | H2 | Icon badge | 4 | [~] |
 | H3 | Morning summary | 4 | [~] |
@@ -1435,4 +1445,4 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 | K22 | "Works with Canvas" wording | 7 | [x] |
 | K23 | Syllabus setup comes first | 8 | [x] |
 
-**Total: 147 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 3 · Done: 120 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0
+**Total: 148 features** (99 original + B11, B12, C13, C14, C15, G9, E29–E33 added 2026-10-01; G10, G11, D8, D9, J1–J7 added 2026-10-06; C16 added 2026-10-07; K1–K14 added and approved 2026-10-20; K15–K22 added 2026-10-20; G12, J8, K23 added 2026-11-04; G13 added 2026-11-05) — Phase 1: 44 · Phase 2: 33 · Phase 3: 12 · Phase 4: 19 · Phase 5: 6 · Phase 6: 8 · Phase 7: 22 · Phase 8: 4 · Done: 121 · Partial: 26 (16 waiting on your Chrome check; 10 in Phase 7 waiting on your Chrome check, your choices or volunteers) · Removed at your request: 1 (C6) · Not started: 0

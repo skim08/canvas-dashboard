@@ -130,6 +130,7 @@ export const DEFAULT_USERDATA = {
   nextPinned: {}, // G5: itemId -> pinnedAt
   nextSkipped: {}, // G5: itemId -> skip until (ms)
   events: [], // G12: your own calendar events (see lib/events.js)
+  classTimes: {}, // G13: courseId -> [{ id, name, days, start, end, where, from, until }]: class times you typed in
   syllabusSkip: {}, // K23: courseId -> true: no syllabus or class times needed (e.g. an online class)
   marks: {}, // I2: pins and hides on announcements, pages, files, discussions, messages, modules, classes: key -> { type, title, courseId, ref, pinned, hidden }
 };

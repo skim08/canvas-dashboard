@@ -43,6 +43,7 @@ async function scheduleFocus() {
 
 // K1: your school's Canvas, before anything syncs.
 const ready = Promise.all([clearStaleLock(), chrome.storage.local.get(['settings', 'syllabi']).then(({ settings: s, syllabi }) => (applySchool(s), setProfiles(syllabi)))]);
+ready.catch(() => {}); // a failure here is reported by whichever task waits on it
 
 async function settings() {
   const { settings: s } = await chrome.storage.local.get('settings');
@@ -59,48 +60,61 @@ async function configure() {
   if (!(await chrome.alarms.get(TICK))) await chrome.alarms.create(TICK, { periodInMinutes: 5, delayInMinutes: 1 });
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
-  await ready;
-  await configure();
-  syncAndNotify({ force: true });
-});
+// Chrome can stop or restart this worker mid-task (after a reload, an update, or when it's
+// idle); the API call then fails with "No SW". Every background task goes through here so
+// that's a quiet note in the log, not an "Uncaught" error on chrome://extensions.
+function safely(task, label) {
+  Promise.resolve()
+    .then(task)
+    .catch((e) => console.warn(`Neko background: ${label} stopped (${e?.message || e}). It runs again on the next refresh.`));
+}
 
-chrome.runtime.onStartup.addListener(async () => {
-  await ready;
-  await configure();
-  await syncAndNotify({});
-  notifyNow(); // H3: a missed morning summary shows when Chrome opens that morning
-});
+chrome.runtime.onInstalled.addListener(() =>
+  safely(async () => {
+    await ready;
+    await configure();
+    await syncAndNotify({ force: true });
+  }, 'install')
+);
+
+chrome.runtime.onStartup.addListener(() =>
+  safely(async () => {
+    await ready;
+    await configure();
+    await syncAndNotify({});
+    await notifyNow(); // H3: a missed morning summary shows when Chrome opens that morning
+  }, 'startup')
+);
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === ALARM) ready.then(() => syncAndNotify({ force: true }));
-  else if (alarm.name === TICK) ready.then(notifyNow);
-  else if (alarm.name === FOCUS) ready.then(() => runFocus({ show })).then(scheduleFocus);
+  if (alarm.name === ALARM) safely(() => ready.then(() => syncAndNotify({ force: true })), 'refresh');
+  else if (alarm.name === TICK) safely(() => ready.then(notifyNow), 'reminders');
+  else if (alarm.name === FOCUS) safely(() => ready.then(() => runFocus({ show })).then(scheduleFocus), 'focus timer');
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local') return;
   if (changes.settings) {
     applySchool(changes.settings.newValue);
-    configure();
+    safely(configure, 'settings');
   }
-  if (changes.focus) scheduleFocus();
+  if (changes.focus) safely(scheduleFocus, 'focus timer');
   if (changes.syllabi) setProfiles(changes.syllabi.newValue); // K8
-  if (changes.userdata || changes.settings) notifyNow(); // keep the badge current when you check things off
+  if (changes.userdata || changes.settings) safely(notifyNow, 'badge'); // keep the badge current when you check things off
 });
 
 // Clicking a notification opens the right place in the dashboard.
-chrome.notifications.onClicked.addListener(async (id) => {
-  const { notifyState } = await chrome.storage.local.get('notifyState');
-  const target = notifyState?.targets?.[id] || '#/home';
-  chrome.tabs.create({ url: chrome.runtime.getURL(`src/newtab.html?app=1${target}`) });
-  chrome.notifications.clear(id);
-});
+chrome.notifications.onClicked.addListener((id) =>
+  safely(async () => {
+    const { notifyState } = await chrome.storage.local.get('notifyState');
+    const target = notifyState?.targets?.[id] || '#/home';
+    await chrome.tabs.create({ url: chrome.runtime.getURL(`src/newtab.html?app=1${target}`) });
+    await chrome.notifications.clear(id);
+  }, 'notification click')
+);
 
 // With the popup turned off, clicking the icon opens the dashboard.
-chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: chrome.runtime.getURL('src/newtab.html?app=1') });
-});
+chrome.action.onClicked.addListener(() => safely(() => chrome.tabs.create({ url: chrome.runtime.getURL('src/newtab.html?app=1') }), 'open dashboard'));
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type === 'sync') {

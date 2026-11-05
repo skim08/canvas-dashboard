@@ -371,6 +371,49 @@ test('G12', 'events are in backups (they live in your data)', () => {
   eq(parseBackup(JSON.stringify(makeBackup(data))).data.userdata.events[0].title, 'x');
 });
 
+// ---------- class times you type in (G13) ----------
+group('Class times you type in (G13)');
+test('G13', 'typed class times become weekly blocks, skipping the syllabus’s days off', async () => {
+  const PR = await import('../lib/profiles.js');
+  const { syllabusSchedule } = await import('../lib/syllabus.js');
+  const before = PR.PROFILES;
+  try {
+    // A syllabus with dates but no class times, plus a day off.
+    PR.setProfiles([{ id: 'p', courseId: '7', code: 'RE 150', source: 'x', schedule: { noClass: [{ day: '2026-11-26', title: 'No class · Thanksgiving' }] } }]);
+    const classTimes = { 7: [{ id: 'a', name: 'Lecture', days: ['Tue', 'Thu'], start: '08:30', end: '09:50', where: 'ARC 147', from: '2026-11-17', until: '2026-11-27' }] };
+    const { add } = syllabusSchedule([{ id: '7', code: 'RE 150', sections: [] }], [], { tz: TZ, classTimes });
+    eq(
+      add.map((i) => [i.title, i.dueAt, i.endAt, i.location, i.cancelled]),
+      [
+        ['Lecture', '2026-11-17T16:30:00.000Z', '2026-11-17T17:50:00.000Z', 'ARC 147', false],
+        ['Lecture', '2026-11-19T16:30:00.000Z', '2026-11-19T17:50:00.000Z', 'ARC 147', false],
+        ['Lecture', '2026-11-24T16:30:00.000Z', '2026-11-24T17:50:00.000Z', 'ARC 147', false],
+        ['No class · Thanksgiving', '2026-11-26T16:30:00.000Z', '2026-11-26T17:50:00.000Z', null, true],
+      ]
+    );
+    // No syllabus at all: typed times still work.
+    PR.setProfiles([]);
+    eq(syllabusSchedule([{ id: '7', code: 'RE 150', sections: [] }], [], { tz: TZ, classTimes }).add.length, 4);
+  } finally {
+    PR.setProfiles(before);
+  }
+});
+test('G13', 'a class with typed times no longer needs setup; one with a syllabus but no times asks for times', async () => {
+  const PR = await import('../lib/profiles.js');
+  const { state } = await import('../ui/store.js');
+  const { needsSyllabus, needsWhat } = await import('../ui/syllabusDrawer.js');
+  const before = [PR.PROFILES, state.userdata];
+  try {
+    PR.setProfiles([{ id: 'b', courseId: '2', code: 'HIST 101', schedule: { deadlines: [] } }]);
+    state.userdata = userWithDefaults({ classTimes: { 3: [{ id: 'x', name: 'Lab', days: ['Fri'], start: '13:00', from: '2026-09-01', until: '2026-12-01' }] } });
+    const ctx = { courses: [{ id: '2', code: 'HIST 101' }, { id: '3', code: 'CHEM 142' }, { id: '4', code: 'BIO 180' }] };
+    eq([needsSyllabus(ctx).map((c) => c.id), needsWhat(ctx.courses[0]), needsWhat(ctx.courses[2])], [['2', '4'], 'times', 'syllabus']);
+  } finally {
+    PR.setProfiles(before[0]);
+    state.userdata = before[1];
+  }
+});
+
 // ---------- syllabus setup comes first (K23) ----------
 group('Syllabus setup comes first (K23)');
 test('K23', 'classes without class times are listed until you add them or say they aren’t needed', async () => {
@@ -398,7 +441,7 @@ test('J8', 'five animal themes plus Classic, each with a named mascot in all fiv
   const M = await import('../ui/mascots.js');
   const css = await (await fetch('../styles/tokens.css')).text();
   const boot = await (await fetch('../boot.js')).text();
-  eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Matcha'], ['ocean', 'Finn'], ['polar', 'Yuki'], ['honey', 'Honey'], ['classic', 'Neko']]);
+  eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Kero'], ['ocean', 'Finn'], ['polar', 'Yumi'], ['honey', 'Honey'], ['classic', 'Neko']]);
   for (const t of M.THEMES) {
     for (const mood of M.MASCOT_MOODS) ok(/^<svg[\s\S]*<\/svg>$/.test(M.mascotMarkup(t.mascot, mood, 40)), `${t.mascot} ${mood}`);
     if (t.id !== 'pink') {

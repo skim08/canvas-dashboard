@@ -56,7 +56,7 @@ It doesn't ask for `cookies` or any always-on host access. No remote code is loa
 - **Grades and GPA:** your grading scale (letters or a 4.0 decimal), what you need on what's left, and what-if scores.
 - **Calendar:** day, week, month and term views, with your class times and exams.
 - **Syllabus import:** PDF or Word files, read on your computer. You review everything before it's saved.
-- **Neko and friends:** a friendly cat who answers questions about your schedule. Four more animal themes (Matcha the frog, Finn the shark, Yuki the polar bear, Honey the shiba) on the Themes tab.
+- **Neko and friends:** a friendly cat who answers questions about your schedule. Four more animal themes (Kero the frog, Finn the shark, Yumi the polar bear, Honey the shiba) on the Themes tab.
 - **Your own events:** pre-class readings, study sessions and anything Canvas doesn't list, with weekly repeats.
 - **Private by design:** no account, no tracking, and nothing leaves your computer except requests to your own school's Canvas.
 - **Disclaimer:** "Not affiliated with Instructure or any school. Grades and GPA are estimates; always check Canvas."

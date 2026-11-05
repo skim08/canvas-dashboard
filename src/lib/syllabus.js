@@ -68,13 +68,17 @@ function base(course, profile, extra) {
   };
 }
 
-export function syllabusSchedule(courses, canvasItems, { tz = DEFAULT_TZ, dates = true, classes = true } = {}) {
+// G13: classTimes are the class times you typed in (userdata.classTimes), for classes
+// whose syllabus doesn't list them. They're added to the syllabus's own meetings.
+export function syllabusSchedule(courses, canvasItems, { tz = DEFAULT_TZ, dates = true, classes = true, classTimes = {} } = {}) {
   const add = [];
   const patch = {};
   for (const course of courses) {
-    const profile = findProfile(course);
-    const s = profile?.schedule;
-    if (!s) continue;
+    const found = findProfile(course);
+    const typed = (classTimes?.[course.id] || []).filter((x) => x.days?.length && x.start && x.from && x.until).map((x) => ({ ...x, id: `ct-${x.id}` }));
+    if (!found?.schedule && !typed.length) continue;
+    const profile = found?.schedule ? found : { source: 'your class times', schedule: {} };
+    const s = typed.length ? { ...profile.schedule, classes: [...(profile.schedule.classes || []), ...typed] } : profile.schedule;
     const mine = canvasItems.filter((i) => i.courseId === course.id && i.source === 'canvas');
     const slots = Object.fromEntries((s.classes || []).map((c) => [c.id, slotOf(course, c)]));
 

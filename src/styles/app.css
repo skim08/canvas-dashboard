@@ -5352,9 +5352,15 @@ button.chat-item {
   color: var(--accent);
 }
 
-.cal-k23 {
+.cal-nav-end {
+  margin-left: auto;
+}
+
+/* The reminder spans the calendar's full width, so the page edges never shift. */
+.banner.cal-k23 {
   flex-wrap: wrap;
-  margin-bottom: var(--s4);
+  max-width: none;
+  margin: 0 0 var(--s4);
 }
 
 .cal-k23-links {
@@ -5410,4 +5416,26 @@ button.chat-item {
 
 .tg-col[title] {
   cursor: pointer;
+}
+
+/* G13: class times */
+.ct-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.ct-callout {
+  margin-bottom: 0;
+}
+
+.cal-k23-text {
+  flex: 1;
+  min-width: 240px;
+}
+
+.set-syl-btns {
+  display: flex;
+  gap: var(--s2);
 }

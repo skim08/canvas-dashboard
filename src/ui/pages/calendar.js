@@ -51,7 +51,7 @@ export function renderCalendar(ctx) {
   return h(
     'div',
     { class: ['page', (view === 'week' || view === 'quarter' || view === 'month') && 'page-wide'] },
-    h('div', { class: 'page-head' }, h('h1', { class: 'page-title' }, 'Calendar'), feat('customEvents') ? button('Event', () => openDrawer('event', `new|${anchor}|`), { key: 'cal-new-event', iconName: 'plus', kind: 'ghost' }) : null, segmented(views.map(([v, l]) => [v, l]), view, (v) => updateSettings({ calendarView: v }), 'cview')),
+    h('div', { class: 'page-head' }, h('h1', { class: 'page-title' }, 'Calendar'), segmented(views.map(([v, l]) => [v, l]), view, (v) => updateSettings({ calendarView: v }), 'cview')),
     feat('classSchedule') ? syllabusCalendarBanner(ctx) : null, // K23
     title
       ? h(
@@ -60,9 +60,13 @@ export function renderCalendar(ctx) {
           iconButton('back', 'Previous', () => move(-1), { key: 'cal-prev' }),
           h('button', { class: 'btn btn-secondary btn-sm', 'data-key': 'cal-today', onclick: () => setUi({ calAnchor: today }) }, 'Today'),
           iconButton('chevron', 'Next', () => move(1), { key: 'cal-next' }),
-          h('h2', { class: 'cal-title' }, title)
+          h('h2', { class: 'cal-title' }, title),
+          // G12: new events start from the row you're looking at, on the right.
+          feat('customEvents') ? h('span', { class: 'cal-nav-end' }, button('New event', () => openDrawer('event', `new|${anchor}|`), { key: 'cal-new-event', iconName: 'plus' })) : null
         )
-      : null,
+      : feat('customEvents')
+        ? h('div', { class: 'cal-nav' }, h('span', { class: 'cal-nav-end' }, button('New event', () => openDrawer('event', `new|${anchor}|`), { key: 'cal-new-event', iconName: 'plus' })))
+        : null,
     filterBar(ctx.courses, s, updateSettings, { sort: view === 'list' }),
     !state.cache
       ? emptyState(loadingText())

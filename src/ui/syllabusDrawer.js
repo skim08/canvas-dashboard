@@ -146,6 +146,18 @@ function startScreen(course) {
       s.error ? h('p', { class: 'setup-error', role: 'alert' }, s.error) : null,
       !mine ? h('button', { class: 'link-btn', 'data-key': 'syl-blank', onclick: () => startBlank(course, null) }, 'Or type class times and dates in yourself') : null
     ),
+    // G13: class times you type in, for when the syllabus doesn't list them.
+    h(
+      'section',
+      { class: 'd-block' },
+      h('h3', null, 'Class times'),
+      typedTimes(course.id)
+        ? h('p', null, (state.userdata.classTimes[course.id] || []).map((r) => `${r.name}: ${r.days.join(', ')}`).join(' · '))
+        : hasTimes(mine || builtIn)
+          ? h('p', null, 'From your syllabus.')
+          : h('p', { class: 'setup-error' }, 'No class times yet, so lectures and sections aren’t on your calendar.'),
+      button(typedTimes(course.id) ? 'Edit class times' : 'Add class times', () => openDrawer('classTimes', course.id), { key: 'syl-class-times', kind: typedTimes(course.id) || hasTimes(mine || builtIn) ? 'secondary' : 'primary', iconName: 'clock' })
+    ),
     // K23: online or self-paced classes have no class times; stop asking for them.
     !state.userdata.syllabusSkip?.[course.id] && !hasTimes(mine || builtIn)
       ? h('p', { class: 'caption' }, 'No set class times, like an online class? ', h('button', { class: 'link-btn', 'data-key': 'syl-skip', onclick: () => (skipSyllabus(course.id), toast(`OK: ${course.nick || course.code} won’t ask for class times`)) }, 'Mark as not needed'))
@@ -179,6 +191,15 @@ function reviewScreen(course) {
   const total = f.classes.length + f.exams.length + f.deadlines.length + f.noClass.length + f.topics.length;
   return [
     h('p', { class: 'd-lead' }, s.from === 'typed in' || s.from === 'your saved dates' ? 'Add or fix class times and dates. Nothing changes until you save.' : `Found ${total} thing${total === 1 ? '' : 's'} in ${s.from}. Check each one against your syllabus: fix anything wrong, remove what doesn’t belong, then save.`),
+    // G13: the syllabus didn't say when the class meets: ask now, while you're here.
+    !f.classes.length
+      ? h(
+          'div',
+          { class: 'setup-todo ct-callout' },
+          h('div', { class: 'setup-todo-head' }, h('strong', null, 'No class times were found in this syllabus'), h('span', null, 'Add when your lecture and sections meet so they show as blocks on your calendar every week. Your school’s class schedule lists them.')),
+          h('div', { class: 'ct-add' }, ['Lecture', 'Quiz section', 'Lab', 'Discussion'].map((k) => button(k, () => (f.classes.push({ id: uid(), name: k, days: [], start: '', end: '', where: '' }), redraw()), { key: `syl-quick:${k}`, iconName: 'plus' })))
+        )
+      : null,
     group(
       'Class meetings',
       f.classes,
@@ -270,8 +291,9 @@ function reviewScreen(course) {
 }
 
 export function syllabusDrawer(courseId, ctx) {
-  const course = ctx.allCourses.find((c) => c.id === courseId);
-  if (!course) return emptyState('Class not found.');
+  const raw = [...ctx.courses, ...(ctx.otherCourses || [])].find((c) => c.id === courseId) || ctx.allCourses.find((c) => c.id === courseId);
+  if (!raw) return emptyState('Class not found.');
+  const course = { ...raw, nick: raw.nick || ctx.nickOf?.(courseId) || raw.autoNick || raw.code };
   const s = st(courseId);
   return [h('header', { class: 'd-header' }, h('h2', { class: 'd-title' }, course.nick || course.code || course.name), h('p', { class: 'd-due' }, 'Syllabus dates and class times')), ...(s.found ? reviewScreen(course) : startScreen(course))];
 }
@@ -284,10 +306,16 @@ export const syllabusSession = (courseId) => st(courseId);
 // A class has its times once its syllabus lists weekly meetings or dated sessions.
 const hasTimes = (p) => !!p && ((p.schedule?.classes || []).some((c) => (c.days && c.days.length) || (p.schedule?.sessions || []).some((m) => m.in === c.id)));
 
+const typedTimes = (courseId) => (state.userdata.classTimes?.[courseId] || []).length > 0; // G13
+
 // Classes still missing their syllabus or class times (unless you said they don't need one).
 export function needsSyllabus(ctx) {
-  return (ctx.courses || []).filter((c) => !c.unavailable && !state.userdata.syllabusSkip?.[c.id] && !hasTimes(findProfile(c)));
+  return (ctx.courses || []).filter((c) => !c.unavailable && !state.userdata.syllabusSkip?.[c.id] && !hasTimes(findProfile(c)) && !typedTimes(c.id));
 }
+
+// What a class still needs: its syllabus, or (syllabus added, no times found) just its class times.
+export const needsWhat = (c) => (findProfile(c) ? 'times' : 'syllabus');
+const openNext = (c) => (needsWhat(c) === 'times' ? openDrawer('classTimes', c.id) : openDrawer('syllabus', c.id));
 
 export const skipSyllabus = (courseId) =>
   updateUser((ud) => {
@@ -303,11 +331,16 @@ export function syllabusSetupCard(ctx) {
   return h(
     'section',
     { class: 'setup-todo', 'aria-label': 'Finish setting up' },
-    h('div', { class: 'setup-todo-head' }, h('strong', null, 'Finish setting up: add your syllabi'), h('span', null, 'Canvas doesn’t share when your classes meet. Add each syllabus (or type the class times) so classes, exams and deadlines show on your calendar. About a minute per class.')),
+    h(
+      'div',
+      { class: 'setup-todo-head' },
+      h('strong', null, list.every((c) => needsWhat(c) === 'times') ? 'Finish setting up: add your class times' : 'Finish setting up: add your syllabi'),
+      h('span', null, 'Canvas doesn’t share when your classes meet. Add each syllabus (or type the class times) so lectures, sections, exams and deadlines show on your calendar. About a minute per class.')
+    ),
     h(
       'div',
       { class: 'setup-todo-list' },
-      list.map((c) => h('button', { class: 'setup-todo-chip', 'data-key': `k23-add:${c.id}`, onclick: () => openSyllabus(c.id) }, dot(c.color), h('span', null, c.nick), h('span', { class: 'setup-todo-add' }, icon('plus', 14), 'Add')))
+      list.map((c) => h('button', { class: 'setup-todo-chip', 'data-key': `k23-add:${c.id}`, onclick: () => openNext(c) }, dot(c.color), h('span', null, c.nick), h('span', { class: 'setup-todo-add' }, icon('plus', 14), needsWhat(c) === 'times' ? 'Class times' : 'Syllabus')))
     )
   );
 }
@@ -320,7 +353,7 @@ export function syllabusCalendarBanner(ctx) {
     'div',
     { class: 'banner tone-amber cal-k23', role: 'status' },
     icon('alert'),
-    h('span', null, `${list.length === 1 ? `${list[0].nick} doesn’t` : `${list.length} classes don’t`} have class times yet, so ${list.length === 1 ? 'it isn’t' : 'they aren’t'} on your calendar. Add a syllabus or type the times:`),
-    h('span', { class: 'cal-k23-links' }, list.map((c) => h('button', { class: 'link-btn', 'data-key': `k23-cal:${c.id}`, onclick: () => openSyllabus(c.id) }, c.nick)))
+    h('span', { class: 'cal-k23-text' }, `${list.length === 1 ? `${list[0].nick} doesn’t` : `${list.length} classes don’t`} have class times yet, so ${list.length === 1 ? 'its lectures and sections aren’t' : 'their lectures and sections aren’t'} on your calendar.`),
+    h('span', { class: 'cal-k23-links' }, list.map((c) => button(`Add ${c.nick} times`, () => openNext(c), { key: `k23-cal:${c.id}`, kind: 'secondary' })))
   );
 }

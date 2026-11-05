@@ -199,7 +199,7 @@ export function allItems(cache, ud, settings, now) {
   const visible = courses.filter((c) => !hiddenCourses.has(c.id) && !c.unavailable);
   const sessions = ud.officeHours || courses.some((c) => findProfile(c)?.officeHours) ? officeHourSessions(visible, ud, cache?.items || [], now, tz) : [];
   // G10, G11: exams, deadlines and class meetings from your syllabi.
-  const syl = syllabusSchedule(visible, cache?.items || [], { tz, dates: settings.features?.syllabusDates !== false, classes: settings.features?.classSchedule !== false });
+  const syl = syllabusSchedule(visible, cache?.items || [], { tz, dates: settings.features?.syllabusDates !== false, classes: settings.features?.classSchedule !== false, classTimes: ud.classTimes || {} });
   const canvas = (cache?.items || []).map((i) => (syl.patch[i.id] ? { ...i, ...syl.patch[i.id] } : i));
   // G12: your own events, one item per occurrence.
   const own = settings.features?.customEvents !== false ? expandEvents(ud.events || [], { tz }) : [];

@@ -23,6 +23,7 @@ import { mochiChat } from './chatDrawer.js';
 import { mascotName } from './mochi.js';
 import { syllabusDrawer } from './syllabusDrawer.js';
 import { eventDrawer, ownEventActions } from './eventDrawer.js';
+import { classTimesDrawer } from './classTimesDrawer.js';
 import { hiddenMarks } from '../lib/marks.js';
 import { unhideMark } from './marks.js';
 import { markSeen } from './gradeActions.js';
@@ -58,6 +59,9 @@ export function renderDrawer(ctx) {
   } else if (d.type === 'archive') {
     title = `Past ${term()}`;
     body = archiveDrawer(d.id, ctx); // I1
+  } else if (d.type === 'classTimes') {
+    title = 'Class times';
+    body = classTimesDrawer(d.id, ctx); // G13
   } else if (d.type === 'event') {
     title = 'Your event';
     body = eventDrawer(d.id, ctx); // G12
