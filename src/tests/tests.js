@@ -441,6 +441,7 @@ test('J8', 'five animal themes plus Classic, each with a named mascot in all fiv
   const M = await import('../ui/mascots.js');
   const css = await (await fetch('../styles/tokens.css')).text();
   const boot = await (await fetch('../boot.js')).text();
+  eq(M.THEMES.map((t) => t.title), ['Blush', 'Matcha', 'Ocean', 'Polar', 'Honey', 'Classic']);
   eq(M.THEMES.map((t) => [t.id, M.MASCOTS[t.mascot].name]), [['pink', 'Neko'], ['matcha', 'Kero'], ['ocean', 'Nami'], ['polar', 'Yumi'], ['honey', 'Hachi'], ['classic', 'Neko']]);
   for (const t of M.THEMES) {
     for (const mood of M.MASCOT_MOODS) ok(/^<svg[\s\S]*<\/svg>$/.test(M.mascotMarkup(t.mascot, mood, 40)), `${t.mascot} ${mood}`);

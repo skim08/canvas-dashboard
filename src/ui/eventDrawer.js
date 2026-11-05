@@ -9,7 +9,6 @@ import { dayKey } from '../lib/time.js';
 import { occurrences } from '../lib/events.js';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const TYPES = [
   ['event', 'Event'],
   ['reading', 'Reading'],
@@ -68,6 +67,14 @@ export function removeOccurrence(eventId, day) {
 }
 
 const redraw = () => setUi({});
+
+// Turning on the first day makes the event weekly; turning off the last makes it one-time.
+function toggleDay(d, x) {
+  const days = d.repeat?.days || [];
+  const next = days.includes(x) ? days.filter((y) => y !== x) : DAYS.filter((y) => y === x || days.includes(y));
+  d.repeat = next.length ? { days: next, until: d.repeat?.until || '' } : null;
+  redraw();
+}
 const field = (label, control) => h('label', { class: 'form-field' }, h('span', null, label), control);
 
 export function eventDrawer(id, ctx) {
@@ -106,19 +113,27 @@ export function eventDrawer(id, ctx) {
       ),
       field('Kind', h('select', { 'data-key': 'ev-type', onchange: (e) => (d.type = e.target.value) }, TYPES.map(([v, l]) => h('option', { value: v, selected: d.type === v }, l))))
     ),
+    // Repeats every: pick days (none = just this once).
     h(
       'div',
       { class: 'form-field' },
-      h('label', { class: 'event-check' }, h('input', { type: 'checkbox', checked: repeating, 'data-key': 'ev-repeat', onchange: (e) => ((d.repeat = e.target.checked ? { days: [WD[new Date(`${d.day}T12:00:00Z`).getUTCDay()]], until: '' } : null), redraw()) }), h('span', null, 'Repeats every week')),
+      h('span', null, 'Repeats every'),
+      h(
+        'div',
+        { class: 'syl-days event-days', role: 'group', 'aria-label': 'Repeats every' },
+        DAYS.map((x) => {
+          const on = !!d.repeat?.days?.includes(x);
+          return h('button', { type: 'button', class: ['syl-day', on && 'is-on'], 'aria-pressed': String(on), title: on ? `Stop repeating on ${x}` : `Repeat every ${x}`, 'data-key': `ev-day:${x}`, onclick: () => toggleDay(d, x) }, x.slice(0, 2));
+        })
+      ),
       repeating
         ? h(
             'div',
             { class: 'event-repeat' },
-            h('div', { class: 'syl-days', role: 'group', 'aria-label': 'Repeat on' }, DAYS.map((x) => h('button', { type: 'button', class: ['syl-day', d.repeat.days.includes(x) && 'is-on'], 'aria-pressed': String(d.repeat.days.includes(x)), 'data-key': `ev-day:${x}`, onclick: () => ((d.repeat.days = d.repeat.days.includes(x) ? d.repeat.days.filter((y) => y !== x) : DAYS.filter((y) => y === x || d.repeat.days.includes(y))), redraw()) }, x.slice(0, 2)))),
             field('Until', h('input', { class: 'text-input', type: 'date', value: d.repeat.until || '', min: d.day, 'data-key': 'ev-until', onchange: (e) => (d.repeat.until = e.target.value) })),
             !d.repeat.until ? h('p', { class: 'caption caption-tight' }, 'No end date: it repeats for 16 weeks.') : null
           )
-        : null
+        : h('p', { class: 'caption caption-tight' }, 'Pick days to repeat it every week. Leave them all off for a one-time event.')
     ),
     field('Note (optional)', h('textarea', { class: 'text-input', rows: 3, value: d.note, 'data-key': 'ev-note', oninput: (e) => (d.note = e.target.value) })),
     h(

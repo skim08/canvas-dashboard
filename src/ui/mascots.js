@@ -5,7 +5,7 @@
 // J8: the themes on the Themes tab. `palette` matches [data-palette] in tokens.css;
 // `swatch` previews the light colors on the theme's card.
 export const THEMES = [
-  { id: 'pink', mascot: 'cat', title: 'Neko', blurb: 'Soft pink, with Neko the cat.', swatch: ['#fdf5f7', '#fbe4ed', '#b03867'] },
+  { id: 'pink', mascot: 'cat', title: 'Blush', blurb: 'Soft pink, with Neko the cat.', swatch: ['#fdf5f7', '#fbe4ed', '#b03867'] },
   { id: 'matcha', mascot: 'frog', title: 'Matcha', blurb: 'Calm greens, with Kero the frog.', swatch: ['#f4f8f1', '#e3f0dc', '#376f34'] },
   { id: 'ocean', mascot: 'shark', title: 'Ocean', blurb: 'Blues and seafoam, with Nami the shark.', swatch: ['#f2f8fb', '#dff0f8', '#1f6f99'] },
   { id: 'polar', mascot: 'bear', title: 'Polar', blurb: 'Minimal white, grey and black, with Yumi the polar bear.', swatch: ['#f6f6f6', '#e8e8e8', '#2a2a2a'] },

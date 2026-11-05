@@ -4931,7 +4931,12 @@ button.chat-item {
   color: var(--text-muted);
 }
 
+.syl-field > * {
+  flex: none; /* keep fields their full height in this column (see .event-form) */
+}
+
 .syl-field .text-input {
+  height: 36px;
   min-width: 120px;
   color: var(--text);
   font-size: var(--t-sm);
@@ -5393,12 +5398,25 @@ button.chat-item {
   min-width: 140px;
 }
 
-.event-check {
-  display: flex;
-  align-items: center;
-  gap: var(--s2);
-  font-size: var(--t-sm);
-  cursor: pointer;
+/* Roomier fields in the event form: text doesn't sit against the edges. */
+.event-form .form-field .text-input,
+.event-form .form-field select {
+  height: 40px;
+  padding: 0 var(--s3);
+}
+
+.event-form > *,
+.event-form .form-field > * {
+  flex: none; /* .text-input's "flex: 1" is for rows; in these columns it squashed the height */
+}
+
+.event-form .form-field textarea.text-input {
+  height: auto;
+  padding: var(--s2) var(--s3);
+}
+
+.event-days {
+  margin-top: var(--s1);
 }
 
 .event-repeat {
