@@ -2,7 +2,7 @@
 
 (Formerly "Canvas Dashboard"; the name was chosen on 2026-10-20. Neko works with Canvas and isn't affiliated with Instructure.)
 
-A Chrome extension (Manifest V3, loaded unpacked) that replaces the Canvas UI for UW courses (`canvas.uw.edu`). **`SPEC.md` is the source of truth** for every feature, its acceptance criteria, its phase and its status.
+A Chrome extension (Manifest V3) that works with any school's Canvas: the student picks their school's Canvas site during setup. It started as a UW-only tool (`canvas.uw.edu`); Phase 7 made it work for any student, and the public, read-only build is published on the Chrome Web Store. **`SPEC.md` is the source of truth** for every feature, its acceptance criteria, its phase and its status.
 
 ## Every session
 

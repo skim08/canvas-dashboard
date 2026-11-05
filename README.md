@@ -2,13 +2,17 @@
 
 A clean, private dashboard that works with Canvas. It's a Chrome extension that replaces the new-tab page with one calm view of everything due, your grades and GPA, a real calendar and your syllabus dates. It reads Canvas with the login you already have and keeps everything on your computer: no account, no server, no analytics.
 
+**Website:** [skim08.github.io/canvas-dashboard](https://skim08.github.io/canvas-dashboard/) · **How it was built with AI:** [BUILDING.md](BUILDING.md)
+
 *Not affiliated with Instructure (the makers of Canvas) or any school.*
 
-![Home: what's due, grades at a glance, exams and Mochi](docs/img/home.jpg)
+![Home: what's due, grades at a glance, exams and Mochi](store/screenshots/1-home.png)
 
-| Calendar | Grades |
+| Grades | Courses |
 |---|---|
-| ![Week view with class times and topics](docs/img/calendar.jpg) | ![Grades with projected GPA](docs/img/grades.jpg) |
+| ![Grades with projected GPA and what you need on what's left](store/screenshots/2-grades.png) | ![Courses with next due item for each class](store/screenshots/3-courses.png) |
+
+*Screenshots show demo mode: a made-up student, no real data.*
 
 ## What it does
 
@@ -33,7 +37,7 @@ A clean, private dashboard that works with Canvas. It's a Chrome extension that 
   - Build tests that check the published zip.
   - Design checks: design tokens only, and WCAG AA contrast in every theme.
 - **Spec-driven:** [`SPEC.md`](SPEC.md) lists every feature with acceptance criteria and status. [`CLAUDE.md`](CLAUDE.md) holds the working rules.
-- Built with [Claude Code](https://claude.com/claude-code) as an AI pair programmer, from a written spec with acceptance criteria and automated tests.
+- Built with [Claude Code](https://claude.com/claude-code) as an AI pair programmer, from a written spec with acceptance criteria and automated tests. The process, decisions and lessons are in [BUILDING.md](BUILDING.md).
 
 ## Try it
 
@@ -69,10 +73,10 @@ It uses sample data. Add `?scenario=setup`, `otherschool`, `expired`, `offline` 
 | `src/lib/` | Canvas client, sync, grade engine, syllabus import, models (no DOM) |
 | `src/ui/` | Screens and components |
 | `src/tests/` | Browser tests and sample data |
-| `docs/` | Landing site for GitHub Pages (privacy policy and terms are drafts) |
+| `docs/` | Landing site on GitHub Pages, with the privacy policy and terms |
 | `store/` | Chrome Web Store listing notes |
 | `tools/` | Checks, build and dev server |
 
 ## Privacy
 
-Everything stays in Chrome on your computer. The extension never sees your password, has no server and sends nothing to the developer or anyone else. See [`docs/privacy.html`](docs/privacy.html) (draft).
+Everything stays in Chrome on your computer. The extension never sees your password, has no server and sends nothing to the developer or anyone else. See the [privacy policy](https://skim08.github.io/canvas-dashboard/privacy.html).
