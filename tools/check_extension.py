@@ -35,7 +35,8 @@ for dirpath, _, files in os.walk("src"):
                 if "fixtures" not in p and "tests" not in p: problems.append(f"{p}: upload host outside test data (only canvas.js's pattern may name it)")
                 continue
             # K17: the landing site is only ever opened as a link (privacy policy, terms), never fetched.
-            if host == "skim08.github.io" and p == os.path.join("src", "lib", "env.js"): continue
+            # Links the student clicks (the website, the store page for "Rate it"), never fetched.
+            if host in ("skim08.github.io", "chromewebstore.google.com") and p == os.path.join("src", "lib", "env.js"): continue
             if host not in ALLOWED_HOSTS: problems.append(f"{p}: outside URL {host}")
             # K1: no school is built in; canvas.uw.edu is only the sample data's school.
             if host == "canvas.uw.edu" and p not in (os.path.join("src", "lib", "env.js"), os.path.join("src", "lib", "fixtures.js")): problems.append(f"{p}: hard-coded school address (use CANVAS_ORIGIN)")

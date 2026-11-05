@@ -2,17 +2,21 @@
 
 A clean, private dashboard that works with Canvas. It's a Chrome extension that replaces the new-tab page with one calm view of everything due, your grades and GPA, a real calendar and your syllabus dates. It reads Canvas with the login you already have and keeps everything on your computer: no account, no server, no analytics.
 
-**Website:** [skim08.github.io/canvas-dashboard](https://skim08.github.io/canvas-dashboard/) · **How it was built with AI:** [BUILDING.md](BUILDING.md)
+**Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/neko/ibclpkpjchlbpmfackdopopoghoecaeo) · **Website:** [skim08.github.io/canvas-dashboard](https://skim08.github.io/canvas-dashboard/) · **How it was built with AI:** [BUILDING.md](BUILDING.md)
 
 *Not affiliated with Instructure (the makers of Canvas) or any school.*
 
-![Home: what's due, grades at a glance, exams and Neko the cat](store/screenshots/1-home.png)
+![Home: what's due, your grades and upcoming exams, with Neko's daily summary](docs/img/1-home.jpg)
 
-| Grades | Courses |
+| Calendar | Grades |
 |---|---|
-| ![Grades with projected GPA and what you need on what's left](store/screenshots/2-grades.png) | ![Courses with next due item for each class](store/screenshots/3-courses.png) |
+| ![Week calendar in dark mode, with class times and your own events](docs/img/2-calendar.jpg) | ![Grades and projected GPA, with what you need on what's left](docs/img/3-grades.jpg) |
 
-*Screenshots show demo mode: a made-up student, no real data.*
+| Inbox | Themes |
+|---|---|
+| ![Inbox: read and reply to Canvas messages](docs/img/4-inbox.jpg) | ![Themes: five animal mascots, each with its own colors](docs/img/5-themes.jpg) |
+
+*Screenshots show demo mode: a made-up student, no real data. They're regenerated for every release by `tools/make_screenshots.py` (the zip won't build if they're out of date), so they always match the current version.*
 
 ## What it does
 
@@ -66,6 +70,8 @@ It uses sample data. Add `?scenario=setup`, `otherschool`, `expired`, `offline` 
 | `python3 tools/lint_css.py` | Checks that only design tokens are used |
 | `python3 tools/contrast.py` | Checks WCAG AA contrast |
 | `python3 tools/test_builds.py` | Checks the owner, public and beta builds |
+| `python3 tools/make_screenshots.py` | Retakes every screenshot (store, website and this README) from the current code, in demo mode |
+| `python3 tools/make_icons.py` | Redraws the extension icon at every size |
 | `python3 tools/build_zip.py` | Builds the public Chrome Web Store zip (read-only except Canvas messages) (`--beta` for a beta zip plus install steps) |
 
 ## Project layout

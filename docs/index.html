@@ -10,24 +10,21 @@
 </head>
 <body>
   <div class="wrap">
-    <header class="top"><a class="brand" href="index.html">Neko</a><nav><a href="index.html#faq">FAQ</a><a href="privacy.html">Privacy</a><a href="support.html">Support</a></nav></header>
+    <header class="top"><a class="brand" href="index.html"><img src="img/icon.png" alt="" width="24" height="24">Neko</a><nav><a href="index.html">Home</a><a href="index.html#faq">FAQ</a><a href="privacy.html">Privacy</a><a href="support.html">Support</a></nav></header>
   </div>
-  <main class="wrap">
+  <main class="wrap" id="top">
     <div class="hero">
+      <img class="hero-icon" src="img/icon.png" alt="" width="64" height="64">
       <h1>Neko</h1>
       <p>Everything due, your grades and your class schedule in one calm page. Works with Canvas, and everything stays on your computer.</p>
       <div class="actions">
-        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSc4tiRa0QkEpl7ge4fI2197QWweA0wrBsrNEDS2qkaTWmKMyA/viewform">Join the beta</a>
+        <a class="btn" href="https://chromewebstore.google.com/detail/neko/ibclpkpjchlbpmfackdopopoghoecaeo">Add to Chrome, it's free</a>
         <a class="btn secondary" href="#faq">Is it safe?</a>
       </div>
-      <p class="note">Free Chrome extension. No account, no tracking. Not affiliated with Instructure or your school.</p>
-      <p class="note">Already signed up? <a href="https://github.com/skim08/canvas-dashboard/releases/tag/v0.2.0-beta">Download the beta and install steps</a>.</p>
+      <p class="note">No account, no tracking. Not affiliated with Instructure or your school.</p>
     </div>
-    <div class="shots">
-      <figure><img src="img/home.jpg" alt="Home: what's due soon, grades at a glance, upcoming exams and Neko's daily summary" width="800" height="500"><figcaption>Home: what's due, your grades and upcoming exams at a glance.</figcaption></figure>
-      <figure><img src="img/calendar.jpg" alt="Week calendar with lectures and quiz sections in hour blocks" width="800" height="500"><figcaption>Your week, with class times and topics from your syllabus.</figcaption></figure>
-      <figure><img src="img/grades.jpg" alt="Grades page with projected GPA and what you need on what's left" width="800" height="500"><figcaption>Grades and GPA, with what you need on what's left.</figcaption></figure>
-    </div>
+    <div class="shots" id="shots"></div>
+    <dialog class="lightbox" id="lightbox" aria-label="Screenshot"><button class="lightbox-close" type="button" aria-label="Close">×</button><img alt=""><p></p></dialog>
     <section>
       <h2>What it does</h2>
       <ul class="features">
@@ -35,6 +32,7 @@
         <li><strong>Grades and GPA</strong>Letter or 4.0 grades, what you need on what's left, and what-if scores.</li>
         <li><strong>A real calendar</strong>Day, week, month and term views with your class times and exams.</li>
         <li><strong>Syllabus import</strong>Bring in a PDF or Word syllabus. It's read on your computer, and you check every date before it's saved.</li>
+        <li><strong>Inbox and groups</strong>Read and reply to Canvas messages from your instructors, TAs and classmates, and open your project groups, without leaving the dashboard.</li>
         <li><strong>Neko and friends</strong>A friendly cat (or frog, shark, polar bear or shiba, each with its own color theme) who answers questions like "what's due tomorrow?"</li>
         <li><strong>Private by design</strong>No account, no analytics, no server. Your data never leaves your browser.</li>
       </ul>
@@ -55,5 +53,21 @@
       <p>Neko works with Canvas. It isn’t affiliated with, endorsed by or sponsored by Instructure, the makers of Canvas, or by any school. Canvas is a trademark of Instructure, Inc.</p>
     </div>
   </footer>
+<script>
+// The screenshots, in the order tools/make_screenshots.py made them. Click one to see it full size.
+(async () => {
+  const box = document.getElementById('shots');
+  const dlg = document.getElementById('lightbox');
+  let list = [];
+  try { list = (await (await fetch('img/screenshots.json', { cache: 'no-cache' })).json()).shots; } catch { return; }
+  for (const s of list) {
+    const fig = document.createElement('figure');
+    fig.innerHTML = `<button type="button" class="shot" aria-label="Enlarge: ${s.alt}"><img src="img/${s.file}" alt="${s.alt}" width="1280" height="800" loading="lazy"></button><figcaption>${s.alt}</figcaption>`;
+    fig.querySelector('button').onclick = () => { dlg.querySelector('img').src = `img/${s.file}`; dlg.querySelector('img').alt = s.alt; dlg.querySelector('p').textContent = s.alt; dlg.showModal(); };
+    box.append(fig);
+  }
+  dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('.lightbox-close')) dlg.close(); });
+})();
+</script>
 </body>
 </html>

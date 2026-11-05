@@ -1154,6 +1154,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 
 #### J8 · Themes tab with animal mascots
 - **Status:** [x] done — a Themes tab (palette icon in the top bar; Settings → Appearance links to it) with six cards: Blush (Neko the cat, default), Matcha (Kero the frog), Ocean (Nami the shark), Polar (Yumi the polar bear, white/grey/black), Honey (Hachi the shiba) and Classic. The toolbar badge uses the theme's color. One click applies the colors everywhere, light and dark, with no flash on open. Each mascot is drawn in code in the same style with all five moods (preview sheet: `src/tests/mascots.html`, image `docs/img/mascots.jpg`) and its name is used in the greeting, “Ask …”, the AI’s introduction and screen-reader labels. The cat is now called Neko (renamed from Mochi at your request). `tools/contrast.py` checks all 12 color sets (6 themes × light/dark): every pair passes WCAG AA (2026-11-05: the frog is Kero and the polar bear is Yumi, at your request) (2026-11-05: the shark is Nami and the shiba is Hachi, at your request) (2026-11-05: the pink theme’s card is called Blush, like the other themes are named for their colors) · **Phase:** 8
+- **Note (2026-11-05):** new extension icon: a white cat with happy eyes and a pink check for a smile, on blue (three colors, so it reads as Neko without looking pink-only). Drawn by `tools/make_icons.py`.
 - **What:** Choose between animal themes, each with its own mascot, name and colors. *(Added 2026-11-04 at the owner's request.)*
 - **Done when:**
   - A Themes tab (from the top bar and Settings → Appearance) shows each theme as a card with its mascot and colors. One click applies it everywhere.
@@ -1274,6 +1275,7 @@ A feature always lands in the same phase as, or a later phase than, any feature 
 
 #### K17 · Landing site
 - **Status:** [~] partial — `docs/` (renamed from `site/` so GitHub Pages can publish it) has a home page (pitch, 3 demo screenshots, Join the beta, features, FAQ), a privacy policy and terms (both marked “Draft for review”, not legal advice: data stays in the browser, no analytics, no server, FERPA, not affiliated), a support page, and `docs/README.md`. It uses one accent color, the system font and the spacing scale, light and dark, and has no horizontal scroll at phone width. `SITE_URL` in `src/lib/env.js` feeds `PRIVACY_URL` and `TERMS_URL`. Named Neko. **Waiting for:** the form link, the support email, your review of the drafts, and hosting · **Phase:** 7
+- **Note (2026-11-05):** the site now links to the Chrome Web Store instead of the beta, has Home and FAQ in its menu, matches the new blue icon, and shows all five current screenshots (click to enlarge). `tools/make_screenshots.py` retakes them for every release, and `tools/build_zip.py` refuses to build with out-of-date screenshots, so the site, README and store always match.
 - **What:** A static site in `docs/` for free GitHub Pages hosting.
 - **Done when:**
   - It has the name and a one-line pitch, 3 screenshots from demo mode, and a "Join the beta" button (Google Form link supplied by the owner).

@@ -1,0 +1,25 @@
+{
+  "version": "0.4.0",
+  "shots": [
+    {
+      "file": "1-home.jpg",
+      "alt": "Home: what's due, your grades and upcoming exams, with Neko's daily summary"
+    },
+    {
+      "file": "2-calendar.jpg",
+      "alt": "Week calendar in dark mode, with class times and your own events"
+    },
+    {
+      "file": "3-grades.jpg",
+      "alt": "Grades and projected GPA, with what you need on what's left"
+    },
+    {
+      "file": "4-inbox.jpg",
+      "alt": "Inbox: read and reply to Canvas messages"
+    },
+    {
+      "file": "5-themes.jpg",
+      "alt": "Themes: five animal mascots, each with its own colors"
+    }
+  ]
+}

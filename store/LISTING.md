@@ -85,7 +85,7 @@ Paste this into **Test instructions** in the developer dashboard:
 
 ## Screenshots and images
 
-Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample data). Never use your real Canvas. The current set is in `store/screenshots/0.4.0/`, with the promo tile at `store/promo-tile-440x280.png`. Regenerate the icons with `/usr/bin/python3 tools/make_icons.py`.
+Take 1280×800 screenshots and demo videos in **demo mode** (Try it with sample data). Never use your real Canvas. Run `/usr/bin/python3 tools/make_screenshots.py` before each release: it retakes all five (store set in `store/screenshots/<version>/`, sharp copies for the website and README in `docs/img/`) and the promo tile, and `tools/build_zip.py` won't build until they match the version. Regenerate the icon with `/usr/bin/python3 tools/make_icons.py`.
 
 For the paste-ready text of the 0.4.0 update (every dashboard tab), see `store/UPDATE-0.4.0.md`.
 

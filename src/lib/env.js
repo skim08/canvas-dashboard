@@ -39,7 +39,7 @@ export const PRIVACY_URL = SITE_URL ? `${SITE_URL}/privacy.html` : null;
 export const TERMS_URL = SITE_URL ? `${SITE_URL}/terms.html` : null;
 export const SUPPORT_EMAIL = 'neko.dashboard@gmail.com';
 export const FEEDBACK_URL = null; // K18: the beta / feedback Google Form
-export const STORE_URL = null; // K18: the Chrome Web Store listing, once it exists
+export const STORE_URL = 'https://chromewebstore.google.com/detail/neko/ibclpkpjchlbpmfackdopopoghoecaeo'; // K18: the Chrome Web Store listing (for “Rate it”)
 
 // K1: your school's Canvas, chosen during setup (settings.canvasOrigin). Every module
 // reads this live binding, so it changes everywhere at once. Test mode uses the

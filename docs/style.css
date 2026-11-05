@@ -1,19 +1,20 @@
-/* K17: the landing site. Same design rules as the extension: one accent color, the
-   system font, spacing 4 / 8 / 12 / 16 / 24 / 32 / 48 px, light and dark. */
+/* K17: the landing site. Same design rules as the extension: the icon's blue as the
+   accent (pink only as a small highlight), the system font, spacing 4 / 8 / 12 / 16 /
+   24 / 32 / 48 px, light and dark. */
 :root {
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   --radius: 10px;
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
-  --bg: #fdf5f7; --surface: #ffffff; --border: #f0dde4;
-  --text: #2d2026; --text-muted: #66525b;
-  --accent: #b03867; --accent-soft: #fbe4ed; --on-accent: #ffffff;
+  --bg: #f6f7fb; --surface: #ffffff; --border: #e1e5f2;
+  --text: #1d2233; --text-muted: #555d75;
+  --accent: #3550c8; --accent-soft: #e7ebff; --on-accent: #ffffff; --pink: #e0457b;
   --amber: #8a5a00; --amber-soft: #fdf1d8;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1d1418; --surface: #261b20; --border: #45313a;
-    --text: #f6e9ef; --text-muted: #cdb4bf;
-    --accent: #f490b6; --accent-soft: #4a2234; --on-accent: #2a1119;
+    --bg: #12141c; --surface: #1b1e2a; --border: #30354a;
+    --text: #edf0fa; --text-muted: #b3bad0;
+    --accent: #9aabff; --accent-soft: #263055; --on-accent: #10142a; --pink: #ff8fb3;
     --amber: #f2c48d; --amber-soft: #3a2a12;
   }
 }
@@ -23,19 +24,25 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 var
 a { color: var(--accent); }
 .wrap { width: min(960px, 100%); margin: 0 auto; padding: 0 var(--s4); }
 header.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4) 0; }
-header.top .brand { font-weight: 600; color: var(--text); text-decoration: none; }
+header.top .brand { display: inline-flex; align-items: center; gap: var(--s2); font-weight: 600; color: var(--text); text-decoration: none; }
+header.top .brand img { border-radius: 6px; }
 header.top nav { display: flex; gap: var(--s4); font-size: 14px; }
 header.top nav a { color: var(--text-muted); text-decoration: none; }
 .hero { padding: var(--s7) 0 var(--s6); text-align: center; }
+.hero-icon { display: block; margin: 0 auto var(--s4); border-radius: 15px; }
 .hero h1 { margin: 0 0 var(--s3); font-size: clamp(32px, 6vw, 48px); line-height: 1.1; letter-spacing: -0.02em; }
 .hero p { margin: 0 auto var(--s5); max-width: 560px; color: var(--text-muted); font-size: 18px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 var(--s5); border-radius: var(--radius); background: var(--accent); color: var(--on-accent); font-weight: 600; text-decoration: none; }
 .btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s3); }
 .note { margin-top: var(--s3); color: var(--text-muted); font-size: 14px; }
+.hero .actions + .note { margin: var(--s5) auto 0; font-size: 15px; } /* same gap below the buttons as above them */
 .shots { display: grid; gap: var(--s5); padding: var(--s6) 0; }
 .shots figure { margin: 0; }
-.shots img { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(45, 32, 38, 0.08); }
+.shots .shot { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: var(--radius); }
+.shots .shot:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.shots img { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(29, 34, 51, 0.10); transition: transform 0.15s ease; }
+.shots .shot:hover img { transform: translateY(-2px); }
 .shots figcaption { margin-top: var(--s2); color: var(--text-muted); font-size: 14px; text-align: center; }
 @media (min-width: 800px) { .shots { grid-template-columns: 1fr 1fr; } .shots figure:first-child { grid-column: 1 / -1; } }
 section { padding: var(--s6) 0; border-top: 1px solid var(--border); }
@@ -51,6 +58,13 @@ section h2 { margin: 0 0 var(--s4); font-size: 24px; }
 .doc h2 { margin: var(--s6) 0 var(--s2); font-size: 20px; }
 .doc p, .doc li { color: var(--text); }
 .draft { margin: var(--s4) 0; padding: var(--s3) var(--s4); border: 1px solid var(--amber); border-radius: var(--radius); background: var(--amber-soft); color: var(--text); font-size: 14px; }
+/* Click a screenshot to see it full size */
+.lightbox { width: min(1400px, 96vw); max-height: 94vh; padding: var(--s3); border: 0; border-radius: var(--radius); background: var(--surface); color: var(--text-muted); }
+.lightbox::backdrop { background: rgba(10, 12, 20, 0.78); }
+.lightbox img { display: block; width: 100%; height: auto; max-height: calc(94vh - 80px); object-fit: contain; border-radius: 6px; }
+.lightbox p { margin: var(--s2) 0 0; font-size: 14px; text-align: center; }
+.lightbox-close { position: absolute; top: var(--s2); right: var(--s2); width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.55); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
 footer { padding: var(--s6) 0 var(--s7); color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--border); }
 footer nav { display: flex; flex-wrap: wrap; gap: var(--s4); margin-bottom: var(--s2); }
 footer a { color: var(--text-muted); }
+.features strong::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: var(--s2); border-radius: 50%; background: var(--pink); vertical-align: 1px; }
